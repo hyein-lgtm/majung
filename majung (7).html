@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAJUNG · 마중</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#05060c; --void-2:#0a0c18; --ink:#e9ecf7; --muted:#8a8fae; --chrome-1:#f6f7fb; --chrome-2:#aeb4cf; --chrome-3:#5a6184;
+    /* WBL 브랜드 컬러 */
+    --wbl-green:#9ead90; --wbl-pink:#c691a3; --wbl-blue:#cad3da; --wbl-beige:#e4e0d5; --wbl-charcoal:#454342;
+    /* 포인트 액센트 — 우주 무드에 WBL 더스티 톤을 가미 */
+    --iris-a:#a7cdd2; --iris-b:#bda6c6; --iris-c:#c691a3; --glass:rgba(255,255,255,0.035); --glass-line:rgba(174,180,207,0.16);
+    /* 오행 컬러 — WBL 팔레트로 재조율 */
+    --w-mok:#9ec79a; --w-hwa:#cf93a8; --w-to:#d9cba4; --w-geum:#e7e3d9; --w-su:#aecbdb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 80% at 50% -10%, #131634 0%, var(--void-2) 40%, var(--void) 100%);color:var(--ink);font-family:'Gowun Dodum',sans-serif;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
+  canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .nebula{position:fixed;inset:0;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:.5}
+  .nebula::before,.nebula::after{content:"";position:absolute;border-radius:50%;filter:blur(80px)}
+  .nebula::before{width:50vw;height:50vw;left:-10vw;top:5vh;background:radial-gradient(circle,rgba(122,247,255,.10),transparent 65%)}
+  .nebula::after{width:55vw;height:55vw;right:-12vw;bottom:-5vh;background:radial-gradient(circle,rgba(198,155,255,.12),transparent 65%)}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{position:relative;z-index:2;max-width:880px;margin:0 auto;padding:clamp(24px,6vw,72px) 22px 90px}
+  .chrome{background:linear-gradient(105deg,#fff 0%,#cfd5ee 22%,#7c83a8 38%,#fbfcff 52%,#9aa0c4 66%,#e9ecf9 82%,#fff 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:shimmer 9s ease-in-out infinite;filter:drop-shadow(0 1px 0 rgba(0,0,0,.4))}
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .iris{background:linear-gradient(100deg,var(--iris-a),var(--iris-b) 45%,var(--iris-c));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header{text-align:center;margin-bottom:clamp(30px,7vw,64px)}
+  .eyebrow{font-family:'Cinzel',serif;letter-spacing:.6em;font-size:11px;color:var(--muted);text-indent:.6em;margin-bottom:22px}
+  .brand{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(54px,15vw,118px);line-height:.9;letter-spacing:.04em}
+  .brand-ko{font-family:'Gowun Batang',serif;font-weight:700;font-size:clamp(20px,5vw,30px);letter-spacing:.45em;text-indent:.45em;margin-top:14px}
+  .tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,3.6vw,21px);color:var(--chrome-2);margin-top:24px;line-height:1.5}
+  .orb-stage{display:flex;justify-content:center;margin:clamp(22px,6vw,46px) 0}
+  .orb{position:relative;width:clamp(130px,34vw,180px);aspect-ratio:1}
+  .orb .halo{position:absolute;inset:-38%;border-radius:50%;background:radial-gradient(circle,rgba(198,145,163,.30),rgba(158,173,144,.13) 45%,transparent 70%);filter:blur(6px);animation:pulse 6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+  .orb .sphere{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 26%, #ffffff 0%, #dfe4f6 8%, #9aa0c6 26%, #3a4068 55%, #11142a 78%, #060814 100%),conic-gradient(from 210deg, #aecbdb, #c691a3, #9ead90, #aecbdb);background-blend-mode:screen;box-shadow:inset -14px -16px 34px rgba(0,0,0,.7), inset 10px 12px 22px rgba(255,255,255,.25), 0 18px 50px rgba(0,0,0,.6);animation:spin 26s linear infinite}
+  .orb .ring{position:absolute;inset:-14%;border-radius:50%;border:1px solid rgba(174,180,207,.25);border-top-color:rgba(202,211,218,.5);border-bottom-color:rgba(198,145,163,.42);animation:spin 14s linear infinite reverse}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .glass{background:var(--glass);border:1px solid var(--glass-line);border-radius:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 24px 60px rgba(0,0,0,.45)}
+  .panel{padding:clamp(22px,5vw,38px)}
+  .panel h2{font-family:'Cinzel',serif;font-weight:500;font-size:13px;letter-spacing:.4em;text-align:center;margin-bottom:6px}
+  .panel .sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:26px}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:12px;letter-spacing:.18em;color:var(--chrome-2);margin-bottom:9px;text-transform:uppercase}
+  .row{display:flex;gap:12px;flex-wrap:wrap}.row > *{flex:1;min-width:90px}
+  input,select{width:100%;background:rgba(8,10,22,.6);border:1px solid var(--glass-line);color:var(--ink);font-family:'Gowun Dodum',sans-serif;font-size:15px;padding:13px 15px;border-radius:13px;outline:none;transition:border-color .25s, box-shadow .25s;appearance:none}
+  input:focus,select:focus{border-color:rgba(174,203,219,.6);box-shadow:0 0 0 3px rgba(174,203,219,.12)}
+  select{cursor:pointer}option{background:#0a0c18}
+  .seg{display:flex;gap:8px}
+  .seg button{flex:1;background:rgba(8,10,22,.6);border:1px solid var(--glass-line);color:var(--muted);padding:12px;border-radius:13px;cursor:pointer;font-family:'Gowun Dodum';font-size:14px;transition:.25s}
+  .seg button.on{color:#05060c;border-color:transparent;background:linear-gradient(105deg,#fff,#c7cdec 40%,#9aa0c4);font-weight:700}
+  .time-fields{transition:.3s}.time-fields.dim{opacity:.32;pointer-events:none;filter:grayscale(1)}
+  .cast{width:100%;margin-top:10px;padding:16px;border:none;border-radius:15px;cursor:pointer;font-family:'Cinzel',serif;letter-spacing:.32em;text-indent:.32em;font-size:14px;color:#05060c;background:linear-gradient(105deg,#fff 0%,#cdd3ef 35%,#a6acd0 55%,#fbfcff 100%);background-size:200% 100%;transition:.4s;box-shadow:0 10px 34px rgba(174,203,219,.22)}
+  .cast:hover{background-position:100% 0;box-shadow:0 14px 44px rgba(198,145,163,.32)}
+  .cast:active{transform:translateY(1px)} .cast:disabled{opacity:.5;cursor:wait}
+  .note{text-align:center;color:var(--muted);font-size:11px;margin-top:16px;letter-spacing:.05em}
+  #result{margin-top:34px;display:none}#result.show{display:block;animation:rise .8s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  .res-head{text-align:center;margin-bottom:30px}
+  .res-head .who{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--chrome-2);font-size:17px}
+  .res-head .ilgan{font-family:'Gowun Batang',serif;font-size:clamp(26px,7vw,40px);margin-top:8px;letter-spacing:.06em}
+  .res-head .zod{color:var(--muted);font-size:13px;letter-spacing:.18em;margin-top:8px}
+  .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:30px}
+  @media(max-width:520px){.pillars{gap:8px}}
+  .pillar{position:relative;border-radius:18px;padding:18px 8px 16px;text-align:center;overflow:hidden;border:1px solid var(--glass-line);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01))}
+  .pillar.unknown{opacity:.5}.pillar.unknown .gan,.pillar.unknown .ji{color:var(--muted)!important;font-family:'Gowun Dodum';font-size:30px}
+  .pillar .lab{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.25em;color:var(--muted);margin-bottom:14px}
+  .pillar .gan,.pillar .ji{font-family:'Gowun Batang',serif;font-weight:700;line-height:1;margin:0 auto}
+  .pillar .gan{font-size:clamp(30px,9vw,46px)}.pillar .ji{font-size:clamp(28px,8.4vw,42px);margin-top:10px}
+  .pillar .han{font-size:10px;color:var(--muted);letter-spacing:.1em;margin-top:5px}
+  .pillar .glowdot{position:absolute;inset:auto 0 -30% 0;height:60%;filter:blur(26px);opacity:.6}
+  .luck{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:-12px 0 26px;font-size:12px;color:var(--muted);letter-spacing:.04em}
+  .luck b{color:var(--chrome-1);font-family:'Gowun Batang',serif}
+  .section-t{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:var(--chrome-2);text-align:center;margin:34px 0 18px}
+  .bar{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+  .bar .name{width:78px;font-family:'Gowun Batang',serif;font-size:14px;line-height:1.2}
+  .bar .name small{display:block;font-family:'Cinzel',serif;font-size:8px;letter-spacing:.15em;color:var(--muted)}
+  .bar .track{flex:1;height:9px;border-radius:9px;background:rgba(255,255,255,.06);overflow:hidden}
+  .bar .fill{height:100%;width:0;border-radius:9px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+  .bar .seas{width:24px;text-align:center;font-size:11px;color:var(--muted)} .bar .cnt{width:26px;text-align:right;color:var(--muted);font-size:12px}
+  .verdict{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}@media(max-width:520px){.verdict{grid-template-columns:1fr}}
+  .vcell{border:1px solid var(--glass-line);border-radius:16px;padding:18px 14px;text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01))}
+  .vcell .vk{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.28em;color:var(--muted);margin-bottom:11px}
+  .vcell .vel{font-family:'Gowun Batang',serif;font-size:30px;font-weight:700;line-height:1}
+  .vcell .vm{font-size:11px;color:var(--muted);margin-top:9px;letter-spacing:.04em;line-height:1.4}
+  .vsum{grid-column:1/-1;border-radius:14px;padding:16px 18px;font-family:'Gowun Batang',serif;font-size:13.5px;line-height:1.75;border:1px solid var(--glass-line);background:rgba(158,173,144,.05)}.vsum .hl{color:var(--iris-a);font-weight:700}
+  .method{margin-top:18px;border:1px solid var(--glass-line);border-radius:14px;background:rgba(255,255,255,.02)}
+  .method summary{cursor:pointer;list-style:none;padding:16px 20px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.25em;color:var(--chrome-2)}
+  .method summary::-webkit-details-marker{display:none}.method summary::after{content:'＋';float:right;color:var(--muted);font-family:'Gowun Dodum'}
+  .method[open] summary::after{content:'－'}
+  .method .mbody{padding:0 20px 22px;font-size:12.5px;line-height:1.9;color:var(--muted)}
+  .method .mbody b{color:var(--ink)}.method .mbody code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:5px;color:var(--chrome-1);font-size:11px}
+  .method .mbody .rsv{display:inline-block;margin-top:12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;color:var(--iris-b)}
+  /* report */
+  .report{display:flex;flex-direction:column;gap:14px}
+  .rcard{position:relative;border:1px solid var(--glass-line);border-radius:18px;padding:24px 24px 24px 30px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));overflow:hidden;animation:rise .6s ease both}
+  .rcard::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:3px;background:linear-gradient(180deg,var(--iris-a),var(--iris-b),var(--iris-c))}
+  .rcard .rnum{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;color:var(--iris-b)}
+  .rcard h3{font-family:'Gowun Batang',serif;font-weight:700;font-size:19px;margin:6px 0 14px;letter-spacing:.02em}
+  .rcard h3 .en{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:13px;color:var(--chrome-3);letter-spacing:.05em;margin-top:2px}
+  .rcard p{font-family:'Gowun Batang',serif;font-size:15px;line-height:1.95;color:#dadeef}
+  .rcard .para{display:block}
+  .rcard .para+.para{margin-top:.85em}
+  .loading{text-align:center;padding:48px 20px}
+  .loading .spinner{width:44px;height:44px;margin:0 auto 20px;border-radius:50%;border:2px solid rgba(174,180,207,.18);border-top-color:var(--iris-a);border-right-color:var(--iris-b);animation:spin 1s linear infinite}
+  .loading .lt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--chrome-2);animation:fade 1.8s ease-in-out infinite}
+  @keyframes fade{0%,100%{opacity:.4}50%{opacity:1}}
+  .offline{text-align:center;font-size:11px;color:var(--w-to);margin-top:14px;letter-spacing:.04em}
+  /* 오행 행성계 */
+  .solar{position:relative;width:100%;height:clamp(300px,74vw,400px);margin:-2px 0 8px;perspective:900px}
+  .orbit-guide{position:absolute;border:1px dashed rgba(174,180,207,.14);border-radius:50%;pointer-events:none}
+  .core{position:absolute;left:50%;top:50%;width:66px;height:66px;transform:translate(-50%,-50%);border-radius:50%;z-index:100;display:grid;place-items:center;
+    background:radial-gradient(circle at 32% 26%, #fff 0%, #dfe4f6 9%, #9aa0c6 30%, #3a4068 60%, #0a0c18 100%);
+    box-shadow:0 0 46px rgba(198,145,163,.42), 0 0 90px rgba(158,173,144,.20), inset -8px -9px 18px rgba(0,0,0,.6), inset 6px 7px 12px rgba(255,255,255,.32);animation:corepulse 5.5s ease-in-out infinite}
+  @keyframes corepulse{0%,100%{box-shadow:0 0 46px rgba(198,145,163,.42),0 0 90px rgba(158,173,144,.20),inset -8px -9px 18px rgba(0,0,0,.6),inset 6px 7px 12px rgba(255,255,255,.32)}50%{box-shadow:0 0 60px rgba(198,145,163,.58),0 0 120px rgba(158,173,144,.30),inset -8px -9px 18px rgba(0,0,0,.6),inset 6px 7px 12px rgba(255,255,255,.32)}}
+  .core span{font-family:'Gowun Batang',serif;font-weight:700;font-size:26px;color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.75)}
+  .core .dlabel{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:8px;letter-spacing:.25em;color:var(--muted);white-space:nowrap}
+  .planet{position:absolute;will-change:transform,left,top}
+  .pl{position:relative;border-radius:50%;display:grid;place-items:center;
+    background:radial-gradient(circle at 34% 30%, rgba(255,255,255,.95), rgba(255,255,255,0) 44%), radial-gradient(circle at 50% 52%, var(--c) 0%, #060814 96%);
+    box-shadow:0 0 26px -2px var(--c), inset -6px -8px 15px rgba(0,0,0,.55), inset 4px 5px 9px rgba(255,255,255,.28)}
+  .pl span{font-family:'Gowun Batang',serif;font-weight:700;color:rgba(255,255,255,.94);text-shadow:0 1px 3px rgba(0,0,0,.7);user-select:none}
+  .dom-ring{position:absolute;inset:-7px;border-radius:50%;border:1.5px solid var(--c);opacity:.55;animation:spin 9s linear infinite}
+  .solar-cap{text-align:center;font-size:11px;color:var(--muted);letter-spacing:.04em;margin:2px 0 12px}
+  .solar-comment{max-width:560px;margin:0 auto 16px;text-align:center;font-family:'Gowun Batang',serif;font-size:14px;line-height:1.75;color:#cfd4ea;border:1px solid var(--glass-line);border-radius:14px;padding:15px 20px;background:rgba(158,173,144,.06)}
+  .solar-comment b{font-weight:700}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .lchip{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--chrome-2);border:1px solid var(--glass-line);border-radius:999px;padding:6px 13px;background:rgba(255,255,255,.03)}
+  .lchip i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 9px var(--c)}
+  .lchip b{color:#fff;font-family:'Gowun Batang',serif}
+  .lchip em{font-style:normal;color:var(--muted);font-size:10px}
+  footer{text-align:center;margin-top:60px;color:var(--muted)}
+  footer .fb{font-family:'Cinzel',serif;letter-spacing:.5em;font-size:14px;text-indent:.5em}
+  footer .ft{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;margin-top:10px;color:var(--chrome-3)}
+  .disc{font-size:10.5px;color:#4a4f6e;margin-top:22px;letter-spacing:.04em;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas><div class="nebula"></div><div class="grain"></div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">COSMIC DESTINY READING</div>
+    <h1 class="brand chrome">MAJUNG</h1>
+    <div class="brand-ko chrome">마&nbsp;중</div>
+    <p class="tagline">운명을 기다리지 않고,<br>마중 나가다</p>
+  </header>
+
+  <div class="orb-stage"><div class="orb"><div class="halo"></div><div class="ring"></div><div class="sphere"></div></div></div>
+
+  <section class="glass panel">
+    <h2 class="chrome">ENTER YOUR COORDINATES</h2>
+    <p class="sub">태어난 순간의 좌표를 입력하세요</p>
+    <div class="field"><label>이름</label>
+      <input id="name" type="text" placeholder="이름 또는 닉네임" maxlength="20" autocomplete="off"></div>
+    <div class="field"><label>생년월일 · 양력</label>
+      <div class="row"><input id="y" type="number" placeholder="1998" min="1920" max="2030"><select id="m"></select><select id="d"></select></div></div>
+    <div class="field"><label>태어난 시각</label>
+      <div class="seg" id="timeSeg" style="margin-bottom:12px"><button data-t="known" class="on">시간 입력</button><button data-t="unknown">시간 모름</button></div>
+      <div class="row time-fields" id="timeFields"><select id="h"></select><select id="mi"></select></div></div>
+    <div class="field"><label>성별</label>
+      <div class="seg" id="genderSeg"><button data-g="여" class="on">여 · LUNA</button><button data-g="남">남 · SOLIS</button></div></div>
+    <button class="cast" id="cast">READ MY STARS</button>
+    <p class="note">시간을 모르면 '시간 모름'을 선택하세요 (시주 제외 · 3주 분석) · 양력 기준</p>
+  </section>
+
+  <section id="result">
+    <div class="res-head">
+      <div class="who" id="who"></div>
+      <div class="ilgan iris" id="ilganTxt"></div>
+      <div class="zod" id="zodTxt"></div>
+    </div>
+    <div class="section-t chrome">FOUR PILLARS · 사주팔자</div>
+    <div class="pillars" id="pillars"></div>
+    <div class="luck" id="luck"></div>
+    <div class="section-t chrome">ELEMENTAL FIELD · 오행</div>
+    <div class="glass" style="padding:24px 22px" id="ohaeng"></div>
+    <div class="section-t chrome">MASTER'S READING · 대가의 풀이</div>
+    <div id="reportZone"></div>
+  </section>
+
+  <footer>
+    <div class="fb chrome">MAJUNG</div>
+    <div class="ft">go out to meet your fate.</div>
+    <p class="disc">본 리딩은 사주명리학의 원리를 바탕으로 한 해석으로, 자기 탐색과 영감을 위한 것입니다. 양력 기준으로 계산됩니다.</p>
+  </footer>
+</div>
+
+<script>
+/* ───────── starfield ───────── */
+(function(){const c=document.getElementById('stars'),x=c.getContext('2d');let w,h,stars,shoot=null;
+  function init(){w=c.width=innerWidth;h=c.height=innerHeight;stars=[...Array(Math.round(w*h/3600))].map(()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.3+.2,a:Math.random(),s:Math.random()*.02+.004,t:Math.random()>.9?(Math.random()>.5?'#7af7ff':'#c69bff'):'#ffffff'}));}
+  function loop(){x.clearRect(0,0,w,h);for(const st of stars){st.a+=st.s;const o=.35+Math.abs(Math.sin(st.a))*.65;x.globalAlpha=o;x.fillStyle=st.t;x.beginPath();x.arc(st.x,st.y,st.r,0,7);x.fill();}x.globalAlpha=1;
+    if(!shoot&&Math.random()<.004){shoot={x:Math.random()*w*.8,y:Math.random()*h*.4,len:0,v:14+Math.random()*8,life:1}}
+    if(shoot){const g=x.createLinearGradient(shoot.x,shoot.y,shoot.x-shoot.len,shoot.y-shoot.len*.4);g.addColorStop(0,'rgba(255,255,255,'+shoot.life+')');g.addColorStop(1,'transparent');x.strokeStyle=g;x.lineWidth=1.4;x.beginPath();x.moveTo(shoot.x,shoot.y);x.lineTo(shoot.x-shoot.len,shoot.y-shoot.len*.4);x.stroke();shoot.x+=shoot.v;shoot.y+=shoot.v*.4;shoot.len=Math.min(shoot.len+shoot.v,160);shoot.life-=.012;if(shoot.life<=0||shoot.x>w)shoot=null;}requestAnimationFrame(loop);}
+  init();loop();addEventListener('resize',init);})();
+
+/* ══════════ RULESET v1.1 — 명리 전문가 검수·큐레이션 단일 소스 ══════════ */
+const RULESET = {
+  version:"1.1-draft", curator:"명리 자문 검수 대상",
+  stemEl:['목','목','화','화','토','토','금','금','수','수'],
+  branchEl:['수','토','목','목','토','화','화','토','금','금','토','수'],
+  hidden:[[[8,0.3],[9,0.7]],[[9,0.1],[7,0.3],[5,0.6]],[[4,0.1],[2,0.3],[0,0.6]],[[0,0.3],[1,0.7]],[[1,0.1],[9,0.3],[4,0.6]],[[4,0.1],[6,0.3],[2,0.6]],[[2,0.1],[5,0.3],[3,0.6]],[[3,0.1],[1,0.3],[5,0.6]],[[4,0.1],[8,0.3],[6,0.6]],[[6,0.3],[7,0.7]],[[7,0.1],[3,0.3],[4,0.6]],[[4,0.1],[0,0.3],[8,0.6]]],
+  posWeight:{yearGan:0.7,yearJi:0.7,monthGan:1.0,monthJi:2.0,dayGan:1.2,dayJi:1.5,hourGan:0.8,hourJi:0.8},
+  seasonMult:{旺:1.4,相:1.2,休:1.0,囚:0.8,死:0.6},
+  gen:{목:'화',화:'토',토:'금',금:'수',수:'목'}, genBy:{화:'목',토:'화',금:'토',수:'금',목:'수'},
+  ctrl:{목:'토',화:'금',토:'수',금:'목',수:'화'}, ctrlBy:{토:'목',금:'화',수:'토',목:'금',화:'수'},
+  remedy:{
+    '목':{color:'초록·청록',dir:'동쪽',habit:'아침 산책, 식물 키우기, 새 배움 시작'},
+    '화':{color:'레드·코랄',dir:'남쪽',habit:'정오 햇볕 쬐기, 무대·발표, 사람 앞에 서기'},
+    '토':{color:'옐로우·베이지',dir:'중앙',habit:'규칙적 루틴, 약속 지키기, 흙·도자기 취미'},
+    '금':{color:'화이트·실버',dir:'서쪽',habit:'미니멀 정리, 금속 액세서리, 마무리 습관'},
+    '수':{color:'블랙·딥블루',dir:'북쪽',habit:'야간 사색, 수영·물 가까이, 독서와 명상'}
+  }
+};
+const STEMS=['갑','을','병','정','무','기','경','신','임','계'], STEMS_H=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const BR=['자','축','인','묘','진','사','오','미','신','유','술','해'], BR_H=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const ZODIAC=['쥐','소','호랑이','토끼','용','뱀','말','양','원숭이','닭','개','돼지'];
+const EL_VAR={'목':'--w-mok','화':'--w-hwa','토':'--w-to','금':'--w-geum','수':'--w-su'};
+const EL_EN={'목':'WOOD','화':'FIRE','토':'EARTH','금':'METAL','수':'WATER'};
+const ORDER=['목','화','토','금','수'];
+function jong(w){const x=w.charCodeAt(w.length-1);return (x>=0xAC00&&x<=0xD7A3)&&((x-0xAC00)%28)!==0;}
+function eul(w){return w+(jong(w)?'을':'를');}
+
+/* ───────── 사주 산출 ───────── */
+function jdn(y,m,d){const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;}
+const MGS={0:2,5:2,1:4,6:4,2:6,7:6,3:8,8:8,4:0,9:0}, HGS={0:0,5:0,1:2,6:2,2:4,7:4,3:6,8:6,4:8,9:8};
+function calcSaju(y,m,d,hh,mi,noHour){
+  let sy=y; if(m<2||(m===2&&d<4))sy=y-1;
+  const yGan=((sy-4)%10+10)%10,yJi=((sy-4)%12+12)%12;
+  const ord=[[2,4,2],[3,6,3],[4,5,4],[5,6,5],[6,6,6],[7,7,7],[8,8,8],[9,8,9],[10,8,10],[11,7,11],[12,7,0]];
+  let mJi=1; if(!(m===1||(m===2&&d<4))){for(const t of ord){if(m>t[0]||(m===t[0]&&d>=t[1]))mJi=t[2];}}
+  const mGan=(MGS[yGan]+((mJi-2+12)%12))%10;
+  const j=jdn(y,m,d), dGan=((j+9)%10+10)%10, dJi=((j+1)%12+12)%12;
+  const out={year:[yGan,yJi],month:[mGan,mJi],day:[dGan,dJi],zodiac:ZODIAC[yJi],noHour:!!noHour};
+  if(!noHour){let total=hh*60+mi,hJi=Math.floor(((total+60)%1440)/120);out.hour=[(HGS[dGan]+hJi)%10,hJi];}
+  return out;
+}
+function gz(p){return STEMS[p[0]]+BR[p[1]]+'('+STEMS_H[p[0]]+BR_H[p[1]]+')';}
+
+/* ───────── 세운 / 대운 ───────── */
+function yearGZidx(y){return [((y-4)%10+10)%10,((y-4)%12+12)%12];}
+const JEOL=[[1,6],[2,4],[3,6],[4,5],[5,6],[6,6],[7,7],[8,8],[9,8],[10,8],[11,7],[12,7]];
+function jeolDates(y){return JEOL.map(([m,d])=>new Date(y,m-1,d));}
+function daewoonDir(gender,yGan){const yang=yGan%2===0;return ((gender==='남'&&yang)||(gender==='여'&&!yang))?1:-1;}
+function startAge(y,m,d,dir){
+  const birth=new Date(y,m-1,d);
+  const cands=[...jeolDates(y-1),...jeolDates(y),...jeolDates(y+1)].sort((a,b)=>a-b);
+  let target = dir===1 ? cands.find(dt=>dt>birth) : [...cands].reverse().find(dt=>dt<birth);
+  return Math.max(1,Math.round(Math.abs(target-birth)/86400000/3));
+}
+function daewoonAt(mGan,mJi,dir,idx){let g=mGan,j=mJi;for(let i=0;i<=idx;i++){g=(g+dir+10)%10;j=(j+dir+12)%12;}return [g,j];}
+
+/* ───────── 오행 분석 (A+B) ───────── */
+function seasonState(monthEl){const R=RULESET,st={};st[monthEl]='旺';st[R.gen[monthEl]]='相';st[R.genBy[monthEl]]='休';st[R.ctrlBy[monthEl]]='囚';st[R.ctrl[monthEl]]='死';return st;}
+function analyzeElements(s){
+  const R=RULESET, monthEl=R.branchEl[s.month[1]], st=seasonState(monthEl), mult={};
+  ORDER.forEach(el=>mult[el]=R.seasonMult[st[el]]);
+  const cnt={목:0,화:0,토:0,금:0,수:0}, wt={목:0,화:0,토:0,금:0,수:0};
+  const addStem=(i,w)=>{const el=R.stemEl[i];cnt[el]++;wt[el]+=w*mult[el];};
+  const addBr=(i,w)=>{const el=R.branchEl[i];cnt[el]++;R.hidden[i].forEach(([si,r])=>{const e=R.stemEl[si];wt[e]+=w*r*mult[e];});};
+  const P=R.posWeight, seq=[['yearGan',s.year[0],'s'],['yearJi',s.year[1],'b'],['monthGan',s.month[0],'s'],['monthJi',s.month[1],'b'],['dayGan',s.day[0],'s'],['dayJi',s.day[1],'b']];
+  if(!s.noHour)seq.push(['hourGan',s.hour[0],'s'],['hourJi',s.hour[1],'b']);
+  seq.forEach(([p,i,t])=>{t==='s'?addStem(i,P[p]):addBr(i,P[p]);});
+  const aMin=Object.entries(cnt).sort((a,b)=>a[1]-b[1]||ORDER.indexOf(a[0])-ORDER.indexOf(b[0]))[0];
+  const bMin=Object.entries(wt).sort((a,b)=>a[1]-b[1])[0];
+  const bMax=Object.entries(wt).sort((a,b)=>b[1]-a[1])[0];
+  const wtTotal=Object.values(wt).reduce((a,b)=>a+b,0)||1;
+  return {cnt,wt,st,mult,aMin,bMin,bMax,monthEl,wtTotal};
+}
+
+/* ───────── 입력 UI ───────── */
+let gender='여', timeMode='known';
+document.querySelectorAll('#genderSeg button').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#genderSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');gender=b.dataset.g;};});
+document.querySelectorAll('#timeSeg button').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#timeSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');timeMode=b.dataset.t;document.getElementById('timeFields').classList.toggle('dim',timeMode==='unknown');};});
+(function(){const m=document.getElementById('m'),d=document.getElementById('d'),h=document.getElementById('h'),mi=document.getElementById('mi');
+  for(let i=1;i<=12;i++)m.add(new Option(i+'월',i));for(let i=1;i<=31;i++)d.add(new Option(i+'일',i));
+  for(let i=0;i<24;i++)h.add(new Option(String(i).padStart(2,'0')+'시',i));for(let i=0;i<60;i+=5)mi.add(new Option(String(i).padStart(2,'0')+'분',i));
+  m.value=1;d.value=1;h.value=12;mi.value=0;})();
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function pillarCard(labEn,p){const R=RULESET,gEl=R.stemEl[p[0]],jEl=R.branchEl[p[1]],gc=css(EL_VAR[gEl]),jc=css(EL_VAR[jEl]);
+  return `<div class="pillar"><div class="lab">${labEn}</div><div class="gan" style="color:${gc}">${STEMS[p[0]]}</div><div class="han">${STEMS_H[p[0]]} · ${gEl}</div><div class="ji" style="color:${jc}">${BR[p[1]]}</div><div class="han">${BR_H[p[1]]} · ${jEl}</div><div class="glowdot" style="background:radial-gradient(circle,${jc},transparent 70%)"></div></div>`;}
+function unknownCard(){return `<div class="pillar unknown"><div class="lab">HOUR · 미상</div><div class="gan">?</div><div class="han">시간 모름</div><div class="ji">?</div><div class="han">3주 분석</div></div>`;}
+
+/* ───────── 리포트: 프롬프트 빌드 ───────── */
+const SYS="당신은 30년 경력의 사주 대가이지만, 어렵게 말하지 않는 사람입니다. 마치 오래 알고 지낸 다정한 어른이 곁에서 손을 잡고 이야기해 주듯, 누구나 쉽게 이해할 수 있는 친근한 일상어로 풀어냅니다. 어려운 한자어나 전문 용어(예: 식상, 관성, 설기 등)는 가능한 한 쓰지 않고, 꼭 필요하면 쉬운 말로 바꿔 설명합니다. 점쟁이처럼 단정하거나 겁주지 않으며, 명리에 근거하되 따뜻한 위로와 응원이 함께 흐르게 합니다. 어조는 정중하면서도 포근한 ~합니다/~입니다체를 씁니다.";
+
+function buildUserPrompt(s,A,meta){
+  const R=RULESET, dEl=R.stemEl[s.day[0]];
+  const dist=ORDER.map(el=>`${el}(${EL_EN[el]}) ${A.cnt[el]}자리·기세 ${(A.wt[el]/A.wtTotal*100).toFixed(0)}%·계절상태 ${A.st[el]}`).join(', ');
+  const data=
+`[내담자] 이름/호칭: ${meta.name?meta.name+'님':'(이름 미입력 → "당신"으로 칭함)'}
+[사주원국] 양력 ${meta.y}.${meta.m}.${meta.d}${s.noHour?'':' '+meta.hh+':'+String(meta.mi).padStart(2,'0')} · ${gender==='남'?'남성':'여성'} · ${s.zodiac}띠
+연주 ${gz(s.year)} / 월주 ${gz(s.month)} / 일주 ${gz(s.day)} / ${s.noHour?'시주 미상(시간 모름 → 3주 분석)':'시주 '+gz(s.hour)}
+일간(日干): ${STEMS[s.day[0]]}${STEMS_H[s.day[0]]} (오행 ${dEl}), 월령 계절 ${A.monthEl}, 일간의 계절상태 ${A.st[dEl]}
+[오행 분포] ${dist}
+가장 강한 기운: ${A.bMax[0]}(${EL_EN[A.bMax[0]]})
+보충이 필요한(부족한) 오행: ${A.bMin[0]}(${EL_EN[A.bMin[0]]})
+[운의 흐름] 현재 ${meta.age}세, ${meta.curYear}년 세운 ${meta.sewoon}, 대운 ${meta.dir>0?'순행':'역행'}·약 ${meta.startAge}세 시작, 현재 대운 ${meta.curDae}`;
+
+  const remedy=R.remedy[A.bMin[0]];
+  return `${data}
+
+위 사주 데이터를 근거로 다음 6개 항목을 분석하라. 명리적 근거(일간의 강약, 오행의 생극, 운의 흐름)는 바탕에 깔되, 겉으로는 어려운 용어를 거의 쓰지 않고 친구에게 이야기하듯 쉬운 일상어로만 풀어쓴다. 한자어·전문어가 떠오르면 반드시 쉬운 우리말로 바꿔 쓴다.
+
+[분량 — 매우 중요] 각 항목은 반드시 최소 20줄 이상으로, 가능한 한 길고 상세하게 작성하라. 독자가 '이건 정말 나를 꿰뚫어 본 글'이라고 느끼며 한 문장 한 문장에 깊이 빠져들어, 천천히 음미할 시간을 갖도록 한다. 추상적인 단정 대신 구체적인 장면·감정·일상의 디테일을 풍부하게 묘사하고, ${meta.name?`'${meta.name}님'이라 이름을 부르며`:`'당신'이라 부르며`} 곁에서 말 거는 듯 따뜻하고 다정하게 쓴다. ${meta.name?`각 항목의 첫머리와 마음을 울리는 중요한 순간마다 '${meta.name}님'이라 호명해 친밀감을 주되, 매 문장마다 반복하지는 말 것(자연스럽게 '당신'과 섞어 쓴다).`:''} 위로와 통찰이 함께 흐르게 하라.
+
+[금지] 점수·가중치·계산방식·판정방법·'A/B' 같은 표현이나 분석 과정은 절대 드러내지 말 것. 또한 '이 앱', '마중(MAJUNG)', 서비스 이름 등 앱 자체에 대한 메타 언급도 절대 하지 말 것. 결과를 오직 자연스러운 통찰과 이야기로만 전한다.
+
+6번 항목(transformed_life)에는 보충이 필요한 오행 '${A.bMin[0]}'의 개운법(색상 ${remedy.color} / 방향 ${remedy.dir} / 습관 ${remedy.habit})을 구체적으로 녹이고, 그 기운이 채워졌을 때 한 달 뒤, 일 년 뒤, 몇 년 뒤 당신의 하루와 관계와 마음이 어떻게 달라지는지 생생한 장면으로 그려라.
+
+문단 구분은 \\n 으로 표기하고, 전체는 반드시 유효한 JSON 이어야 한다. 다른 설명·머리말·코드펜스 없이 오직 아래 JSON 객체 하나로만 답하라:
+{"summary_fortune":"","love_fortune":"","marriage_fortune":"","five_elements_status":"","deficient_element":"","transformed_life":""}`;
+}
+
+/* ───────── 리포트: API 호출 + 폴백 ───────── */
+async function fetchReport(s,A,meta){
+  const body={model:"claude-sonnet-4-20250514",max_tokens:8000,
+    system:SYS,messages:[{role:"user",content:buildUserPrompt(s,A,meta)}]};
+  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  if(!res.ok)throw new Error("api "+res.status);
+  const data=await res.json();
+  const text=(data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n");
+  const clean=text.replace(/```json|```/g,"").trim();
+  const m=clean.match(/\{[\s\S]*\}/); if(!m)throw new Error("no json");
+  return JSON.parse(m[0]);
+}
+function localReport(s,A,meta){
+  const R=RULESET, dEl=R.stemEl[s.day[0]], def=A.bMin[0], rem=R.remedy[def], strong=A.bMax[0];
+  const flow=meta.dir>0?'순행':'역행';
+  const T={
+    '목':{nature:'쑥쑥 자라는 나무',love:'한번 마음 주면 변치 않고 곁을 지키는',marry:'함께 자라며 미래를 그릴 수 있는',shadow:'제자리에 묶여 있을 때 드는 답답함'},
+    '화':{nature:'환하게 타오르는 불',love:'솔직하고 따뜻하게, 마음을 못 숨기고 다가가는',marry:'당신의 열기를 차분히 받아주는',shadow:'금세 뜨거워졌다 식는 감정의 오르내림'},
+    '토':{nature:'넓고 든든한 땅',love:'말보다 행동으로 묵묵히 곁을 지켜주는',marry:'당신의 든든함에 편히 기댈 수 있는',shadow:'너무 많이 떠안다 지치는 마음'},
+    '금':{nature:'잘 벼려진 단단한 금속',love:'신중하게 보다가도 한번 정하면 한결같은',marry:'당신의 깐깐한 기준을 존중해 주는',shadow:'자신에게까지 너무 엄격해지는 면'},
+    '수':{nature:'낮은 곳으로 깊이 흐르는 물',love:'천천히, 그러나 가장 깊은 곳까지 스며드는',marry:'당신의 깊이를 답답해하지 않고 헤아려주는',shadow:'속마음을 잘 안 드러내는 거리감'}
+  }[dEl];
+  const nm=(meta.name||'').trim();
+  const fields={
+    summary_fortune:
+`당신이 타고난 마음의 바탕은 '${T.nature}' 같아요. 사주 한가운데에 자리한 '나'를 뜻하는 기운이 ${dEl}${jong(dEl)?'이':''}라서, 속으로는 늘 ${dEl==='목'?'자라고 뻗어나가고 싶은 마음':dEl==='화'?'밝게 표현하고 나누고 싶은 마음':dEl==='토'?'든든하게 중심을 잡고 싶은 마음':dEl==='금'?'깔끔하게 매듭짓고 싶은 마음':'천천히 깊이 들여다보고 싶은 마음'}이 흐릅니다.
+가만히 멈춰 있을 때보다 무언가를 향해 움직일 때 더 나다워지고 기운이 나는 사람, 아마 스스로도 어렴풋이 느끼고 있었을 거예요.
+지금 당신은 인생의 큰 10년 흐름 가운데 한 구간을 지나고 있어요. 이 시기는 남들의 인정보다 '내 색깔'을 또렷이 세우라고 말해주는 때입니다.
+혹시 그동안 다른 사람 속도에 맞추느라 정작 내 리듬을 잃은 적은 없었나요. 누구에겐 빨라 보이고 누구에겐 느려 보여도, 당신에겐 당신만의 박자가 있어요. 올해는 그 박자를 되찾기 좋은 해입니다.
+너무 조급해하지 않아도 괜찮아요. 지금 흔들리는 것 같은 일들은 사실 더 단단해지려고 뿌리를 깊게 내리는 중일 때가 많거든요.
+다만 '${T.shadow}'만은 살짝 조심하세요. 당신이 자주 걸려 넘어지는 작은 돌부리 같은 거예요. 그걸 알아챈 순간 이미 반은 넘어선 거랍니다.
+운명은 가만히 기다린다고 오는 게 아니에요. 당신은 먼저 마중 나갈 때 가장 빛나는 사람입니다.`,
+    love_fortune:
+`사랑할 때 당신은 '${T.love}' 사람이에요. 겉으론 어떻게 보이든, 속마음은 늘 진심을 다하는 쪽이죠.
+${dEl}의 기운을 타고난 사람은 사랑에서도 자기 색이 분명해요. 그래서 잘 맞는 사람과는 누구보다 깊어지지만, 결이 다른 사람 앞에서는 금세 지치기도 합니다. 연애에서 비슷한 일이 자꾸 반복됐다면, 아마 여기에 이유가 있었을 거예요.
+머리로는 이것저것 따져봐도, 한번 마음이 가면 쉽게 거두지 못하는 다정한 사람. 그게 당신의 큰 매력이면서, 가끔은 스스로를 아프게 하는 부분이기도 해요.
+앞으로 다가올 인연은, 당신에게 부족한 ${def}(${EL_EN[def]})의 기운을 가진 사람일 때 신기하게 마음이 편해집니다. 내게 없는 걸 가진 사람, 내 빈자리를 자연스럽게 채워주는 사람이요.
+사랑이 잘 안 풀릴 때 '내가 부족해서 그런가' 하고 자신을 탓한 적 있나요. 그렇지 않아요. 당신이 부족한 게 아니라, 아직 결이 맞는 사람을 못 만났을 뿐이에요.
+앞으로 가장 중요한 건 '먼저 한 걸음'이에요. 재고 또 재며 상대가 다가오길 기다리는 사이, 인연이 조용히 지나가 버리기도 하거든요. 당신답게, 먼저 마중 나가 보세요.
+그리고 기억해요. 당신이 사랑받는 건 뭘 잘해서가 아니라, 그냥 당신이라서 이미 충분하다는 걸요.`,
+    marriage_fortune:
+`결혼이라는 인연을 들여다보면, 당신 곁에는 '${T.marry} 사람'이 좋은 짝으로 들어와요.
+사주에서 배우자는 그냥 같이 사는 사람이 아니라, 내 기운의 모자란 부분을 채워 균형을 맞춰주는 사람으로 봐요. 당신에게 부족한 ${def}(${EL_EN[def]})의 기운을 가진 사람이라면, 둘이 함께일 때 서로의 빈틈이 메워져 훨씬 단단해집니다.
+지금 당신 안에는 ${strong}(${EL_EN[strong]})의 기운이 강하게 자리해 있어요. 든든한 힘이지만, 가까운 사이에서는 가끔 '고집'이나 '내 방식'처럼 보일 수 있어요. 상대의 속도를 조금만 존중해 주면, 그 작은 배려가 인연을 오래 따뜻하게 지켜줍니다.
+결혼하기 좋은 때를 말하자면, ${def}의 기운이 차오르는 흐름 — ${rem.dir} 쪽과 인연이 닿거나 ${rem.color} 계열에 자꾸 마음이 가는 시기 — 에 결정을 내리면 한결 수월해요.
+혹시 결혼을 두고 마음이 급하거나, 반대로 자꾸 미뤄진다면 그것도 다 흐름 속 이유가 있어요. 남의 시계 말고 당신의 시계로 보면 됩니다. 늦은 인연은 없어요. 제때 오는 인연이 있을 뿐이에요.
+무엇보다, 좋은 결혼은 완벽한 사람을 만나는 게 아니라 서로의 모자란 점을 너그럽게 안아주는 두 사람이 만나는 일이에요. 당신은 이미 그 너그러움을 가진 사람입니다.`,
+    five_elements_status:
+`당신의 사주 안에서 다섯 기운은 이렇게 흐르고 있어요 — ${ORDER.map(el=>el+'('+EL_EN[el]+') '+A.cnt[el]).join(' · ')}.
+그중 가장 또렷하게 솟아 있는 건 ${strong}(${EL_EN[strong]}) 기운이에요. 태어난 계절의 힘까지 더해져서, 이 기운이 당신 삶의 색을 가장 진하게 칠하고 있습니다.
+${strong} 기운이 강하다는 건, ${strong==='목'?'자라고 나아가려는 의지':strong==='화'?'밝게 표현하고 나누려는 열정':strong==='토'?'품고 안정시키려는 따뜻함':strong==='금'?'정리하고 매듭짓는 단단함':'깊이 생각하고 유연하게 흐르는 지혜'} 같은 면을 남보다 많이 타고났다는 뜻이에요. 사람들이 당신에게서 가장 먼저 느끼는 인상도 아마 여기서 나올 거예요.
+강한 기운은 분명 당신의 무기예요. 하지만 한쪽으로 너무 쏠리면 그늘도 같이 깊어져요. '내가 왜 이렇게까지 하지' 싶었던 순간들은, 대개 이 기운이 너무 넘쳤을 때랍니다.
+그래서 사주는 가장 센 걸 자랑하기보다, 가장 약한 걸 살피라고 말해요. 다섯 기운이 고르게 흐를 때 강함이 폭주가 아니라 진짜 추진력이 되거든요.
+당신이 할 일은 강한 ${eul(strong)} 억누르는 게 아니라, 약한 쪽에 물길을 살짝 터주는 거예요. 그러면 타고난 힘이 더 예쁘게 빛납니다.`,
+    deficient_element:
+`당신의 사주에서 가장 손이 잘 닿지 않는, 그래서 마음 써서 채워가면 좋은 게 바로 ${def}(${EL_EN[def]}) 기운이에요.
+${A.cnt[def]>0?'아예 없는 건 아니지만 계절과 자리의 도움을 못 받아서, 있어도 제 목소리를 잘 못 내는':'사주에 거의 자리가 없어서, 의식하지 않으면 잘 채워지지 않는'} 상태랍니다. 이건 모자람이 아니라, 살면서 당신이 일부러 마중 나가면 좋은 '방향'이에요.
+${def} 기운이 부족한 사람은 ${def==='목'?'새로 시작하는 일 앞에서 머뭇거리거나, 자라는 느낌이 없어 답답해지기 쉬워요':def==='화'?'속에 있는 열정을 밖으로 꺼내 표현하는 게 서툴고, 자기 빛을 스스로 의심하기 쉬워요':def==='토'?'중심을 잡기 어려워 흔들리거나, 안정된 기반을 만드는 걸 힘들어하기 쉬워요':def==='금'?'마무리와 결정을 자꾸 미루거나, 정리가 안 돼 마음이 어수선해지기 쉬워요':'쉴 때 제대로 못 쉬고, 깊이 생각하거나 흐름에 몸을 맡기는 걸 어려워하기 쉬워요'}.
+혹시 떠오르는 장면이 있나요. 분명 잘 해내고 있는데도 어딘가 채워지지 않던 그 허전함 — 어쩌면 그게 이 ${def}의 빈자리였을지도 몰라요.
+다행인 건, 비어 있다는 건 채울 수 있다는 뜻이기도 하다는 거예요. 타고난 강함은 바꾸기 어렵지만, 부족한 기운은 색과 방향과 작은 습관으로 얼마든지 끌어올 수 있어요.
+이 ${eul(def)} 채우는 일이 당신 운 전체의 균형을 잡아줘요. 가장 약한 한 곳을 돌보는 순간, 나머지 기운들도 제자리를 찾아 흐르기 시작하거든요.`,
+    transformed_life:
+`그럼 이 ${def}(${EL_EN[def]}) 기운이 당신 삶에 차오르면 뭐가 달라질까요. 어렵지 않아요. 일상의 아주 작은 것부터 시작하면 됩니다.
+먼저 색이에요. ${eul(rem.color)} 가까이 두세요. 옷 한 점, 자주 쓰는 물건, 눈이 자주 머무는 자리에 이 색을 들이는 것만으로 기운이 슬며시 스며들어요. 방향은 ${rem.dir} 쪽이 좋아요. 책상이나 잠자리, 중요한 결정을 내리는 자리를 이쪽에 두면 좋습니다. 그리고 습관은 — ${rem.habit}. 거창하지 않아도 돼요. 하루 한 조각이면 충분해요.
+한 달쯤 지나면 작은 변화가 먼저 느껴질 거예요. 아침이 조금 가벼워지고, 미루던 일에 손이 가고, 까닭 모를 답답함이 옅어집니다. ${def==='수'?'들끓던 마음이 차분해지면서 생각이 깊어지고':'머뭇거리던 자리에서 한 걸음 내딛는 용기가 생기고'}, 너무 강하던 ${strong} 기운도 더는 넘치지 않고 제 길로 흘러요.
+일 년쯤 지나면 주변에서 먼저 알아챕니다. "요즘 좀 달라졌다", "편안해 보인다"는 말을 듣게 될 거예요. 결정은 가벼워지고, 사람들과의 사이는 부드러워지고, 예전엔 당신을 흔들던 일들이 더는 당신을 무너뜨리지 못해요.
+몇 해가 더 지나면, 당신은 어느새 그리던 모습에 가까워져 있을 거예요. 기회 앞에서 더는 망설이지 않고 먼저 손 내미는 사람, 운이 오길 기다리는 게 아니라 운을 마중 나가는 사람으로요.
+그리고 제가 당신에게 가장 건네고 싶은 한마디예요 — 운명을 기다리지 말고, 먼저 마중 나가요. 당신은 충분히 그럴 수 있는 사람이니까요.`
+  };
+  if(nm){Object.keys(fields).forEach(k=>{fields[k]=nm+'님, '+fields[k];});}
+  return fields;
+}
+const RMETA=[
+  ['01','종합운','LIFE FLOW','summary_fortune'],
+  ['02','연애운','LOVE','love_fortune'],
+  ['03','결혼운','UNION','marriage_fortune'],
+  ['04','사주오행의 기운','ELEMENTS','five_elements_status'],
+  ['05','부족한 오행','THE VOID','deficient_element'],
+  ['06','오행이 채워지면 변화될 삶','TRANSMUTATION','transformed_life']
+];
+function renderReport(rep){
+  const cards=RMETA.map(([n,ko,en,key],i)=>{
+    const paras=String(rep[key]||'').replace(/\\n/g,'\n').split(/\n+/).map(t=>t.trim()).filter(Boolean);
+    const body=paras.map(t=>`<span class="para">${t}</span>`).join('');
+    return `<div class="rcard" style="animation-delay:${i*.08}s"><div class="rnum">${n}</div><h3>${ko}<span class="en">${en}</span></h3><p>${body}</p></div>`;
+  }).join('');
+  document.getElementById('reportZone').innerHTML=`<div class="report">${cards}</div>`;
+}
+
+/* ───────── 오행 행성계 (3D) ───────── */
+let solarAnim=null;
+function solarComment(A){
+  const total=A.wtTotal||1, top=A.bMax[0], bot=A.bMin[0];
+  const maxP=A.wt[top]/total*100, minP=A.wt[bot]/total*100, spread=maxP-minP;
+  const T=`<b style="color:${css(EL_VAR[top])}">${top}(${EL_EN[top]})</b>`;
+  const B=`<b style="color:${css(EL_VAR[bot])}">${bot}(${EL_EN[bot]})</b>`;
+  let txt;
+  if(maxP>=40) txt=`${T} 기운이 별자리를 강하게 끌고 가는, 색이 또렷한 사주입니다. 반대로 ${B} 기운은 가장 옅으니, 이 기운을 채울 때 쏠림이 풀리고 흐름이 한결 부드러워집니다.`;
+  else if(spread<=12) txt=`다섯 기운이 비교적 고르게 흐르는, 균형 잡힌 별자리입니다. ${T} 기운이 살짝 앞장서고 ${B} 기운이 가장 옅지만 큰 치우침은 없습니다.`;
+  else txt=`전체적으로 ${T} 기운의 색을 띠고 흐르며, ${B} 기운이 가장 옅습니다. 강함은 무기로 쓰고 옅은 곳을 채우면 비로소 균형이 살아납니다.`;
+  if(A.cnt[bot]===0) txt+=` 특히 ${B} 기운은 자리가 비어 있어, 의식적으로 마중 나가야 할 방향입니다.`;
+  return txt;
+}
+function renderSolar(A,s){
+  const dEl=RULESET.stemEl[s.day[0]], total=A.wtTotal||1;
+  const els=ORDER.map(el=>({el,color:css(EL_VAR[el]),pct:A.wt[el]/total*100,cnt:A.cnt[el]}));
+  const maxPct=Math.max(...els.map(e=>e.pct))||1;
+  const strong=els.slice().sort((a,b)=>b.pct-a.pct)[0].el;
+  const box=document.getElementById('ohaeng');
+  box.innerHTML=`<div class="solar"><div class="orbits"></div><div class="core"><span>${STEMS_H[s.day[0]]}</span><div class="dlabel">日干 · ${EL_EN[dEl]}</div></div><div class="planets"></div></div>
+    <p class="solar-cap">큰 행성일수록 강한 기운 · 중심은 당신의 일간(日干)</p>
+    <p class="solar-comment">${solarComment(A)}</p>
+    <div class="legend">${els.map(e=>`<span class="lchip" style="--c:${e.color}"><i></i>${e.el} <b>${e.pct.toFixed(0)}%</b><em>${EL_EN[e.el]}·${e.cnt}자리</em></span>`).join('')}</div>`;
+  const solar=box.querySelector('.solar'), orbits=box.querySelector('.orbits'), planets=box.querySelector('.planets');
+  const RF=[0.40,0.55,0.70,0.85,1.0], SP=[0.50,0.40,0.32,0.26,0.21];
+  const nodes=els.map((e,i)=>{
+    const size=24+(e.pct/maxPct)*50;
+    const o=document.createElement('div');o.className='orbit-guide';orbits.appendChild(o);
+    const p=document.createElement('div');p.className='planet';
+    p.innerHTML=`<div class="pl" style="--c:${e.color};width:${size}px;height:${size}px">${e.el===strong?'<div class="dom-ring"></div>':''}<span style="font-size:${(size*0.42).toFixed(0)}px">${e.el}</span></div>`;
+    planets.appendChild(p);
+    return {e,p,o,rf:RF[i],sp:SP[i],ph:i*1.32,size};
+  });
+  if(solarAnim)cancelAnimationFrame(solarAnim);
+  function frame(now){
+    const W=solar.clientWidth,H=solar.clientHeight,cx=W/2,cy=H/2;
+    const maxRx=Math.max(60,Math.min(W/2-50,(H/2-44)/0.34));
+    const t=now/1000;
+    nodes.forEach(({e,p,o,rf,sp,ph})=>{
+      const rx=maxRx*rf, ry=rx*0.34;
+      o.style.cssText=`position:absolute;border:1px dashed rgba(174,180,207,.13);border-radius:50%;pointer-events:none;width:${rx*2}px;height:${ry*2}px;left:${cx-rx}px;top:${cy-ry}px`;
+      const ang=ph+t*sp, x=cx+rx*Math.cos(ang), y=cy+ry*Math.sin(ang), depth=(Math.sin(ang)+1)/2, sc=0.70+0.36*depth;
+      p.style.left=x+'px';p.style.top=y+'px';p.style.transform=`translate(-50%,-50%) scale(${sc.toFixed(3)})`;
+      p.style.zIndex=Math.round(depth*190);p.style.opacity=(0.5+0.5*depth).toFixed(2);
+      p.firstChild.style.filter=`brightness(${(0.78+0.5*depth).toFixed(2)})`;
+    });
+    solarAnim=requestAnimationFrame(frame);
+  }
+  solarAnim=requestAnimationFrame(frame);
+}
+
+/* ───────── 메인 ───────── */
+document.getElementById('cast').onclick=async()=>{
+  const btn=document.getElementById('cast');
+  const name=(document.getElementById('name').value||'').trim();
+  const y=+document.getElementById('y').value, m=+document.getElementById('m').value, d=+document.getElementById('d').value;
+  const hh=+document.getElementById('h').value, mi=+document.getElementById('mi').value;
+  if(!y||y<1920||y>2030){alert('생년(1920~2030)을 입력해 주세요.');return;}
+  const noHour=(timeMode==='unknown');
+  const s=calcSaju(y,m,d,hh,mi,noHour), A=analyzeElements(s), R=RULESET;
+
+  // 세운/대운 메타
+  const curYear=2026, age=curYear-y;
+  const sg=yearGZidx(curYear), sewoon=STEMS[sg[0]]+BR[sg[1]];
+  const dir=daewoonDir(gender,s.year[0]), sAge=startAge(y,m,d,dir);
+  const dIdx=age<sAge?0:Math.floor((age-sAge)/10);
+  const dp=daewoonAt(s.month[0],s.month[1],dir,dIdx);
+  const curDae=(age<sAge?'초년운(대운 전)':STEMS[dp[0]]+BR[dp[1]]+'('+STEMS_H[dp[0]]+BR_H[dp[1]]+') 대운');
+  const meta={name,y,m,d,hh,mi,age,curYear,sewoon,dir,startAge:sAge,curDae};
+
+  // 헤더 + 기둥
+  document.getElementById('who').textContent=`${name?name+'님 · ':''}${y}.${String(m).padStart(2,'0')}.${String(d).padStart(2,'0')} · ${gender==='여'?'LUNA':'SOLIS'}${noHour?' · 시간 미상':''}`;
+  const dEl=R.stemEl[s.day[0]];
+  document.getElementById('ilganTxt').innerHTML=`日干 · ${STEMS[s.day[0]]}${STEMS_H[s.day[0]]} <span style="font-size:.6em;color:var(--muted)">${EL_EN[dEl]}</span>`;
+  document.getElementById('zodTxt').textContent=`${s.zodiac}띠 · ${EL_EN[dEl]} SOUL`;
+  document.getElementById('pillars').innerHTML=(s.noHour?unknownCard():pillarCard('HOUR',s.hour))+pillarCard('DAY',s.day)+pillarCard('MONTH',s.month)+pillarCard('YEAR',s.year);
+  document.getElementById('luck').innerHTML=`<span>현재 <b>${age}세</b></span><span>${curYear} 세운 <b>${sewoon}</b></span><span>대운 <b>${dir>0?'순행':'역행'}·${sAge}세~</b></span><span>현 대운 <b>${curDae.replace(' 대운','')}</b></span>`;
+
+  // 오행 행성계
+  renderSolar(A,s);
+
+  const r=document.getElementById('result');r.classList.add('show');
+  setTimeout(()=>{document.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%');r.scrollIntoView({behavior:'smooth',block:'start'});},120);
+
+  // 대가의 풀이 (AI → 폴백)
+  const rz=document.getElementById('reportZone');
+  rz.innerHTML=`<div class="glass loading"><div class="spinner"></div><div class="lt">별의 문장을 옮겨 적는 중…</div></div>`;
+  btn.disabled=true; btn.textContent='READING…';
+  try{
+    const rep=await fetchReport(s,A,meta);
+    renderReport(rep);
+  }catch(e){
+    renderReport(localReport(s,A,meta));
+  }finally{
+    btn.disabled=false; btn.textContent='READ MY STARS';
+  }
+};
+</script>
+</body>
+</html>
