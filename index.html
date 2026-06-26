@@ -1285,7 +1285,39 @@ function renderFinal(s,A,voc){
     `<button class="cta2" type="button" onclick="shareResult()" style="flex:1;margin-top:0;cursor:pointer">↑ 오행 결과 공유하기</button>`+
     `</div></div>`;
 }
-function toggleAcc(el){el.classList.toggle('open');}
+function toggleAcc(el){
+  var opening=!el.classList.contains('open');
+  el.classList.toggle('open');
+  if(opening){
+    var inner=el.querySelector('.acc-body-inner');
+    if(inner && !inner.dataset.typed){ setTimeout(function(){ typeReveal(inner); },120); }
+  }
+}
+/* 펼칠 때 그 섹션 본문이 '쓰여지듯' 타이핑으로 드러남 — 태그는 그대로 두고 텍스트노드만 순차 노출(재포맷 점프 없음) */
+function typeReveal(container){
+  if(!container || container.dataset.typed) return;
+  container.dataset.typed='1';
+  if(!document.getElementById('mjTypeKf')){
+    var st=document.createElement('style'); st.id='mjTypeKf';
+    st.textContent='@keyframes mjCaret{0%,100%{opacity:1}50%{opacity:0}} .mj-caret{color:#E3C98C;animation:mjCaret 1s step-end infinite;font-weight:400;margin-left:1px}';
+    document.head.appendChild(st);
+  }
+  var walker=document.createTreeWalker(container,NodeFilter.SHOW_TEXT,null);
+  var nodes=[], n;
+  while((n=walker.nextNode())){ if(n.nodeValue && n.nodeValue.replace(/\s/g,'')!=='') nodes.push({node:n,full:n.nodeValue}); }
+  if(!nodes.length) return;
+  nodes.forEach(function(o){ o.node.nodeValue=''; });
+  var caret=document.createElement('span'); caret.className='mj-caret'; caret.textContent='▍';
+  container.appendChild(caret);
+  var ni=0, ci=0, STEP=2, SPEED=16;
+  var timer=setInterval(function(){
+    if(ni>=nodes.length){ clearInterval(timer); if(caret.parentNode) caret.parentNode.removeChild(caret); return; }
+    var o=nodes[ni];
+    ci+=STEP;
+    o.node.nodeValue=o.full.slice(0,ci);
+    if(ci>=o.full.length){ o.node.nodeValue=o.full; ni++; ci=0; }
+  },SPEED);
+}
 function charmTipHtml(s,A,voc){
   const F=chartFrame(s,A), def=F.def, c=MCOL[def], rem=RULESET.remedy[def], munyang=(CHARM[def]||{}).name||'맞춤 문양';
   return `<div class="charm-tip" style="--tc:${c}"><span class="tip-h">왜 블랙 오닉스인가요?</span>`+
@@ -1372,19 +1404,11 @@ document.getElementById('cast').onclick=async()=>{
   try{ renderReport(localReport(s,A,meta),tip,ctaText); }
   catch(e2){ rz.innerHTML=`<div class="glass" style="padding:26px;line-height:1.8;text-align:center">풀이를 불러오는 중 문제가 생겼어요.<br>잠시 후 다시 시도해 주세요.<br><span style="color:var(--muted);font-size:12px">${(e2&&e2.message)||e2}</span></div>`; }
   btn.disabled=true; btn.textContent='더 깊은 풀이 불러오는 중…';
-  window.__streamingReport=true;
-  let _streamEl=null;
-  fetchReport(s,A,meta,(partial)=>{
-    // 스트리밍 중엔 마크다운 재파싱 없이 가벼운 텍스트만 갱신 (길어도 안 버벅이게) — '쓰는 중' 연출
-    if(!_streamEl){
-      rz.innerHTML='<style>@keyframes mjPulse{0%,100%{opacity:.3}50%{opacity:1}}@keyframes mjCaret{0%,100%{opacity:1}50%{opacity:0}}.mj-caret{color:#E3C98C;animation:mjCaret 1s step-end infinite}</style>'
-        +'<div class="glass reading-doc"><div style="font-size:12.5px;letter-spacing:.04em;color:var(--muted,#9a8f7a);margin:0 0 14px;display:flex;align-items:center;gap:7px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#E3C98C;animation:mjPulse 1s ease-in-out infinite"></span>✍️ '+voc+'의 풀이를 정성껏 적고 있어요…</div><div class="stream-live" style="white-space:pre-wrap;line-height:1.9"></div></div>';
-      _streamEl=rz.querySelector('.stream-live');
-    }
-    if(_streamEl){
-      _streamEl.innerHTML=liteMd(partial)+'<span class="mj-caret">▍</span>';
-    }
-  })
+  // A안 흐름: 화면엔 구조(결정형 표·저울 + 접힌 '자세히 풀어보기' 카드)가 즉시 보이고(위 localReport),
+  //   AI 풀이는 백그라운드로 받아 무음 교체한다. 카드를 펼칠 때 그 섹션만 타이핑으로 드러난다(typeReveal).
+  //   → 평문이 떴다가 마크다운으로 재포맷되는 '흐름 끊김'이 사라진다.
+  window.__streamingReport=true; // AI 도착 전 nav 재빌드 억제
+  fetchReport(s,A,meta)
     .then(rep=>{ window.__streamingReport=false; try{ renderReport(rep,tip,ctaText); }catch(_){} })
     .catch(()=>{ window.__streamingReport=false; })
     .finally(()=>{ btn.disabled=false; btn.textContent='오행 리포트 보기'; });
