@@ -1489,27 +1489,27 @@ function buildShareHtml(s,A,voc,meta){
       '<div style="width:100%;display:flex;align-items:flex-start;justify-content:space-between">'+logoHtml+'<div style="text-align:right"><div style="font-family:'+FH+';font-weight:800;font-size:28px;color:#C9A86A;line-height:1">마중</div><div style="font-size:12px;letter-spacing:7px;color:rgba(239,233,219,0.36);margin-top:6px">MAJUNG</div></div></div>'+
       '<div style="position:relative;width:936px;margin:18px auto 0;padding:118px 60px 0;box-sizing:border-box;border:2px solid '+c+'88;border-bottom:none;border-radius:468px 468px 0 0;background:radial-gradient(ellipse 64% 52% at 50% 64%,'+c+'33,transparent 72%);display:flex;flex-direction:column;align-items:center;box-shadow:0 0 60px rgba(227,201,140,0.08),inset 0 0 80px rgba(227,201,140,0.05)">'+
         '<div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#0E1520 58%,transparent 74%);padding:6px 16px">'+crest+'</div>'+
-        '<div style="font-size:23px;letter-spacing:9px;color:rgba(227,201,140,0.8);padding-left:9px">내 중심 기운</div>'+
-        '<div style="font-family:'+FH+';font-weight:800;font-size:74px;letter-spacing:1px;line-height:1.05;margin-top:8px;color:'+c+';text-shadow:0 2px 24px rgba(0,0,0,0.5)">'+TYPE_NM[dEl]+'</div>'+
-        '<div style="font-family:'+FH+';font-size:29px;color:rgba(239,233,219,0.85);text-align:center;word-break:keep-all;line-height:1.45;max-width:720px;margin-top:12px">&ldquo;'+TYPE_TAG[dEl]+'&rdquo;</div>'+
+        '<div style="width:100%;text-align:center;white-space:nowrap;font-size:23px;letter-spacing:9px;color:rgba(227,201,140,0.8)">내 중심 기운</div>'+
+        '<div style="width:100%;text-align:center;white-space:nowrap;font-family:'+FH+';font-weight:800;font-size:74px;letter-spacing:1px;line-height:1.05;margin-top:8px;color:'+c+';text-shadow:0 2px 24px rgba(0,0,0,0.5)">'+TYPE_NM[dEl]+'</div>'+
+        '<div style="width:100%;font-family:'+FH+';font-size:29px;color:rgba(239,233,219,0.85);text-align:center;word-break:keep-all;line-height:1.45;max-width:720px;margin:12px auto 0">&ldquo;'+TYPE_TAG[dEl]+'&rdquo;</div>'+
         charImg+
       '</div>'+
       '<div style="width:560px;height:2px;background:linear-gradient(to right,transparent,rgba(227,201,140,0.6),transparent)"></div>'+
       '<div style="width:100%;margin-top:30px;display:flex;flex-direction:column;align-items:center">'+
-        '<div style="font-size:22px;letter-spacing:7px;color:rgba(227,201,140,0.85);padding-left:7px">나는 이런 사람이에요</div>'+
+        '<div style="width:100%;text-align:center;white-space:nowrap;font-size:22px;letter-spacing:7px;color:rgba(227,201,140,0.85)">나는 이런 사람이에요</div>'+
         '<div style="width:100%;margin-top:18px">'+rows(SELF4[dEl],c)+'</div>'+
       '</div>'+
       '<div style="display:flex;align-items:center;gap:16px;margin-top:26px"><span style="width:80px;height:1px;background:linear-gradient(to right,transparent,rgba(227,201,140,0.55),transparent)"></span><span style="color:rgba(227,201,140,0.7);font-size:18px">✦</span><span style="width:80px;height:1px;background:linear-gradient(to left,transparent,rgba(227,201,140,0.55),transparent)"></span></div>'+
       '<div style="width:100%;margin-top:26px;display:flex;flex-direction:column;align-items:center">'+
-        '<div style="font-size:22px;letter-spacing:7px;color:rgba(227,201,140,0.85);padding-left:7px">내게 필요한 기운</div>'+
-        '<div style="font-family:'+FH+';font-weight:800;font-size:44px;margin-top:10px;color:'+cd+'">'+TYPE_NM[def]+'</div>'+
-        '<div style="font-size:25px;color:rgba(239,233,219,0.78);margin-top:8px;text-align:center;word-break:keep-all;line-height:1.4">'+NEED_LINE[def]+'</div>'+
-        '<div style="margin-top:20px;font-size:20px;letter-spacing:5px;color:rgba(227,201,140,0.68);padding-left:5px">이런 사람이 곁에 있으면 좋아요</div>'+
+        '<div style="width:100%;text-align:center;white-space:nowrap;font-size:22px;letter-spacing:7px;color:rgba(227,201,140,0.85)">내게 필요한 기운</div>'+
+        '<div style="width:100%;text-align:center;white-space:nowrap;font-family:'+FH+';font-weight:800;font-size:44px;margin-top:10px;color:'+cd+'">'+TYPE_NM[def]+'</div>'+
+        '<div style="width:100%;font-size:25px;color:rgba(239,233,219,0.78);margin-top:8px;text-align:center;word-break:keep-all;line-height:1.4">'+NEED_LINE[def]+'</div>'+
+        '<div style="width:100%;text-align:center;white-space:nowrap;margin-top:20px;font-size:20px;letter-spacing:5px;color:rgba(227,201,140,0.68)">이런 사람이 곁에 있으면 좋아요</div>'+
         '<div style="width:100%;margin-top:14px">'+rows(COMP4[def],cd)+'</div>'+
       '</div>'+
       '<div style="margin-top:auto;width:100%;display:flex;flex-direction:column;align-items:center;padding-top:20px">'+
         '<div style="display:inline-flex;align-items:center;gap:16px;padding:18px 38px;border-radius:999px;border:1px solid rgba(227,201,140,0.5);background:rgba(255,255,255,0.06)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span style="font-family:'+FH+';font-weight:800;font-size:36px;letter-spacing:3px;color:#EFE9DB">마중 사주</span></div>'+
-        '<div style="font-size:19px;letter-spacing:3px;color:rgba(239,233,219,0.4);margin-top:13px">지금 검색하고 나의 기운을 마중하세요</div>'+
+        '<div style="width:100%;text-align:center;font-size:19px;letter-spacing:3px;color:rgba(239,233,219,0.4);margin-top:13px">지금 검색하고 나의 기운을 마중하세요</div>'+
       '</div>'+
     '</div>'+
   '</div>';
@@ -1548,7 +1548,7 @@ async function _renderShare(){
     await Promise.all(imgs.map(function(im){ return im.decode?im.decode().catch(function(){}):Promise.resolve(); }));
     await new Promise(r=>setTimeout(r,200));
     // 콜드 캡처 시 raster <img>(로고·캐릭터)가 누락되는 문제 방지: 첫 호출은 워밍 렌더 후 본 렌더
-    if(!window.__shareWarmed){ try{ await window.htmlToImage.toPng(wrap.firstElementChild,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:1,backgroundColor:'#0E1520',style:{transform:'none',margin:'0'}}); }catch(_){ } await new Promise(function(r){setTimeout(r,120);}); window.__shareWarmed=true; }
+    try{ await window.htmlToImage.toPng(wrap.firstElementChild,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:1,backgroundColor:'#0E1520',style:{transform:'none',margin:'0'}}); }catch(_){ } await new Promise(function(r){setTimeout(r,160);});
     url=await window.htmlToImage.toPng(wrap.firstElementChild,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:2,cacheBust:true,backgroundColor:'#0E1520',style:{transform:'none',margin:'0'}});
   }
   finally{ document.body.removeChild(wrap); }
@@ -1558,18 +1558,24 @@ async function saveResult(){
   try{
     const url=await _renderShare();
     const fname='WBL마중_'+((window.__SAJU&&window.__SAJU.voc||'result').replace('님','')||'result')+'.png';
-    const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent||'');
-    if(isMobile){
+    const ua=navigator.userAgent||'';
+    const isIOS=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    if(isIOS){
+      // 아이폰: 웹은 사진 앨범에 직접 못 써서, 공유 시트의 '이미지 저장'으로 앨범에 저장
       try{
         const blob=await (await fetch(url)).blob();
         const file=new File([blob],fname,{type:'image/png'});
         if(navigator.canShare && navigator.canShare({files:[file]})){
           await navigator.share({files:[file],title:'마중 · 오행 리포트',text:'나의 오행 리포트 — WBL 마중'});
-          return; // 공유 시트에서 '사진에 저장' 선택 시 카메라 사진첩에 저장돼요
+          return;
         }
       }catch(e){ if(e&&e.name==='AbortError') return; }
     }
-    const a=document.createElement('a'); a.href=url; a.download=fname; document.body.appendChild(a); a.click(); a.remove();
+    // 안드로이드·기타: 시트 없이 바로 다운로드(갤러리/다운로드 폴더)
+    let href=url;
+    try{ const blob=await (await fetch(url)).blob(); href=URL.createObjectURL(blob); }catch(_){}
+    const a=document.createElement('a'); a.href=href; a.download=fname; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
+    if(href!==url) setTimeout(function(){ try{URL.revokeObjectURL(href);}catch(_){ } }, 5000);
   }
   catch(e){ alert('이미지 저장에 실패했어요. 잠시 후 다시 시도해 주세요.'); }
 }
