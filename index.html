@@ -1442,6 +1442,7 @@ document.getElementById('cast').onclick=async()=>{
   const r=document.getElementById('result');
   const _reveal=()=>{ r.classList.add('show'); var _se=document.getElementById('screenEnter'); if(_se)_se.style.display='none'; window.scrollTo({top:0}); setTimeout(()=>{document.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%');r.scrollIntoView({behavior:'smooth',block:'start'});},120); };
   runSplash(voc, _reveal);
+  setTimeout(function(){ try{ if(window.__SAJU) _renderShare().catch(function(){}); }catch(e){} }, 2000);
 
   // 대가의 풀이 — 폴백을 먼저 그려 항상 보이게 하고, AI가 응답하면 더 깊은 풀이로 교체
   const rz=document.getElementById('reportZone');
@@ -1548,7 +1549,7 @@ async function _renderShare(){
     await Promise.all(imgs.map(function(im){ return im.decode?im.decode().catch(function(){}):Promise.resolve(); }));
     await new Promise(r=>setTimeout(r,200));
     // 콜드 캡처 시 raster <img>(로고·캐릭터)가 누락되는 문제 방지: 첫 호출은 워밍 렌더 후 본 렌더
-    try{ await window.htmlToImage.toPng(wrap.firstElementChild,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:1,backgroundColor:'#0E1520',style:{transform:'none',margin:'0'}}); }catch(_){ } await new Promise(function(r){setTimeout(r,160);});
+    for(var _w=0;_w<2;_w++){ try{ await window.htmlToImage.toPng(wrap.firstElementChild,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:1,backgroundColor:'#0E1520',style:{transform:'none',margin:'0'}}); }catch(_){ } await new Promise(function(r){setTimeout(r,180);}); }
     url=await window.htmlToImage.toPng(wrap.firstElementChild,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:2,cacheBust:true,backgroundColor:'#0E1520',style:{transform:'none',margin:'0'}});
   }
   finally{ document.body.removeChild(wrap); }
