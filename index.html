@@ -1471,6 +1471,9 @@ function buildShareHtml(s,A,voc,meta){
   var F=chartFrame(s,A), dEl=F.dEl, def=F.def, c=MCOL[dEl], cd=MCOL[def];
   var LOGO=(document.querySelector('.logo-mark')||{}).src||'';
   var FH="'Nanum Myeongjo',serif";
+  var HANJA={'목':'木','화':'火','토':'土','금':'金','수':'水'};
+  var MCB={'목':'#A6C089','화':'#E8898F','토':'#E2A878','금':'#E6CF8E','수':'#9FC6DB'};
+  var EMO={'목':'🌱','화':'🔥','토':'⛰️','금':'💎','수':'🌊'};
   var TYPE_NM={'목':'새싹 성장형','화':'태양 온기형','토':'대지 포용형','금':'기준 확실형','수':'이슬비 지혜형'};
   var TYPE_TAG={'목':'여백을 푸르게 채우는 싱그러운 새싹','화':'세상을 환히 밝히는 찬란한 태양','토':'모든 방황을 다정하게 품어주는 넓은 대지','금':'흔들려도 제 기준만은 또렷하게 빛나는 사람','수':'메마른 마음에 촉촉이 스며드는 새벽 이슬비'};
   var SELF4={'목':['새로운 걸 시작할 때 가장 살아있어요','한번 마음먹으면 끝까지 가요','멈춰 있는 걸 못 견뎌요','솔직해서 뒤끝이 없어요'],'화':['내가 있으면 자리가 환해져요','좋고 싫음이 얼굴에 다 보여요','한번 빠지면 누구보다 뜨거워요','표현을 못 하면 답답해요'],'토':['곁에 있으면 마음이 놓인대요','한번 맡으면 끝까지 책임져요','화려함보다 진심이 좋아요','친해질수록 더 편한 사람이에요'],'금':['아닌 건 아니라고 솔직히 말해요','내 기준에 안 맞으면 잘 안 흔들려요','한번 한 약속은 꼭 지켜요','어설픈 마무리를 못 견뎌요'],'수':['분위기와 사람 속을 빨리 읽어요','혼자만의 시간이 꼭 필요해요','깊은 대화를 좋아해요','친해질수록 더 편한 사람이에요']};
@@ -1479,38 +1482,58 @@ function buildShareHtml(s,A,voc,meta){
   var sd=7; (voc+def+dEl).split('').forEach(function(ch){sd=(sd*31+ch.charCodeAt(0))%99991;});
   function rnd(){ sd=(sd*1103515245+12345)%2147483648; return sd/2147483648; }
   var stars=''; for(var i=0;i<54;i++){ stars+='<circle cx="'+(rnd()*1080).toFixed(0)+'" cy="'+(rnd()*1920).toFixed(0)+'" r="'+(0.5+rnd()*1.6).toFixed(1)+'" fill="#fff" opacity="'+(0.1+rnd()*0.5).toFixed(2)+'"/>'; }
-  var crest='<svg width="46" height="54" viewBox="0 0 62 74" fill="none"><defs><linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8D29A"/><stop offset="1" stop-color="#B98E45"/></linearGradient></defs><path d="M31 4 L34.5 12 L27.5 12 Z" fill="url(#cg2)"/><path d="M14 70 V34 a17 17 0 0 1 34 0 V70" stroke="url(#cg2)" stroke-width="3" stroke-linecap="round"/><circle cx="31" cy="44" r="3.4" fill="url(#cg2)"/></svg>';
-  function rows(arr,col){ return arr.map(function(t){ return '<div style="font-size:29px;color:#F1EBDA;line-height:1.4;display:flex;align-items:center;gap:14px;justify-content:center;text-align:center;word-break:keep-all;margin:7px 0"><span style="color:'+col+';font-weight:800;flex-shrink:0">&#10003;</span>'+t+'</div>'; }).join(''); }
-  var charImg = MASCOT[dEl] ? '<img src="'+MASCOT[dEl]+'" alt="마중이" style="margin-top:16px;height:380px;width:auto;position:relative;z-index:2;filter:drop-shadow(0 16px 26px rgba(0,0,0,0.6))">' : '';
+  function archSvg(sw,wid,hei){ return '<svg width="'+wid+'" height="'+hei+'" viewBox="0 0 62 74" fill="none"><defs><linearGradient id="ar'+sw+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8D29A"/><stop offset="1" stop-color="#B98E45"/></linearGradient></defs><path d="M31 4 L34.5 12 L27.5 12 Z" fill="url(#ar'+sw+')"/><path d="M14 70 V34 a17 17 0 0 1 34 0 V70" stroke="url(#ar'+sw+')" stroke-width="3" stroke-linecap="round"/><circle cx="31" cy="44" r="3.4" fill="url(#ar'+sw+')"/></svg>'; }
+  function badge(el,base,bright){ return '<div style="display:inline-flex;align-items:center;gap:11px;margin-top:10px;padding:9px 26px;border-radius:999px;border:2px solid '+bright+';background:'+base+'2b;font-size:28px;font-weight:700;letter-spacing:1px;white-space:nowrap;color:'+bright+'">'+EMO[el]+' '+el+' 기운 <span style="font-family:'+FH+';font-weight:800;font-size:48px;line-height:1">'+HANJA[el]+'</span></div>'; }
+  function rows(arr,col){ return arr.map(function(t){ return '<div style="font-size:27px;color:#F1EBDA;line-height:1.35;display:flex;align-items:center;gap:13px;justify-content:center;text-align:center;word-break:keep-all;margin:9px 0"><span style="color:'+col+';font-weight:800;flex-shrink:0">&#10003;</span>'+t+'</div>'; }).join(''); }
+  // 오행 균형 차트 (실제 분포 A.cnt)
+  var cnts=ORDER.map(function(e){return A.cnt[e]||0;}); var maxc=Math.max(1,Math.max.apply(null,cnts));
+  var chart=ORDER.map(function(e){ var amt=A.cnt[e]||0, col=MCOL[e], cb=MCB[e], isC=(e===dEl), isN=(e===def); var h=Math.round(amt/maxc*100);
+    var bs='width:100%;height:86px;display:flex;align-items:flex-end;justify-content:center;border-radius:12px;background:rgba(255,255,255,0.035);border:1.5px solid rgba(255,255,255,0.09);'+(isC?'box-shadow:0 0 22px -3px '+cb+';border-color:'+cb+';border-width:2px;':'')+(amt===0?'border-style:dashed;':'');
+    var tag=isC?'중심':(isN?'필요':''); var tagc=(isC||isN)?cb:'transparent';
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:98px">'+
+      '<div style="'+bs+'"><div style="width:56%;height:'+h+'%;border-radius:9px 9px 0 0;background:'+(amt===0?'transparent':col)+'"></div></div>'+
+      '<div style="font-family:'+FH+';font-weight:800;font-size:30px;line-height:1;color:'+cb+'">'+HANJA[e]+'</div>'+
+      '<div style="font-size:19px;color:#9aa6b2">'+e+' '+amt+'</div>'+
+      '<div style="font-size:16px;letter-spacing:2px;height:20px;font-weight:700;color:'+tagc+'">'+tag+'</div>'+
+    '</div>'; }).join('');
+  var charImg = MASCOT[dEl] ? '<img src="'+MASCOT[dEl]+'" alt="마중이" style="margin-top:12px;height:236px;width:auto;position:relative;z-index:2;filter:drop-shadow(0 12px 20px rgba(0,0,0,0.6))">' : '';
   var logoHtml = LOGO ? '<img src="'+LOGO+'" alt="WBL" style="height:50px;width:auto;display:block">' : '<div style="font-family:'+FH+';font-style:italic;font-weight:800;font-size:42px;color:#C9A86A">wbL</div>';
+  var lbl='font-size:22px;letter-spacing:7px;color:rgba(227,201,140,0.85);width:100%;text-align:center;white-space:nowrap';
   return '<div style="width:1080px;height:1920px;position:relative;overflow:hidden;background:radial-gradient(120% 80% at 50% 30%,#1C2A45,#0E1520 52%,#070b12);font-family:Pretendard,sans-serif;color:#EFE9DB">'+
     '<svg viewBox="0 0 1080 1920" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0">'+stars+'</svg>'+
     '<div style="position:absolute;top:26px;left:26px;right:26px;bottom:26px;border:1px solid rgba(227,201,140,0.16);border-radius:24px;z-index:1"></div>'+
-    '<div style="position:relative;z-index:2;width:100%;height:100%;padding:58px 70px 56px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center">'+
-      '<div style="width:100%;display:flex;align-items:flex-start;justify-content:space-between">'+logoHtml+'<div style="text-align:right"><div style="font-family:'+FH+';font-weight:800;font-size:28px;color:#C9A86A;line-height:1">마중</div><div style="font-size:12px;letter-spacing:7px;color:rgba(239,233,219,0.36);margin-top:6px">MAJUNG</div></div></div>'+
-      '<div style="position:relative;width:936px;margin:18px auto 0;padding:118px 60px 0;box-sizing:border-box;border:2px solid '+c+'88;border-bottom:none;border-radius:468px 468px 0 0;background:radial-gradient(ellipse 64% 52% at 50% 64%,'+c+'33,transparent 72%);display:flex;flex-direction:column;align-items:center;box-shadow:0 0 60px rgba(227,201,140,0.08),inset 0 0 80px rgba(227,201,140,0.05)">'+
-        '<div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#0E1520 58%,transparent 74%);padding:6px 16px">'+crest+'</div>'+
-        '<div style="width:100%;text-align:center;white-space:nowrap;font-size:23px;letter-spacing:9px;color:rgba(227,201,140,0.8)">내 중심 기운</div>'+
-        '<div style="width:100%;text-align:center;white-space:nowrap;font-family:'+FH+';font-weight:800;font-size:74px;letter-spacing:1px;line-height:1.05;margin-top:8px;color:'+c+';text-shadow:0 2px 24px rgba(0,0,0,0.5)">'+TYPE_NM[dEl]+'</div>'+
-        '<div style="width:100%;font-family:'+FH+';font-size:29px;color:rgba(239,233,219,0.85);text-align:center;word-break:keep-all;line-height:1.45;max-width:720px;margin:12px auto 0">&ldquo;'+TYPE_TAG[dEl]+'&rdquo;</div>'+
+    '<div style="position:relative;z-index:2;width:100%;height:100%;padding:54px 64px 50px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center">'+
+      '<div style="width:100%;display:flex;align-items:flex-start;justify-content:space-between">'+logoHtml+'<div style="text-align:right"><div style="font-family:'+FH+';font-weight:800;font-size:28px;color:#C9A86A;line-height:1">마중</div><div style="font-size:12px;letter-spacing:6px;color:rgba(239,233,219,0.36);margin-top:6px">MAJUNG · 사주오행</div></div></div>'+
+      '<div style="position:relative;width:936px;margin:16px auto 0;padding:64px 60px 0;box-sizing:border-box;border:2px solid '+c+'88;border-bottom:none;border-radius:468px 468px 0 0;background:radial-gradient(ellipse 64% 52% at 50% 64%,'+c+'33,transparent 72%);display:flex;flex-direction:column;align-items:center">'+
+        '<div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,#0E1520 58%,transparent 74%);padding:6px 16px">'+archSvg('k',46,54)+'</div>'+
+        '<div style="'+lbl+'">내 중심 오행 · 일간(日干)</div>'+
+        badge(dEl,c,MCB[dEl])+
+        '<div style="width:100%;text-align:center;white-space:nowrap;font-family:'+FH+';font-weight:800;font-size:44px;letter-spacing:1px;line-height:1.1;margin-top:8px;color:'+c+';text-shadow:0 2px 24px rgba(0,0,0,0.5)">'+TYPE_NM[dEl]+'</div>'+
+        '<div style="width:100%;max-width:720px;font-family:'+FH+';font-size:28px;color:rgba(239,233,219,0.85);text-align:center;word-break:keep-all;line-height:1.45;margin:10px auto 0">&ldquo;'+TYPE_TAG[dEl]+'&rdquo;</div>'+
         charImg+
       '</div>'+
       '<div style="width:560px;height:2px;background:linear-gradient(to right,transparent,rgba(227,201,140,0.6),transparent)"></div>'+
-      '<div style="width:100%;margin-top:30px;display:flex;flex-direction:column;align-items:center">'+
-        '<div style="width:100%;text-align:center;white-space:nowrap;font-size:22px;letter-spacing:7px;color:rgba(227,201,140,0.85)">나는 이런 사람이에요</div>'+
-        '<div style="width:100%;margin-top:18px">'+rows(SELF4[dEl],c)+'</div>'+
+      '<div style="width:100%;margin-top:24px;display:flex;flex-direction:column;align-items:center">'+
+        '<div style="'+lbl+'">오행의 균형 · 五行</div>'+
+        '<div style="display:flex;justify-content:center;align-items:flex-end;gap:13px;margin-top:14px;width:100%">'+chart+'</div>'+
       '</div>'+
-      '<div style="display:flex;align-items:center;gap:16px;margin-top:26px"><span style="width:80px;height:1px;background:linear-gradient(to right,transparent,rgba(227,201,140,0.55),transparent)"></span><span style="color:rgba(227,201,140,0.7);font-size:18px">✦</span><span style="width:80px;height:1px;background:linear-gradient(to left,transparent,rgba(227,201,140,0.55),transparent)"></span></div>'+
-      '<div style="width:100%;margin-top:26px;display:flex;flex-direction:column;align-items:center">'+
-        '<div style="width:100%;text-align:center;white-space:nowrap;font-size:22px;letter-spacing:7px;color:rgba(227,201,140,0.85)">내게 필요한 기운</div>'+
-        '<div style="width:100%;text-align:center;white-space:nowrap;font-family:'+FH+';font-weight:800;font-size:44px;margin-top:10px;color:'+cd+'">'+TYPE_NM[def]+'</div>'+
+      '<div style="display:flex;align-items:center;gap:16px;margin-top:18px"><span style="width:80px;height:1px;background:linear-gradient(to right,transparent,rgba(227,201,140,0.55),transparent)"></span><span style="color:rgba(227,201,140,0.7);font-size:18px">✦</span><span style="width:80px;height:1px;background:linear-gradient(to left,transparent,rgba(227,201,140,0.55),transparent)"></span></div>'+
+      '<div style="width:100%;margin-top:18px;display:flex;flex-direction:column;align-items:center">'+
+        '<div style="'+lbl+'">나는 이런 사람이에요</div>'+
+        '<div style="width:100%;margin-top:14px">'+rows(SELF4[dEl],c)+'</div>'+
+      '</div>'+
+      '<div style="display:flex;align-items:center;gap:16px;margin-top:18px"><span style="width:80px;height:1px;background:linear-gradient(to right,transparent,rgba(227,201,140,0.55),transparent)"></span><span style="color:rgba(227,201,140,0.7);font-size:18px">✦</span><span style="width:80px;height:1px;background:linear-gradient(to left,transparent,rgba(227,201,140,0.55),transparent)"></span></div>'+
+      '<div style="width:100%;margin-top:18px;display:flex;flex-direction:column;align-items:center">'+
+        '<div style="'+lbl+'">내게 필요한 기운 · 용신(用神)</div>'+
+        badge(def,cd,MCB[def])+
+        '<div style="width:100%;text-align:center;white-space:nowrap;font-family:'+FH+';font-weight:800;font-size:40px;margin-top:8px;color:'+cd+'">'+TYPE_NM[def]+'</div>'+
         '<div style="width:100%;font-size:25px;color:rgba(239,233,219,0.78);margin-top:8px;text-align:center;word-break:keep-all;line-height:1.4">'+NEED_LINE[def]+'</div>'+
-        '<div style="width:100%;text-align:center;white-space:nowrap;margin-top:20px;font-size:20px;letter-spacing:5px;color:rgba(227,201,140,0.68)">이런 사람이 곁에 있으면 좋아요</div>'+
-        '<div style="width:100%;margin-top:14px">'+rows(COMP4[def],cd)+'</div>'+
+        '<div style="width:100%;text-align:center;white-space:nowrap;margin-top:14px;font-size:20px;letter-spacing:5px;color:rgba(227,201,140,0.68)">이런 사람이 곁에 있으면 좋아요</div>'+
+        '<div style="width:100%;margin-top:12px">'+rows(COMP4[def],cd)+'</div>'+
       '</div>'+
-      '<div style="margin-top:auto;width:100%;display:flex;flex-direction:column;align-items:center;padding-top:20px">'+
-        '<div style="display:inline-flex;align-items:center;gap:16px;padding:18px 38px;border-radius:999px;border:1px solid rgba(227,201,140,0.5);background:rgba(255,255,255,0.06)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span style="font-family:'+FH+';font-weight:800;font-size:36px;letter-spacing:3px;color:#EFE9DB">마중 사주</span></div>'+
-        '<div style="width:100%;text-align:center;font-size:19px;letter-spacing:3px;color:rgba(239,233,219,0.4);margin-top:13px">지금 검색하고 나의 기운을 마중하세요</div>'+
+      '<div style="margin-top:auto;width:100%;display:flex;flex-direction:column;align-items:flex-end;padding-top:10px">'+
+        '<div style="display:inline-flex;align-items:center;gap:13px;padding:15px 30px;border-radius:999px;border:1px solid rgba(227,201,140,0.5);background:rgba(255,255,255,0.06)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span style="font-family:'+FH+';font-weight:800;font-size:36px;letter-spacing:3px;color:#EFE9DB">마중 사주</span></div>'+
+        '<div style="font-size:18px;letter-spacing:2px;color:rgba(239,233,219,0.4);margin-top:10px;text-align:right">지금 검색하고 나의 기운을 마중하세요</div>'+
       '</div>'+
     '</div>'+
   '</div>';
