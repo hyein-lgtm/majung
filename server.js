@@ -55,6 +55,54 @@ app.post('/api', async (req, res) => {
   }
 });
 
+// ── 이미지 프록시 (cafe24 핫링크 우회) ─────────────────────
+// wblbeauty 상품 썸네일은 외부 도메인에서 직접 부르면 cafe24가 막는다.
+// 서버가 Referer를 wblbeauty로 붙여 대신 받아와 브라우저에 전달한다.
+// 브라우저에서는 /img?u=<원본이미지주소> 형태로 호출한다.
+app.get('/img', async (req, res) => {
+  const u = (req.query.u || '').toString();
+  if (!/^https:\/\/(www\.)?wblbeauty\.com\//i.test(u)) {
+    return res.sendStatus(400); // 오픈 프록시 방지: wblbeauty 도메인만 허용
+  }
+  try {
+    const r = await fetch(u, {
+      headers: { 'Referer': 'https://www.wblbeauty.com/', 'User-Agent': 'Mozilla/5.0' }
+    });
+    if (!r.ok) return res.sendStatus(502);
+    res.set('Content-Type', r.headers.get('content-type') || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=86400'); // 하루 캐시
+    res.send(Buffer.from(await r.arrayBuffer()));
+  } catch (e) {
+    console.error('[이미지 프록시] 실패', String(e));
+    res.sendStatus(502);
+  }
+});
+
+// ── 정적 파일 ──────────────────────────────────────────────
+app.use(express.static(__dirname));
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('마중 listening on ' + PORT));
+app.get('/img', async (req, res) => {
+  const u = (req.query.u || '').toString();
+  if (!/^https:\/\/(www\.)?wblbeauty\.com\//i.test(u)) {
+    return res.sendStatus(400); // 오픈 프록시 방지: wblbeauty 도메인만 허용
+  }
+  try {
+    const r = await fetch(u, {
+      headers: { 'Referer': 'https://www.wblbeauty.com/', 'User-Agent': 'Mozilla/5.0' }
+    });
+    if (!r.ok) return res.sendStatus(502);
+    res.set('Content-Type', r.headers.get('content-type') || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=86400'); // 하루 캐시
+    res.send(Buffer.from(await r.arrayBuffer()));
+  } catch (e) {
+    console.error('[이미지 프록시] 실패', String(e));
+    res.sendStatus(502);
+  }
+});
+
 // ── 정적 파일 ──────────────────────────────────────────────
 app.use(express.static(__dirname));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
