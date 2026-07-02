@@ -1355,17 +1355,17 @@ function renderBridge(s,A,voc){
       `<div class="mjc-row"><div class="mjc-n">1</div><div class="mjc-t"><b>일상 행동</b> ${d.act}<br><span>${d.actsub}</span></div></div>`+
       `<div class="mjc-row"><div class="mjc-n">2</div><div class="mjc-t"><b>공간 컬러</b> ${d.space}<br><span>${d.spacesub}</span></div></div>`+
     `</div>`+
-    `<div class="mjc-rx"><div class="mjc-tag">24시간 밀착 처방</div><h3>몸에서 잠시도<br>떼지 않는 단 하나의 기운</h3>`+
-    `<p>여린 살결에 <span class="mjc-em">스톤이 닿을 때,</span><br>부족했던 기운이 하루 종일<br>맥박을 타고 흘러요.</p></div>`+
+    `<div class="mjc-rx"><div class="mjc-tag">24시간 밀착 처방</div><h3>몸에서 잠시도 떼지 않는<br>단 하나의 기운</h3>`+
+    `<p>여린 살결에 <span class="mjc-em">스톤이 닿을 때,</span><br>부족했던 기운이 하루 종일 맥박을 타고 흘러요.</p></div>`+
     `<div class="mjc-wrist"><div class="mjc-arch"></div><div class="mjc-halo"></div>`+
       `<div class="mjc-wtag">WHY&nbsp;WEAR&nbsp;IT</div>`+
       `<div class="mjc-wh">왜 하필,<br>몸에 지녀야 할까</div>`+
       `<div class="mjc-wp"><p>피부는 <b>기운이 드나드는 통로</b>예요.<br>맥이 뛰는 자리에 원석이 닿을수록<br>부족했던 기운이 더 가까이 흘러요.</p>`+
-      `<p>그래서 <b>${d.stone}</b>은 <b>손목엔 팔찌로,<br>손끝엔 반지로, 목·귀엔 목걸이·귀걸이로</b> —<br>당신에게 가장 잘 맞는 자리에 지니면 돼요.</p>`+
+      `<p>그래서 <b>${d.stone}</b>은<br><b>손목엔 팔찌로, 손끝엔 반지로,<br>목·귀엔 목걸이·귀걸이로</b><br>— 가장 잘 맞는 자리에 지니면 돼요.</p>`+
       `<p class="mjc-m">습관은 잊히고 공간은 떠나면 그만이지만,<br>몸에 닿아 있는 기운은 잠시도 나를 떠나지 않아요.</p></div>`+
     `</div>`+
     `<div class="mjc-band"><div class="mjc-disc"><span class="mjc-wave"></span><span class="mjc-wave"></span><span class="mjc-wave"></span>${mascot}</div>`+
-      `<div class="mjc-say">${voc}, 제가 ${voc}의 사주에 맞는<br>이 <span class="mjc-hl">${d.totem}</span>을 정성껏<br>팔찌에 묶어두었어요.</div>`+
+      `<div class="mjc-say">${voc}, 제가 ${voc}의 사주에 맞는<br>이 <span class="mjc-hl">${d.totem}</span>을 팔찌에 정성껏 묶어두었어요.</div>`+
       `<div class="mjc-desc">마지막 기운 조율까지 마쳤으니,<br>이제 ${voc}의 <b>수호 토템</b>이 되어줄 거예요.</div>`+
       `<div class="mjc-badge">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
     `<div class="mjc-div"><span>MY TOTEM</span></div>`+
@@ -1383,12 +1383,11 @@ function renderFinal(s,A,voc){
   document.getElementById('finalCtaZone').innerHTML=
     `<div class="final"><div class="ttl">FOR ${nm}</div>`+
     `<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 14px"><span style="flex:1;height:1px;background:linear-gradient(to right,transparent,#C9A86A66)"></span><span style="color:#C9A86A;font-size:14px">♦</span><span style="flex:1;height:1px;background:linear-gradient(to left,transparent,#C9A86A66)"></span></div>`+
-    `<h3>${voc}에게 필요한 기운은<br><b style="color:${c}">${NM[def]}</b>의 흐름이에요</h3>`+
-    `<p style="font-size:13px;color:rgba(239,233,219,0.5);margin:12px 0 18px;letter-spacing:.02em">✦ ${voc}의 맥박에 채워 넣을 <b style="color:${c}">${NM[def]}<span class="hanja">(${HAN5[def]})</span></b>의 에너지 처방전 ✦</p>`+
-    `<p class="cta-personal">*${voc}의 생년월일·시 데이터로 조합한 맞춤형 원석 처방이에요</p>`+`<div class="cta-aura k-${kind}" style="--c1:${e1};--c2:${e2}">${def==='수'?'<div class="ripple"></div>':''}<i class="spark" style="left:10%;animation-delay:0s"></i><i class="spark" style="left:23%;animation-delay:.4s"></i><i class="spark" style="left:36%;animation-delay:.9s"></i><i class="spark" style="left:48%;animation-delay:1.3s"></i><i class="spark" style="left:60%;animation-delay:1.8s"></i><i class="spark" style="left:72%;animation-delay:2.2s"></i><i class="spark" style="left:84%;animation-delay:2.6s"></i><i class="spark" style="left:92%;animation-delay:3s"></i><a class="cta-buy" href="https://www.wblbeauty.com/event/lookbook/26summer.html" target="_blank" rel="noopener">♦ 내 손목에 ${NM[def]} 에너지 채우기</a></div>`+
-    `<div style="display:flex;gap:10px;margin-top:10px">`+
-    `<button class="cta2" type="button" onclick="saveResult()" style="flex:1;margin-top:0;cursor:pointer">↓ 오행 결과 저장하기</button>`+
-    `<button class="cta2" type="button" onclick="shareResult()" style="flex:1;margin-top:0;cursor:pointer">↑ 오행 결과 공유하기</button>`+
+    `<h3 style="word-break:keep-all">${voc}에게 필요한 기운은<br><b style="color:${c}">${NM[def]}</b>의 흐름이에요</h3>`+
+    `<p style="font-size:13px;color:rgba(239,233,219,0.5);margin:12px 0 18px;letter-spacing:.02em;word-break:keep-all">✦ ${voc}의 맥박에 채워 넣을 <b style="color:${c}">${NM[def]}<span class="hanja">(${HAN5[def]})</span></b>의 에너지 처방전 ✦</p>`+
+    `<p class="cta-personal">*${voc}의 생년월일·시 데이터로 조합한 맞춤형 원석 처방이에요</p>`+`<div class="cta-aura k-${kind}" style="--c1:${e1};--c2:${e2}">${def==='수'?'<div class="ripple"></div>':''}<i class="spark" style="left:10%;animation-delay:0s"></i><i class="spark" style="left:23%;animation-delay:.4s"></i><i class="spark" style="left:36%;animation-delay:.9s"></i><i class="spark" style="left:48%;animation-delay:1.3s"></i><i class="spark" style="left:60%;animation-delay:1.8s"></i><i class="spark" style="left:72%;animation-delay:2.2s"></i><i class="spark" style="left:84%;animation-delay:2.6s"></i><i class="spark" style="left:92%;animation-delay:3s"></i><button class="cta-buy" type="button" onclick="saveResult()" style="border:none;width:100%;cursor:pointer;font-family:inherit">◆ 나의 오행 전체 리포트 소장하기</button></div>`+
+    `<div style="margin-top:10px">`+
+    `<button class="cta2" type="button" onclick="shareResult()" style="width:100%;margin-top:0;cursor:pointer">↑ SNS에 내 오행 결과 공유하기</button>`+
     `</div></div>`;
 }
 function toggleAcc(el){
