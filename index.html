@@ -263,6 +263,7 @@
   }
   /* === 2단 화면(인트로/입력) — 목업 반영 === */
   .screen{animation:rise .6s ease both;position:relative}
+  .screen p,.screen span,.screen div,.screen h1,.screen h2,.screen h3,.screen h4,.screen li,.screen a,.screen b,.screen strong,.screen em{word-break:keep-all}
   .topbar{display:flex;align-items:center;justify-content:space-between;margin:2px 0 16px;min-height:34px}
   .topbar .logo{font-family:'Pretendard',sans-serif;font-weight:800;font-size:17px;letter-spacing:.05em;text-transform:lowercase}
   .pill-btn{background:transparent;border:1px solid var(--gold);color:var(--gold-soft);font-size:12px;padding:7px 15px;border-radius:999px;cursor:pointer;font-family:'Pretendard',sans-serif;letter-spacing:.5px;white-space:nowrap}
@@ -1335,6 +1336,29 @@ function renderBridge(s,A,voc){
 .mjc-finalcta:hover{transform:translateY(-1px) scale(1.01)}
 .mjc-gtitle{text-align:center;font-size:16px;font-weight:800;line-height:1.5;margin:26px auto 0;max-width:330px;color:#EFE9DB}
 .mjc-gtitle b{color:var(--ac)}
+.mjc-hero{position:relative;margin:20px 0 0;border:1px solid rgba(var(--glow),.42);border-radius:20px;overflow:hidden;background:linear-gradient(160deg,rgba(var(--glow),.14),rgba(11,16,24,.25))}
+.mjc-hero-th{position:relative;height:224px;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 90% at 50% 32%,rgba(var(--glow),.3),transparent 72%)}
+.mjc-hero-art{width:148px;height:148px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 38% 30%,rgba(255,255,255,.4),rgba(var(--glow),.55) 46%,var(--ac) 100%);box-shadow:0 0 42px rgba(var(--glow),.6),inset 0 5px 16px rgba(255,255,255,.42)}
+.mjc-hero-han{font-family:'Noto Serif KR','Nanum Myeongjo',serif;font-size:60px;font-weight:800;color:rgba(11,16,24,.5);text-shadow:0 1px 2px rgba(255,255,255,.4)}
+.mjc-soon{position:absolute;top:14px;left:14px;font-size:10px;font-weight:800;letter-spacing:.14em;color:#EFE9DB;background:rgba(11,16,24,.62);border:1px solid rgba(239,233,219,.32);border-radius:999px;padding:5px 11px}
+.mjc-hero-bd{padding:20px 20px 24px;text-align:center}
+.mjc-hero-tag{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--ac)}
+.mjc-hero-nm{margin-top:9px;font-size:22px;font-weight:800;color:#EFE9DB;letter-spacing:.01em}
+.mjc-hero-nt{margin-top:10px;font-size:13.5px;line-height:1.8;color:rgba(239,233,219,.72)}
+.mjc-hero-nt b{color:var(--ac);font-weight:700}
+.mjc-soonpill{font-size:11px !important;font-weight:800;letter-spacing:.08em;opacity:.72}
+.mjc-syn{position:relative;margin-top:30px;padding:22px 18px;border-radius:18px;border:1px dashed rgba(239,233,219,.22);background:rgba(239,233,219,.03);text-align:center}
+.mjc-syn-tag{font-size:11px;font-weight:800;letter-spacing:.16em;color:rgba(239,233,219,.6)}
+.mjc-syn-h{margin-top:8px;font-size:16.5px;font-weight:800;color:#EFE9DB}
+.mjc-syn-p{margin-top:9px;font-size:12.5px;line-height:1.85;color:rgba(239,233,219,.62)}
+.mjc-syn-p b{color:#E3C98C;font-weight:700}
+.mjc-syn-card{display:flex;align-items:center;gap:14px;margin-top:18px;padding:14px;border-radius:14px;background:rgba(11,16,24,.4);border:1px solid rgba(239,233,219,.1);text-align:left}
+.mjc-syn-th{position:relative;flex:0 0 66px;width:66px;height:66px;border-radius:12px;background:radial-gradient(circle at 40% 34%,rgba(227,201,140,.5),rgba(11,16,24,.55));display:flex;align-items:center;justify-content:center}
+.mjc-soon.sm{position:static;top:auto;left:auto;font-size:8px;padding:3px 7px;letter-spacing:.1em}
+.mjc-syn-bd{flex:1;min-width:0}
+.mjc-syn-nm{font-size:14.5px;font-weight:800;color:#EFE9DB}
+.mjc-syn-nt{margin-top:3px;font-size:12px;color:rgba(239,233,219,.6)}
+.mjc-syn-link{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#E3C98C;opacity:.85}
 .mjc-trust{margin-top:18px;display:flex;justify-content:center;flex-wrap:wrap;gap:13px;font-size:11px;color:rgba(239,233,219,.5)}
 .mjc-trust i{width:3px;height:3px;border-radius:50%;background:rgba(201,168,106,.5);align-self:center}`;
     document.head.appendChild(st);
@@ -1358,22 +1382,34 @@ function renderBridge(s,A,voc){
     `<div class="mjc-rx"><div class="mjc-tag">24시간 밀착 처방</div><h3>몸에서 잠시도 떼지 않는<br>단 하나의 기운</h3>`+
     `<p>여린 살결에 <span class="mjc-em">스톤이 닿을 때,</span><br>부족했던 기운이 하루 종일 맥박을 타고 흘러요.</p></div>`+
     `<div class="mjc-wrist"><div class="mjc-arch"></div><div class="mjc-halo"></div>`+
-      `<div class="mjc-wtag">WHY&nbsp;WEAR&nbsp;IT</div>`+
-      `<div class="mjc-wh">왜 하필,<br>몸에 지녀야 할까</div>`+
-      `<div class="mjc-wp"><p>피부는 <b>기운이 드나드는 통로</b>예요.<br>맥이 뛰는 자리에 원석이 닿을수록<br>부족했던 기운이 더 가까이 흘러요.</p>`+
-      `<p>그래서 <b>${d.stone}</b>은<br><b>손목엔 팔찌로, 손끝엔 반지로,<br>목·귀엔 목걸이·귀걸이로</b><br>— 가장 잘 맞는 자리에 지니면 돼요.</p>`+
-      `<p class="mjc-m">습관은 잊히고 공간은 떠나면 그만이지만,<br>몸에 닿아 있는 기운은 잠시도 나를 떠나지 않아요.</p></div>`+
+      `<div class="mjc-wtag">WHY&nbsp;WEAR&nbsp;IT?</div>`+
+      `<div class="mjc-wh">왜 하필,<br>몸에 지녀야 할까?</div>`+
+      `<div class="mjc-wp"><p>일상 행동은 잊히고, 공간은 떠나면 그만이니까.<br>맥박이 뛰는 살결 위에 원석이 닿을 때,<br><b>부족한 기운은 잠시도 당신을 떠나지 않고<br>하루 종일 흐릅니다.</b></p>`+
+      `<p>피부는 <b>기운이 드나드는 가장 직관적인 통로</b>입니다.<br>당신에게 가장 잘 맞는 자리(손목, 손끝, 목)에 지녀보세요.</p></div>`+
     `</div>`+
     `<div class="mjc-band"><div class="mjc-disc"><span class="mjc-wave"></span><span class="mjc-wave"></span><span class="mjc-wave"></span>${mascot}</div>`+
-      `<div class="mjc-say">${voc}, 제가 ${voc}의 사주에 맞는<br>이 <span class="mjc-hl">${d.totem}</span>을 팔찌에 정성껏 묶어두었어요.</div>`+
+      `<div class="mjc-say">${voc}, 제가 ${voc}의 사주를 오래<br>들여다보고 가장 옅어진 <span class="mjc-hl">${d.say}</span>을<br>이 팔찌에 정성껏 담아두었어요.</div>`+
       `<div class="mjc-desc">마지막 기운 조율까지 마쳤으니,<br>이제 ${voc}의 <b>수호 토템</b>이 되어줄 거예요.</div>`+
       `<div class="mjc-badge">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
     `<div class="mjc-div"><span>MY TOTEM</span></div>`+
-    `<p class="mjc-social">이번 주 <b>1,240명</b>이 자신의 기운 토템을 마중나갔어요</p>`+
-    `<div class="mjc-grid">${prods}</div>`+
-    `<div class="mjc-gtitle">${d.gtitle}</div>`+
+    `<p class="mjc-social">벌써 <b>1,240명</b>이 자신의 기운 팔찌를 기다리고 있어요</p>`+
+    `<div class="mjc-hero">`+
+      `<div class="mjc-hero-th"><span class="mjc-soon">COMING SOON</span><div class="mjc-hero-art"><span class="mjc-hero-han">${d.han}</span></div></div>`+
+      `<div class="mjc-hero-bd">`+
+        `<div class="mjc-hero-tag">MAIN · 당신의 처방 팔찌</div>`+
+        `<div class="mjc-hero-nm">${d.name} 오행 팔찌</div>`+
+        `<div class="mjc-hero-nt">부족한 <b>${d.say}</b>을 하루 종일 채워주는<br>${voc}만의 기본 토템이에요.</div>`+
+      `</div>`+
+    `</div>`+
+    `<div class="mjc-finalcta" role="button" style="cursor:default"><span class="mjc-ar"></span><span class="mjc-lb">내 오행 팔찌 마중하기</span><span class="mjc-lb mjc-soonpill">OPEN SOON</span></div>`+
     `<p class="mjc-guide">${d.guide}</p>`+
-    `<a class="mjc-finalcta" href="${CTA}" target="_blank" rel="noopener"><span class="mjc-ar"></span><span class="mjc-lb">처방 토템 마중하기</span><span class="mjc-lb">➔</span></a>`+
+    `<div class="mjc-syn">`+
+      `<div class="mjc-syn-tag">＋ SYNERGY</div>`+
+      `<div class="mjc-syn-h">함께 차면, 기운이 완성돼요</div>`+
+      `<div class="mjc-syn-p">오행 팔찌가 부족한 기운을 <b>채운다면</b>,<br>개운팔찌는 그 위에서 전체 운을 <b>끌어올려요.</b></div>`+
+      `<div class="mjc-syn-card"><div class="mjc-syn-th"><span class="mjc-soon sm">SOON</span></div><div class="mjc-syn-bd"><div class="mjc-syn-nm">개운 팔찌</div><div class="mjc-syn-nt">채움 위에 더하는 상승의 기운</div><span class="mjc-syn-link">개운팔찌도 보러가기 →</span></div></div>`+
+    `</div>`+
+    `<p style="margin:16px auto 0;text-align:center;font-size:11.5px;line-height:1.6;color:rgba(239,233,219,.45);letter-spacing:.02em;word-break:keep-all">✦ 마중이가 ${voc} 사주에 맞춰 준비한 기운 팔찌예요 ✦</p>`+
     `<div class="mjc-trust"><span>무료 배송</span><i></i><span>7일 내 반품</span><i></i><span>기운 큐레이션 보증</span></div>`+
     `</div>`;
 }
@@ -1381,14 +1417,11 @@ function renderFinal(s,A,voc){
   const def=chartFrame(s,A).def, nm=(voc||'').replace('님','')||'YOU';
   const NM={'목':'나무','화':'불','토':'흙','금':'금','수':'물'}, c=MCOL[def]; const [e1,e2,kind]=ENERGY[def]||ENERGY['수'];
   document.getElementById('finalCtaZone').innerHTML=
-    `<div class="final"><div class="ttl">FOR ${nm}</div>`+
-    `<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 14px"><span style="flex:1;height:1px;background:linear-gradient(to right,transparent,#C9A86A66)"></span><span style="color:#C9A86A;font-size:14px">♦</span><span style="flex:1;height:1px;background:linear-gradient(to left,transparent,#C9A86A66)"></span></div>`+
-    `<h3 style="word-break:keep-all">${voc}에게 필요한 기운은<br><b style="color:${c}">${NM[def]}</b>의 흐름이에요</h3>`+
-    `<p style="font-size:13px;color:rgba(239,233,219,0.5);margin:12px 0 18px;letter-spacing:.02em;word-break:keep-all">✦ ${voc}의 맥박에 채워 넣을 <b style="color:${c}">${NM[def]}<span class="hanja">(${HAN5[def]})</span></b>의 에너지 처방전 ✦</p>`+
-    `<p class="cta-personal">*${voc}의 생년월일·시 데이터로 조합한 맞춤형 원석 처방이에요</p>`+`<div class="cta-aura k-${kind}" style="--c1:${e1};--c2:${e2}">${def==='수'?'<div class="ripple"></div>':''}<i class="spark" style="left:10%;animation-delay:0s"></i><i class="spark" style="left:23%;animation-delay:.4s"></i><i class="spark" style="left:36%;animation-delay:.9s"></i><i class="spark" style="left:48%;animation-delay:1.3s"></i><i class="spark" style="left:60%;animation-delay:1.8s"></i><i class="spark" style="left:72%;animation-delay:2.2s"></i><i class="spark" style="left:84%;animation-delay:2.6s"></i><i class="spark" style="left:92%;animation-delay:3s"></i><button class="cta-buy" type="button" onclick="saveResult()" style="border:none;width:100%;cursor:pointer;font-family:inherit">◆ 나의 오행 전체 리포트 소장하기</button></div>`+
-    `<div style="margin-top:10px">`+
-    `<button class="cta2" type="button" onclick="shareResult()" style="width:100%;margin-top:0;cursor:pointer">↑ SNS에 내 오행 결과 공유하기</button>`+
-    `</div></div>`;
+    `<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0 6px">`+
+      `<button type="button" onclick="saveResult()" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">이미지로 저장하기</button>`+
+      `<span style="width:1px;height:12px;background:rgba(239,233,219,.22)"></span>`+
+      `<button type="button" onclick="shareResult()" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">친구에게 공유하기</button>`+
+    `</div>`;
 }
 function toggleAcc(el){
   var opening=!el.classList.contains('open');
