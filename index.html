@@ -1511,7 +1511,7 @@ function renderFinal(s,A,voc){
   const NM={'목':'나무','화':'불','토':'흙','금':'금','수':'물'}, c=MCOL[def]; const [e1,e2,kind]=ENERGY[def]||ENERGY['수'];
   document.getElementById('finalCtaZone').innerHTML=
     `<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0 6px">`+
-      `<button type="button" onclick="saveResult()" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">이미지로 저장하기</button>`+
+      `<button type="button" onclick="saveResult(this)" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">이미지로 저장하기</button>`+
       `<span style="width:1px;height:12px;background:rgba(239,233,219,.22)"></span>`+
       `<button type="button" onclick="shareResult()" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">친구에게 공유하기</button>`+
     `</div>`;
@@ -1882,30 +1882,23 @@ async function _renderShare(){
   finally{ document.body.removeChild(wrap); }
   return url;
 }
-async function saveResult(){
+async function saveResult(btn){
+  var _old = btn ? btn.innerHTML : null;
   try{
+    if(btn){ btn.innerHTML='저장 중…'; btn.disabled=true; }
     const url=await _renderShare();
     const fname='WBL마중_'+((window.__SAJU&&window.__SAJU.voc||'result').replace('님','')||'result')+'.png';
-    const ua=navigator.userAgent||'';
-    const isIOS=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-    if(isIOS){
-      // 아이폰: 웹은 사진 앨범에 직접 못 써서, 공유 시트의 '이미지 저장'으로 앨범에 저장
-      try{
-        const blob=await (await fetch(url)).blob();
-        const file=new File([blob],fname,{type:'image/png'});
-        if(navigator.canShare && navigator.canShare({files:[file]})){
-          await navigator.share({files:[file],title:'마중 · 오행 리포트',text:'나의 오행 리포트 — WBL 마중'});
-          return;
-        }
-      }catch(e){ if(e&&e.name==='AbortError') return; }
-    }
-    // 안드로이드·기타: 시트 없이 바로 다운로드(갤러리/다운로드 폴더)
+    // '이 문장 저장하기'와 동일하게 — 공유 시트 없이 바로 다운로드
     let href=url;
     try{ const blob=await (await fetch(url)).blob(); href=URL.createObjectURL(blob); }catch(_){}
     const a=document.createElement('a'); a.href=href; a.download=fname; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
     if(href!==url) setTimeout(function(){ try{URL.revokeObjectURL(href);}catch(_){ } }, 5000);
+    if(btn){ btn.innerHTML='저장했어요 ✓'; setTimeout(function(){ btn.innerHTML=_old; btn.disabled=false; },1800); }
   }
-  catch(e){ alert('이미지 저장에 실패했어요. 잠시 후 다시 시도해 주세요.'); }
+  catch(e){
+    if(btn){ btn.innerHTML=_old; btn.disabled=false; }
+    alert('이미지 저장에 실패했어요. 잠시 후 다시 시도해 주세요.');
+  }
 }
 async function shareResult(){
   try{
@@ -2059,4 +2052,4 @@ var _hb=document.getElementById('helpBtn'); if(_hb)_hb.onclick=()=>alert('생년
 })();
 </script>
 </body>
-</html>
+</ht
