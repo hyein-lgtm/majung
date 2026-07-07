@@ -2030,7 +2030,7 @@ var _hb=document.getElementById('helpBtn'); if(_hb)_hb.onclick=()=>alert('생년
   .toc-fab .toc-ring .rt{stroke:rgba(224,184,94,0.22)}
   .toc-fab .toc-ring .rp{stroke:var(--gold);transition:stroke-dashoffset .5s ease}
   /* 다섯 갈래 완독 스티키 진행바 */
-  .acc-progress{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 10px);z-index:40;margin:12px 0 18px;padding:12px 14px;border-radius:14px;background:rgba(18,26,38,0.86);border:1px solid rgba(224,184,94,0.22);box-shadow:0 6px 20px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .acc-progress{position:sticky;top:max(calc(env(safe-area-inset-top, 0px) + 12px), 56px);z-index:40;margin:12px 0 18px;padding:12px 14px;border-radius:14px;background:rgba(18,26,38,0.86);border:1px solid rgba(224,184,94,0.22);box-shadow:0 6px 20px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .acc-progress .acc-segs{display:flex;gap:5px}
   .acc-progress .acc-seg{flex:1;height:6px;border-radius:99px;background:rgba(239,233,219,0.14);transition:background .35s ease,box-shadow .35s ease}
   .acc-progress .acc-seg.on{background:linear-gradient(90deg,var(--gold-soft),var(--gold));box-shadow:0 0 6px rgba(224,184,94,.5)}
