@@ -1434,7 +1434,6 @@ function renderBridge(s,A,voc){
 .mjc-hero-price .mjc-price-off{font-size:15px;font-weight:800;color:#E86A6A}
 .mjc-hero-price .mjc-price-org{font-size:14px;color:rgba(239,233,219,.45);text-decoration:line-through}
 .mjc-hero-price .mjc-price-now{font-size:23px;font-weight:800;color:#EFE9DB}
-.mjc-price-note{margin-top:6px;font-size:11px;letter-spacing:.08em;color:var(--ac)}
 .mjc-soonpill{font-size:11px !important;font-weight:800;letter-spacing:.08em;opacity:.72}
 .mjc-syn{position:relative;margin-top:30px;padding:22px 18px;border-radius:18px;border:1px dashed rgba(239,233,219,.22);background:rgba(239,233,219,.03);text-align:center}
 .mjc-syn-tag{font-size:11px;font-weight:800;letter-spacing:.16em;color:rgba(239,233,219,.6)}
@@ -1491,7 +1490,6 @@ function renderBridge(s,A,voc){
         `<div class="mjc-hero-nm">${d.name} 오행 팔찌</div>`+
         `<div class="mjc-hero-nt">부족한 <b>${d.say}</b>을 <b>${STONE[def].nm}</b>에 담아<br>하루 종일 채워주는 ${voc}만의 기본 토템이에요.</div>`+
         `<div class="mjc-hero-price"><span class="mjc-price-off">10%</span><span class="mjc-price-org">59,800원</span><span class="mjc-price-now">53,820원</span></div>`+
-        `<div class="mjc-price-note">오픈 예정가 · 사전 혜택가</div>`+
       `</div>`+
     `</div>`+
     `<a class="mjc-finalcta" href="https://www.wblbeauty.com/event/lookbook/26summer2.html" target="_blank" rel="noopener"><span class="mjc-ar"></span><span class="mjc-lb">내 오행 팔찌 마중하기</span></a>`+
@@ -1522,7 +1520,68 @@ function toggleAcc(el){
   if(opening){
     var inner=el.querySelector('.acc-body-inner');
     if(inner && !inner.dataset.typed){ setTimeout(function(){ typeReveal(inner); },120); }
+    /* 완독 진행률: 처음 펼칠 때만 해당 인덱스를 true 로 (다시 닫아도 유지) */
+    try{
+      var accs=document.querySelectorAll('#reportZone .reading-doc .acc');
+      var idx=Array.prototype.indexOf.call(accs, el);
+      if(idx>-1 && window.openedFlags && !window.openedFlags[idx]){
+        window.openedFlags[idx]=true;
+        if(typeof updateFiveProgress==='function') updateFiveProgress();
+      }
+    }catch(_){}
   }
+}
+/* ===== 다섯 갈래 완독 진행률 (스티키 바 + 목차 링) ===== */
+window.openedFlags = window.openedFlags || [false,false,false,false,false];
+function _fiveCount(){ return (window.openedFlags||[]).filter(Boolean).length; }
+function updateFiveProgress(){
+  var total=5, n=_fiveCount();
+  /* 스티키 바 */
+  var bar=document.getElementById('accProgress');
+  if(bar){
+    var segs=bar.querySelectorAll('.acc-seg');
+    for(var i=0;i<segs.length;i++){ segs[i].classList.toggle('on', (window.openedFlags||[])[i]===true); }
+    var cnt=bar.querySelector('.acc-count'); if(cnt) cnt.textContent=n+'/'+total;
+    var msgEl=bar.querySelector('.acc-msg');
+    if(msgEl){
+      var msg;
+      if(n===0) msg='다섯 가지 이야기가 기다리고 있어요';
+      else if(n>=total) msg='모든 이야기를 다 읽으셨네요';
+      else msg=(total-n)+'개 남았어요, 조금만 더!';
+      msgEl.textContent=msg;
+    }
+  }
+  /* 목차 링 */
+  var ring=document.getElementById('tocRingProg');
+  if(ring){
+    var r=parseFloat(ring.getAttribute('r'))||15.5;
+    var C=2*Math.PI*r;
+    ring.style.strokeDasharray=C.toFixed(2);
+    ring.style.strokeDashoffset=(C*(1-n/total)).toFixed(2);
+  }
+  /* 목차 패널 라벨 (N/5) */
+  var lb=document.querySelector('.toc-five-lb');
+  if(lb) lb.textContent=' ('+n+'/'+total+')';
+}
+/* 다섯 갈래 제목 아래에 스티키 진행바 삽입 (없을 때만 생성 · 새 리포트면 플래그 초기화) */
+function injectFiveProgress(){
+  var doc=document.querySelector('#reportZone .reading-doc');
+  if(!doc) return;
+  if(document.getElementById('accProgress')){ updateFiveProgress(); return; }
+  /* 새 리포트: 플래그 초기화 */
+  window.openedFlags=[false,false,false,false,false];
+  /* "다섯 갈래" 제목(h2) 찾기 */
+  var heads=doc.querySelectorAll('h2'); var anchor=null;
+  for(var i=0;i<heads.length;i++){ if(/다섯\s*갈래/.test(heads[i].textContent||'')){ anchor=heads[i]; break; } }
+  var bar=document.createElement('div');
+  bar.id='accProgress'; bar.className='acc-progress';
+  bar.innerHTML='<div class="acc-segs">'+
+      '<span class="acc-seg"></span><span class="acc-seg"></span><span class="acc-seg"></span><span class="acc-seg"></span><span class="acc-seg"></span>'+
+    '</div>'+
+    '<div class="acc-meta"><span class="acc-msg">다섯 가지 이야기가 기다리고 있어요</span><span class="acc-count">0/5</span></div>';
+  if(anchor && anchor.parentNode){ anchor.parentNode.insertBefore(bar, anchor.nextSibling); }
+  else { doc.insertBefore(bar, doc.firstChild); }
+  updateFiveProgress();
 }
 /* 펼칠 때 그 섹션 본문이 '쓰여지듯' 타이핑으로 드러남 — 태그는 그대로 두고 텍스트노드만 순차 노출(재포맷 점프 없음) */
 function typeReveal(container){
@@ -1947,12 +2006,25 @@ var _hb=document.getElementById('helpBtn'); if(_hb)_hb.onclick=()=>alert('생년
   #readProgress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-soft),var(--gold));box-shadow:0 0 8px rgba(224,184,94,.6);transition:width .15s linear}
   .toc-fab{position:fixed;right:16px;bottom:18px;z-index:1200;display:none;align-items:center;gap:7px;padding:11px 15px;border-radius:999px;border:1px solid var(--gold);background:rgba(20,28,40,0.92);color:var(--gold);font-family:'Pretendard',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
   .toc-fab.on{display:inline-flex}
+  .toc-fab .toc-ring{position:relative;width:22px;height:22px;flex-shrink:0}
+  .toc-fab .toc-ring svg{display:block;width:22px;height:22px;transform:rotate(-90deg)}
+  .toc-fab .toc-ring .rt{stroke:rgba(224,184,94,0.22)}
+  .toc-fab .toc-ring .rp{stroke:var(--gold);transition:stroke-dashoffset .5s ease}
+  /* 다섯 갈래 완독 스티키 진행바 */
+  .acc-progress{position:sticky;top:8px;z-index:40;margin:12px 0 18px;padding:12px 14px;border-radius:14px;background:rgba(18,26,38,0.86);border:1px solid rgba(224,184,94,0.22);box-shadow:0 6px 20px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .acc-progress .acc-segs{display:flex;gap:5px}
+  .acc-progress .acc-seg{flex:1;height:6px;border-radius:99px;background:rgba(239,233,219,0.14);transition:background .35s ease,box-shadow .35s ease}
+  .acc-progress .acc-seg.on{background:linear-gradient(90deg,var(--gold-soft),var(--gold));box-shadow:0 0 6px rgba(224,184,94,.5)}
+  .acc-progress .acc-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px}
+  .acc-progress .acc-msg{font-size:12px;color:rgba(239,233,219,0.72);letter-spacing:.01em}
+  .acc-progress .acc-count{font-size:12px;font-weight:700;color:var(--gold);flex-shrink:0}
   .toc-panel{position:fixed;right:16px;bottom:64px;z-index:1200;width:min(76vw,250px);max-height:60vh;overflow-y:auto;background:rgba(16,23,34,0.97);border:1px solid rgba(224,184,94,0.35);border-radius:16px;padding:6px;box-shadow:0 12px 36px rgba(0,0,0,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;transform:translateY(8px) scale(.98);transform-origin:bottom right;pointer-events:none;transition:opacity .22s,transform .22s}
   .toc-panel.on{opacity:1;transform:none;pointer-events:auto}
   .toc-panel .toc-h{font-size:10.5px;letter-spacing:.2em;color:var(--gold);padding:8px 12px 6px;text-transform:uppercase}
   .toc-panel a{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;color:#d4c9b3;font-size:13.5px;line-height:1.4;text-decoration:none;cursor:pointer;word-break:keep-all}
   .toc-panel a:hover{background:rgba(255,255,255,0.05)}
   .toc-panel a.active{background:rgba(224,184,94,0.14);color:#f3ecdd}
+  .toc-panel a .toc-five-lb{color:var(--gold);font-weight:700;font-size:12px}
   .toc-panel a .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:.45}
   .toc-panel a.active .dot{opacity:1;box-shadow:0 0 6px var(--gold)}
   .elem-modal{position:fixed;inset:0;z-index:1500;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(6,10,18,0.72);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
@@ -1972,7 +2044,7 @@ var _hb=document.getElementById('helpBtn'); if(_hb)_hb.onclick=()=>alert('생년
   .elem-row .er-desc{font-size:12.5px;line-height:1.62;color:#c9bfa9;word-break:keep-all}
 </style>
 <div id="readProgress"><i></i></div>
-<button class="toc-fab" id="tocFab" type="button" aria-label="섹션 목차"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M3 6h.01M3 12h.01M3 18h.01"/></svg>목차</button>
+<button class="toc-fab" id="tocFab" type="button" aria-label="섹션 목차"><span class="toc-ring"><svg viewBox="0 0 34 34" fill="none"><circle class="rt" cx="17" cy="17" r="15.5" stroke-width="3"/><circle class="rp" id="tocRingProg" cx="17" cy="17" r="15.5" stroke-width="3" stroke-linecap="round" style="stroke-dasharray:97.39;stroke-dashoffset:97.39"/></svg></span>목차</button>
 <div class="toc-panel" id="tocPanel" aria-hidden="true"></div>
 <div class="elem-modal" id="elemModal" aria-hidden="true"><div class="em-box" id="elemBox"></div></div>
 <script>
@@ -2017,10 +2089,11 @@ var _hb=document.getElementById('helpBtn'); if(_hb)_hb.onclick=()=>alert('생년
     var rh=result.querySelector('.res-head'); if(rh){ if(!rh.id)rh.id='sec-core'; sections.push({id:rh.id,label:'중심기운'}); }
     var bs=result.querySelector('.bal-sub'); if(bs){ if(!bs.id)bs.id='sec-balance'; sections.push({id:bs.id,label:'오행 균형'}); }
     var hs=result.querySelectorAll('#reportZone .reading-doc h2');
-    for(var i=0;i<hs.length;i++){ if(!hs[i].id)hs[i].id='sec-rd-'+i; var lb=headLabel(hs[i]); if(lb) sections.push({id:hs[i].id,label:lb}); }
+    for(var i=0;i<hs.length;i++){ if(!hs[i].id)hs[i].id='sec-rd-'+i; var lb=headLabel(hs[i]); if(lb) sections.push({id:hs[i].id,label:lb,five:/다섯\s*갈래/.test(hs[i].textContent||'')}); }
     var fz=document.getElementById('finalCtaZone'); if(fz&&fz.querySelector('.final')){ sections.push({id:'finalCtaZone',label:'개운 처방전'}); }
     if(!sections.length){ panel.innerHTML=''; return; }
-    panel.innerHTML='<div class="toc-h">목차</div>'+sections.map(function(sx){return '<a data-t="'+sx.id+'"><span class="dot"></span><span>'+sx.label+'</span></a>';}).join('');
+    panel.innerHTML='<div class="toc-h">목차</div>'+sections.map(function(sx){return '<a data-t="'+sx.id+'"><span class="dot"></span><span>'+sx.label+(sx.five?'<span class="toc-five-lb"></span>':'')+'</span></a>';}).join('');
+    if(typeof injectFiveProgress==='function'){ injectFiveProgress(); }
     var links=panel.querySelectorAll('a');
     for(var j=0;j<links.length;j++){ (function(a){ a.onclick=function(){ var el=document.getElementById(a.getAttribute('data-t')); if(el){ var y=el.getBoundingClientRect().top+window.scrollY-70; window.scrollTo({top:y<0?0:y,behavior:'smooth'}); } closePanel(); }; })(links[j]); }
     setupSpy(); updateBar();
