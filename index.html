@@ -1661,7 +1661,7 @@ function saveDestinyLine(btn){
       x.fillText('마중', W/2, baseY-42);
       x.fillStyle='rgba(239,233,219,.5)'; x.font='400 23px "Nanum Myeongjo", serif';
       x.fillText(voc?voc+'의 한 문장':'운명을 마중 나가는 한 문장', W/2, baseY);
-      cv.toBlob(function(b){ if(!b){return;} var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='마중_한문장.png'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1200); },'image/png');
+      cv.toBlob(function(b){ if(!b){return;} saveImageFile(b, '마중_한문장.png'); },'image/png');
       var old=btn.innerHTML; btn.innerHTML='저장했어요 ✓'; btn.disabled=true;
       setTimeout(function(){ btn.innerHTML=old; btn.disabled=false; },1800);
     };
@@ -1941,17 +1941,36 @@ async function _renderShare(){
   finally{ document.body.removeChild(wrap); }
   return url;
 }
+/* 이미지 저장 공통 — 아이폰/모바일은 공유 시트(→ '사진에 저장' 한 번 탭)로 사진 앨범에 저장,
+   그 외(PC·안드로이드 등)는 바로 다운로드. iOS Safari는 a.download가 사진 앨범 저장을 지원하지 않아
+   다운로드 미리보기 화면이 뜨므로, 파일 공유가 가능하면 공유 시트를 우선 사용한다. */
+async function saveImageFile(blob, filename){
+  try{
+    if(navigator.canShare){
+      var f=new File([blob], filename, {type:'image/png'});
+      if(navigator.canShare({files:[f]})){
+        await navigator.share({files:[f], title:'마중사주'});
+        return true;
+      }
+    }
+  }catch(err){
+    if(err && err.name==='AbortError') return true; /* 사용자가 공유 취소 */
+    /* 그 외 오류 → 아래 다운로드로 폴백 */
+  }
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download=filename; a.rel='noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ try{URL.revokeObjectURL(url);}catch(_){ } }, 4000);
+  return false;
+}
 async function saveResult(btn){
   var _old = btn ? btn.innerHTML : null;
   try{
     if(btn){ btn.innerHTML='저장 중…'; btn.disabled=true; }
     const url=await _renderShare();
     const fname='WBL마중_'+((window.__SAJU&&window.__SAJU.voc||'result').replace('님','')||'result')+'.png';
-    // '이 문장 저장하기'와 동일하게 — 공유 시트 없이 바로 다운로드
-    let href=url;
-    try{ const blob=await (await fetch(url)).blob(); href=URL.createObjectURL(blob); }catch(_){}
-    const a=document.createElement('a'); a.href=href; a.download=fname; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
-    if(href!==url) setTimeout(function(){ try{URL.revokeObjectURL(href);}catch(_){ } }, 5000);
+    const blob=await (await fetch(url)).blob();
+    await saveImageFile(blob, fname);
     if(btn){ btn.innerHTML='저장했어요 ✓'; setTimeout(function(){ btn.innerHTML=_old; btn.disabled=false; },1800); }
   }
   catch(e){
@@ -2011,7 +2030,7 @@ var _hb=document.getElementById('helpBtn'); if(_hb)_hb.onclick=()=>alert('생년
   .toc-fab .toc-ring .rt{stroke:rgba(224,184,94,0.22)}
   .toc-fab .toc-ring .rp{stroke:var(--gold);transition:stroke-dashoffset .5s ease}
   /* 다섯 갈래 완독 스티키 진행바 */
-  .acc-progress{position:sticky;top:8px;z-index:40;margin:12px 0 18px;padding:12px 14px;border-radius:14px;background:rgba(18,26,38,0.86);border:1px solid rgba(224,184,94,0.22);box-shadow:0 6px 20px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .acc-progress{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 10px);z-index:40;margin:12px 0 18px;padding:12px 14px;border-radius:14px;background:rgba(18,26,38,0.86);border:1px solid rgba(224,184,94,0.22);box-shadow:0 6px 20px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .acc-progress .acc-segs{display:flex;gap:5px}
   .acc-progress .acc-seg{flex:1;height:6px;border-radius:99px;background:rgba(239,233,219,0.14);transition:background .35s ease,box-shadow .35s ease}
   .acc-progress .acc-seg.on{background:linear-gradient(90deg,var(--gold-soft),var(--gold));box-shadow:0 0 6px rgba(224,184,94,.5)}
