@@ -409,6 +409,61 @@
   @keyframes spSpin{to{transform:rotate(360deg)}}
   @keyframes spTwinkle{0%,100%{opacity:.18}50%{opacity:.85}}
   @media (prefers-reduced-motion:reduce){.sp-glow,.sp-orbit,.sp-stars i{animation:none}}
+
+  /* ── 궁합(매칭) ── */
+  .match-card{margin:22px auto 4px;max-width:400px;padding:22px 20px;border-radius:20px;
+    background:linear-gradient(155deg,rgba(201,168,106,.12),rgba(201,168,106,.03));
+    border:1px solid rgba(201,168,106,.28);text-align:center}
+  .match-title{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:19px;color:var(--ink);letter-spacing:.01em;line-height:1.4}
+  .match-desc{font-family:'Pretendard',sans-serif;font-size:12.5px;line-height:1.65;color:rgba(239,233,219,.6);margin-top:9px}
+  .match-rel-seg{display:flex;gap:8px;justify-content:center;margin:16px 0 14px}
+  .match-rel{flex:1;max-width:96px;padding:9px 0;border-radius:12px;cursor:pointer;
+    font-family:'Pretendard',sans-serif;font-size:13.5px;font-weight:600;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(239,233,219,.62);transition:all .18s}
+  .match-rel.on{background:linear-gradient(135deg,var(--gold),var(--gold-deep));border-color:transparent;color:#1a130a;box-shadow:0 4px 14px rgba(201,168,106,.3)}
+  .match-make-btn{width:100%;padding:14px 0;border:none;border-radius:14px;cursor:pointer;
+    font-family:'Pretendard',sans-serif;font-size:15px;font-weight:700;letter-spacing:.01em;color:#1a130a;
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep));box-shadow:0 6px 20px rgba(201,168,106,.32)}
+  .match-make-btn:disabled{opacity:.6;cursor:default}
+  /* 궁합 초대 진입 배너 */
+  .match-banner{margin:14px auto 4px;max-width:420px;padding:16px 18px;border-radius:16px;text-align:center;
+    background:linear-gradient(155deg,rgba(201,168,106,.14),rgba(201,168,106,.04));border:1px solid rgba(201,168,106,.3)}
+  .match-banner .mb-t{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:17px;color:var(--ink);line-height:1.5}
+  .match-banner .mb-t b{color:var(--gold-soft)}
+  .match-banner .mb-s{font-family:'Pretendard',sans-serif;font-size:12px;color:rgba(239,233,219,.58);line-height:1.6;margin-top:8px}
+  /* 궁합 결과 화면 */
+  #matchResult{padding:0 18px 60px}
+  .match-share-card{margin:20px auto 0;max-width:420px;padding:34px 26px 30px;border-radius:24px;text-align:center;
+    background:radial-gradient(120% 90% at 50% 0%,rgba(201,168,106,.16),rgba(14,21,32,0) 60%),linear-gradient(160deg,#141d2a,#0e1520);
+    border:1px solid rgba(201,168,106,.3)}
+  .msc-rel{display:inline-block;padding:5px 14px;border-radius:999px;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:700;
+    color:var(--gold-soft);background:rgba(201,168,106,.14);border:1px solid rgba(201,168,106,.35);letter-spacing:.02em}
+  .msc-names{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:23px;color:var(--ink);margin:16px 0 4px;line-height:1.4}
+  .msc-amp{color:var(--gold);margin:0 4px}
+  .msc-score{margin:10px 0 6px;line-height:1}
+  .msc-num{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:64px;
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .msc-pct{font-family:'Pretendard',sans-serif;font-size:18px;font-weight:700;color:var(--gold-soft);margin-left:3px}
+  .msc-head{font-family:'Nanum Myeongjo',serif;font-weight:700;font-size:16.5px;color:var(--ink);line-height:1.6;margin:12px 0 0;word-break:keep-all}
+  .msc-desc{font-family:'Pretendard',sans-serif;font-size:13px;color:rgba(239,233,219,.68);line-height:1.7;margin-top:12px;word-break:keep-all}
+  .msc-mark{margin-top:20px;font-family:'Pretendard',sans-serif;font-size:11px;letter-spacing:.14em;color:rgba(201,168,106,.55);text-transform:uppercase}
+  .match-selfnote{max-width:420px;margin:14px auto 0;padding:11px 14px;border-radius:12px;text-align:center;
+    font-family:'Pretendard',sans-serif;font-size:12px;line-height:1.6;color:rgba(239,233,219,.62);
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09)}
+  .match-cta-wrap{max-width:420px;margin:22px auto 0;display:flex;flex-direction:column;gap:12px}
+  .match-full-btn{width:100%;padding:15px 0;border:none;border-radius:14px;cursor:pointer;
+    font-family:'Pretendard',sans-serif;font-size:14.5px;font-weight:700;color:#1a130a;
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep));box-shadow:0 6px 20px rgba(201,168,106,.3)}
+  .match-save-link{width:100%;padding:11px 0;border:1px solid rgba(201,168,106,.35);border-radius:14px;cursor:pointer;
+    font-family:'Pretendard',sans-serif;font-size:13px;font-weight:600;color:var(--gold-soft);background:transparent}
+  .match-save-link:disabled{opacity:.6;cursor:default}
+  .match-reinvite-t{text-align:center;font-family:'Nanum Myeongjo',serif;font-weight:700;font-size:15px;color:var(--ink);margin:34px 0 2px}
+  /* 궁합 오류 안내 */
+  #matchError{padding:0 20px}
+  .match-err-box{max-width:400px;margin:16vh auto 0;text-align:center;padding:34px 24px;border-radius:22px;
+    background:linear-gradient(160deg,#141d2a,#0e1520);border:1px solid rgba(201,168,106,.22)}
+  .me-emoji{font-size:40px;margin-bottom:14px}
+  .me-t{font-family:'Nanum Myeongjo',serif;font-weight:700;font-size:17px;color:var(--ink);line-height:1.6;margin-bottom:22px;word-break:keep-all}
 </style>
 </head>
 <body>
@@ -1508,12 +1563,207 @@ function renderFinal(s,A,voc){
   const def=chartFrame(s,A).def, nm=(voc||'').replace('님','')||'YOU';
   const NM={'목':'나무','화':'불','토':'흙','금':'금','수':'물'}, c=MCOL[def]; const [e1,e2,kind]=ENERGY[def]||ENERGY['수'];
   document.getElementById('finalCtaZone').innerHTML=
-    `<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0 6px">`+
+    matchInviteCardHtml(voc)+
+    `<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin:18px 0 6px">`+
       `<button type="button" onclick="saveResult(this)" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">이미지로 저장하기</button>`+
-      `<span style="width:1px;height:12px;background:rgba(239,233,219,.22)"></span>`+
-      `<button type="button" onclick="shareResult()" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">친구에게 공유하기</button>`+
     `</div>`;
 }
+
+/* ───────── 궁합(매칭) 기능 ─────────
+   개인정보 보호: 이름·생년월일은 URL/토큰에 절대 넣지 않는다.
+   서버에는 '표시이름 + 오행비율 5개 + 관계'만 임시(7일) 저장한다. */
+function _mesc(s){ return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+var _MREL_KO={love:'연인',friend:'친구',family:'가족'};
+function elemRatios(A){
+  var wt=(A&&A.wt)||{}, keys=['목','화','토','금','수'], tot=0, o={};
+  keys.forEach(function(k){ tot+=(+wt[k]||0); });
+  tot=tot||1;
+  keys.forEach(function(k){ o[k]=Math.round((+wt[k]||0)/tot*1000)/1000; });
+  return o;
+}
+function matchInviteCardHtml(voc){
+  var nm=(voc||'').replace('님','')||'나';
+  if(!window.__matchRel) window.__matchRel='love';
+  var rels=[['love','연인'],['friend','친구'],['family','가족']];
+  var segs=rels.map(function(r){ return '<button type="button" class="match-rel'+(window.__matchRel===r[0]?' on':'')+'" onclick="setMatchRel(\''+r[0]+'\',this)">'+r[1]+'</button>'; }).join('');
+  return '<div class="match-card">'
+    +'<div class="match-title">'+_mesc(nm)+'님과 나의 궁합은?</div>'
+    +'<div class="match-desc">친구에게 링크를 보내면,<br>서로의 오행 궁합을 1분 만에 확인할 수 있어요.</div>'
+    +'<div class="match-rel-seg">'+segs+'</div>'
+    +'<button type="button" class="match-make-btn" onclick="createMatchLink(this)">궁합 링크 만들기</button>'
+    +'</div>';
+}
+function setMatchRel(rel, btn){
+  window.__matchRel=rel;
+  try{ Array.prototype.forEach.call(btn.parentNode.querySelectorAll('.match-rel'),function(b){ b.classList.toggle('on', b===btn); }); }catch(_){}
+}
+async function createMatchLink(btn){
+  var J=window.__SAJU; if(!J){ alert('먼저 사주 결과가 준비되어야 해요.'); return; }
+  var _old=btn?btn.textContent:null;
+  try{
+    if(btn){ btn.textContent='링크 만드는 중…'; btn.disabled=true; }
+    var rel=window.__matchRel||'love';
+    var body={ voc:(J.voc||'').replace('님',''), relation:rel, elems:elemRatios(J.A) };
+    var r=await fetch('/api/match/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok) throw new Error('create failed');
+    var data=await r.json();
+    var link=location.origin+'/match/'+data.token;
+    var msg='나 방금 사주 봤는데 너랑 궁합 궁금해서! 1분만 눌러봐 → '+link;
+    if(btn){ btn.textContent='궁합 링크 만들기'; btn.disabled=false; }
+    if(navigator.share){
+      try{ await navigator.share({title:'마중사주 궁합', text:msg, url:link}); return; }
+      catch(err){ if(err&&err.name==='AbortError') return; }
+    }
+    try{ await navigator.clipboard.writeText(link); alert('궁합 링크를 복사했어요!\n친구에게 붙여넣어 보내주세요.\n\n'+link); }
+    catch(_){ prompt('아래 링크를 복사해 친구에게 보내주세요:', link); }
+  }catch(e){
+    if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
+    alert('링크 생성에 실패했어요. 잠시 후 다시 시도해 주세요.');
+  }
+}
+/* 두 사람의 오행 비율을 비교해 궁합 점수 + 관계별 톤 카피를 만든다 */
+function compareCompat(eA, eB, rel){
+  var keys=['목','화','토','금','수'];
+  var gen={목:'화',화:'토',토:'금',금:'수',수:'목'}; /* 상생 흐름 */
+  var maxK=function(o){ return keys.slice().sort(function(a,b){return (o[b]||0)-(o[a]||0);})[0]; };
+  var minK=function(o){ return keys.slice().sort(function(a,b){return (o[a]||0)-(o[b]||0);})[0]; };
+  var aDom=maxK(eA), aDef=minK(eA), bDom=maxK(eB), bDef=minK(eB);
+  var comp=0;
+  if((eB[aDef]||0)>=(eA[aDef]||0)) comp+=1;      /* 상대가 내 부족 기운을 더 가짐 */
+  if((eA[bDef]||0)>=(eB[bDef]||0)) comp+=1;
+  if(gen[bDom]===aDef||bDom===aDef) comp+=1;      /* 상대 대표기운이 내 부족을 채움 */
+  if(gen[aDom]===bDef||aDom===bDef) comp+=1;
+  var dist=0; keys.forEach(function(k){ dist+=Math.abs((eA[k]||0)-(eB[k]||0)); });
+  var sim=1-Math.min(dist/2,1);
+  var raw=(comp/4)*0.6 + sim*0.4;
+  var score=Math.round(52+raw*46);              /* 52~98, 늘 긍정적 범위 */
+  var tier = score>=85?'high':(score>=70?'mid':'warm');
+  var COPY={
+    love:{
+      high:'서로에게 강하게 끌리는 설레는 궁합이에요. 함께 있으면 시간 가는 줄 모르는 사이!',
+      mid:'다른 결이 오히려 서로를 궁금하게 만드는, 알아갈수록 빠져드는 연인이에요.',
+      warm:'천천히 데워지는 사랑이에요. 서두르지 않아도 서로를 부드럽게 채워줄 수 있어요.'
+    },
+    friend:{
+      high:'이거 거의 소울메이트급 케미인데요? 만나면 배꼽 빠지게 웃는 사이일 확률 99%.',
+      mid:'서로 없는 걸 채워주는, 은근히 죽이 잘 맞는 친구예요. 같이 사고 치기 딱 좋음ㅋ',
+      warm:'스타일은 좀 다르지만 그래서 더 배울 게 많은 친구. 오래 볼수록 진국인 사이!'
+    },
+    family:{
+      high:'서로를 깊이 감싸주는 따뜻한 궁합이에요. 곁에 있는 것만으로 든든한 사이랍니다.',
+      mid:'다른 듯 닮은 두 사람, 서로의 빈자리를 조용히 채워주는 가족이에요.',
+      warm:'가끔 티격태격해도 결국은 서로의 온기가 되어주는, 뭉근하게 정 깊은 사이예요.'
+    }
+  };
+  var ELN={목:'나무',화:'불',토:'흙',금:'금',수:'물'};
+  return { score:score, tier:tier, relation:rel, relName:(_MREL_KO[rel]||'친구'),
+           headline:(COPY[rel]||COPY.friend)[tier], aDom:aDom, bDom:bDom, aDef:aDef, bDef:bDef,
+           elnA:ELN[aDom], elnB:ELN[bDom], gen:gen, ELN:ELN };
+}
+function _pairDesc(r, aNm, bNm){
+  if(r.gen[r.aDom]===r.bDom) return aNm+'님의 '+r.elnA+' 기운이 '+bNm+'님의 '+r.elnB+' 기운을 살려주는 상생의 흐름이에요.';
+  if(r.gen[r.bDom]===r.aDom) return bNm+'님의 '+r.elnB+' 기운이 '+aNm+'님의 '+r.elnA+' 기운을 북돋아 주는 사이예요.';
+  if(r.aDom===r.bDom) return '두 사람 모두 '+r.elnA+'의 기운이 강해, 마음이 통하는 지점이 많아요.';
+  return aNm+'님의 '+r.elnA+'과(와) '+bNm+'님의 '+r.elnB+'이(가) 서로 다른 색으로 균형을 맞춰줘요.';
+}
+function renderMatchResult(sB, AB, vocB, metaB){
+  var M=window.__MATCHDATA||{};
+  var eA=M.elems||{}, eB=elemRatios(AB);
+  var rel=M.relation||'friend';
+  var r=compareCompat(eA, eB, rel);
+  var aNm=_mesc((M.voc||'상대').replace('님',''));
+  var bNm=_mesc((vocB||'나').replace('님',''));
+  /* 본인과의 궁합 감지(막지 않고 안내만) */
+  var selfNote='';
+  var same=(aNm && aNm===bNm);
+  if(same){ selfNote='<div class="match-selfnote">본인과의 궁합을 보고 있는 것 같아요 :) 친구에게 링크를 보내 진짜 궁합을 확인해 보세요!</div>'; }
+  var host=document.getElementById('matchResult');
+  if(!host){ host=document.createElement('section'); host.id='matchResult'; host.className='screen'; document.body.appendChild(host); }
+  window.__matchRel=rel; /* 재초대 카드에 같은 관계 기본 선택 */
+  host.innerHTML=
+    '<div class="topbar"><button class="icon-btn" type="button" aria-label="닫기" onclick="location.href=\'/\'">‹</button>'
+      +'<div style="font-family:\'Pretendard\',sans-serif;font-weight:600;font-size:12px;color:var(--gold)">궁합 결과</div><span style="width:20px"></span></div>'
+    +'<div id="matchShareCard" class="match-share-card">'
+      +'<div class="msc-rel">'+r.relName+' 궁합</div>'
+      +'<div class="msc-names">'+aNm+' <span class="msc-amp">&amp;</span> '+bNm+'</div>'
+      +'<div class="msc-score"><span class="msc-num">'+r.score+'</span><span class="msc-pct">점</span></div>'
+      +'<div class="msc-head">'+r.headline+'</div>'
+      +'<div class="msc-desc">'+_pairDesc(r, aNm, bNm)+'</div>'
+      +'<div class="msc-mark">마중사주</div>'
+    +'</div>'
+    +selfNote
+    +'<div class="match-cta-wrap">'
+      +'<button type="button" class="match-full-btn" onclick="showFullReportForB()">'+bNm+'님의 전체 사주도 보고 싶다면 →</button>'
+      +'<button type="button" class="match-save-link" onclick="saveMatchResult(this)">궁합 이미지로 저장하기</button>'
+    +'</div>'
+    +'<div class="match-reinvite-t">나도 다른 친구랑 궁합 볼래?</div>'
+    +matchInviteCardHtml(vocB);
+  var se=document.getElementById('screenEnter'); if(se) se.style.display='none';
+  var ri=document.getElementById('result'); if(ri) ri.classList.remove('show');
+  ['screenIntro'].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.display='none'; });
+  host.style.display='block';
+  window.scrollTo({top:0});
+}
+function showFullReportForB(){
+  window.__MATCH=null; window.__MATCHDATA=null;
+  var mr=document.getElementById('matchResult'); if(mr) mr.style.display='none';
+  var se=document.getElementById('screenEnter'); if(se) se.style.display='block';
+  var cb=document.getElementById('cast'); if(cb) cb.click(); /* 폼 값 유지된 채 일반 리포트 재생성 */
+}
+async function saveMatchResult(btn){
+  var _old=btn?btn.innerHTML:null;
+  try{
+    if(btn){ btn.innerHTML='저장 중…'; btn.disabled=true; }
+    if(typeof ensureH2I==='function') await ensureH2I();
+    var node=document.getElementById('matchShareCard');
+    if(document.fonts&&document.fonts.ready){ try{ await document.fonts.ready; }catch(_){}}
+    await new Promise(function(res){setTimeout(res,120);});
+    var url=await window.htmlToImage.toPng(node,{pixelRatio:2,cacheBust:true,backgroundColor:'#0E1520'});
+    var blob=await (await fetch(url)).blob();
+    await saveImageFile(blob, '마중_궁합.png');
+    if(btn){ btn.innerHTML='저장했어요 ✓'; setTimeout(function(){ btn.innerHTML=_old; btn.disabled=false; },1800); }
+  }catch(e){ if(btn){ btn.innerHTML=_old; btn.disabled=false; } alert('이미지 저장에 실패했어요. 잠시 후 다시 시도해 주세요.'); }
+}
+async function startMatchFlow(token){
+  try{
+    var r=await fetch('/api/match/'+encodeURIComponent(token));
+    if(r.status===404){ showMatchError('not_found'); return; }
+    if(r.status===410){ showMatchError('expired'); return; }
+    if(!r.ok){ showMatchError('error'); return; }
+    var data=await r.json();
+    window.__MATCH={token:token};
+    window.__MATCHDATA={voc:data.voc, relation:data.relation, elems:data.elems};
+    showMatchInviteScreen(data);
+  }catch(e){ showMatchError('error'); }
+}
+function showMatchInviteScreen(data){
+  var relName=_MREL_KO[data.relation]||'친구';
+  var aNm=_mesc((data.voc||'상대').replace('님',''));
+  var se=document.getElementById('screenEnter'); if(!se) return;
+  var b=document.getElementById('matchBanner');
+  if(!b){
+    b=document.createElement('div'); b.id='matchBanner'; b.className='match-banner';
+    var tb=se.querySelector('.topbar');
+    if(tb&&tb.nextSibling){ se.insertBefore(b, tb.nextSibling); } else { se.insertBefore(b, se.firstChild); }
+  }
+  b.innerHTML='<div class="mb-t">'+aNm+'님이 <b>'+relName+'</b>(으)로<br>당신과의 궁합을 보고 싶어해요</div>'
+    +'<div class="mb-s">태어난 순간의 좌표를 입력하면<br>1분 만에 두 사람의 궁합을 확인할 수 있어요.</div>';
+  var cast=document.getElementById('cast'); if(cast) cast.innerHTML='궁합 확인하기';
+  showScreen('screenEnter');
+}
+function showMatchError(kind){
+  window.__MATCH=null; window.__MATCHDATA=null;
+  var msg = kind==='expired'
+    ? '이 궁합 링크는 만료되었어요.<br>(링크는 만들어진 뒤 7일간 유효해요)'
+    : '궁합 링크를 찾을 수 없어요.<br>링크가 정확한지 확인해 주세요.';
+  var host=document.getElementById('matchError');
+  if(!host){ host=document.createElement('section'); host.id='matchError'; host.className='screen'; document.body.appendChild(host); }
+  host.innerHTML='<div class="match-err-box"><div class="me-emoji">🕰️</div><div class="me-t">'+msg+'</div>'
+    +'<button type="button" class="match-make-btn" style="max-width:280px" onclick="location.href=\'/\'">내 사주 보러 가기</button></div>';
+  ['screenIntro','screenEnter','result','matchResult'].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.display=(id==='result')?'':'none'; if(id==='result'&&e) e.classList.remove('show'); });
+  host.style.display='block';
+}
+
 function toggleAcc(el){
   var opening=!el.classList.contains('open');
   el.classList.toggle('open');
@@ -1783,7 +2033,9 @@ document.getElementById('cast').onclick=async()=>{
   document.getElementById('luck').innerHTML=`<span>현재 <b>${age}세</b></span><span>${curYear} 세운 <b>${sewoon}</b></span><span>대운 <b>${dir>0?'순행':'역행'}·${sAge}세~</b></span><span>현 대운 <b>${curDae.replace(' 대운','')}</b></span>`;
 
   const voc = (name||'').trim() ? (name.trim()+'님') : '당신';
-  window.__SCALE_HTML=scaleHtml(s,A); window.__SAJU={s,A,voc,meta}; heroLine(s,A,voc); renderBalance(s,A,voc); renderBridge(s,A,voc); renderFinal(s,A,voc);
+  window.__SCALE_HTML=scaleHtml(s,A); window.__SAJU={s,A,voc,meta};
+  if(window.__MATCH){ try{ renderMatchResult(s,A,voc,meta); }catch(e){ console.error(e); } btn.disabled=false; return; }
+  heroLine(s,A,voc); renderBalance(s,A,voc); renderBridge(s,A,voc); renderFinal(s,A,voc);
 
   const r=document.getElementById('result');
   const _reveal=()=>{ r.classList.add('show'); var _se=document.getElementById('screenEnter'); if(_se)_se.style.display='none'; window.scrollTo({top:0}); setTimeout(()=>{document.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%');r.scrollIntoView({behavior:'smooth',block:'start'});},120); };
@@ -2001,6 +2253,14 @@ var _restart=document.getElementById('restartBtn'); if(_restart)_restart.onclick
 var _rs=document.getElementById('resShare'); if(_rs)_rs.onclick=()=>{ if(navigator.share){navigator.share({title:'마중 리포트',url:location.href}).catch(()=>{});} else {alert('이 링크를 복사해 공유해 보세요:\n'+location.href);} };
 var _oi=document.getElementById('ohaeInfo'); if(_oi)_oi.onclick=()=>alert('오행(나무·불·흙·쇠·물) 다섯 기운의 이야기예요. 마중은 사주 속 다섯 기운의 균형을 읽어, 강한 기운과 채우면 좋은 기운, 삶의 방향을 알려드려요.');
 var _hb=document.getElementById('helpBtn'); if(_hb)_hb.onclick=()=>alert('생년월일·태어난 시간·양력/음력을 넣으면 사주 여덟 글자를 뽑아 오행 리포트를 만들어드려요. 시간을 모르면 ‘시간 모름’을 선택하세요.');
+
+/* /match/:token 진입 감지 — 궁합 초대 링크로 들어온 경우 초대 화면부터 시작 */
+(function(){
+  try{
+    var m=(location.pathname||'').match(/^\/match\/([^\/?#]+)/);
+    if(m&&m[1]){ startMatchFlow(decodeURIComponent(m[1])); }
+  }catch(_){}
+})();
 </script>
   <div id="ctaFloat" class="cta-float" aria-hidden="true"></div>
   <div id="splash" class="splash" aria-hidden="true">

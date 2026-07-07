@@ -78,6 +78,55 @@ app.get('/img', async (req, res) => {
   }
 });
 
+// ── 궁합 링크 토큰 (메모리 임시 저장, 7일 TTL) ──────────────
+// 개인정보 보호: A의 이름/생년월일은 URL·토큰에 절대 넣지 않는다.
+// 서버는 오직 { 표시이름, 오행비율(5개), 관계 }만 잠깐 보관한다.
+// 서버 재시작/재배포 시 메모리가 초기화되어 링크가 만료된다(MVP 허용).
+const crypto = require('crypto');
+const matchStore = new Map(); // token -> { voc, elems, relation, createdAt }
+const MATCH_TTL = 7 * 24 * 60 * 60 * 1000; // 7일
+
+function pruneMatch() {
+  const now = Date.now();
+  for (const [k, v] of matchStore) {
+    if (now - v.createdAt > MATCH_TTL) matchStore.delete(k);
+  }
+}
+
+app.post('/api/match/create', (req, res) => {
+  try {
+    const b = req.body || {};
+    const voc = (b.voc || '').toString().slice(0, 24); // 표시 이름만 (최소)
+    const relation = ['love', 'friend', 'family'].includes(b.relation) ? b.relation : 'friend';
+    // 오행 비율: 정확히 목/화/토/금/수 5개 숫자만 허용
+    const src = b.elems || {};
+    const keys = ['목', '화', '토', '금', '수'];
+    const elems = {};
+    for (const k of keys) {
+      const n = Number(src[k]);
+      elems[k] = (isFinite(n) && n >= 0) ? Math.round(n * 1000) / 1000 : 0;
+    }
+    pruneMatch();
+    const token = crypto.randomBytes(9).toString('base64url'); // 12자 내외 URL-safe
+    matchStore.set(token, { voc, elems, relation, createdAt: Date.now() });
+    res.json({ token });
+  } catch (e) {
+    console.error('[궁합] create 실패', String(e));
+    res.status(400).json({ error: 'bad_request' });
+  }
+});
+
+app.get('/api/match/:token', (req, res) => {
+  pruneMatch();
+  const rec = matchStore.get((req.params.token || '').toString());
+  if (!rec) return res.status(404).json({ error: 'not_found' });
+  if (Date.now() - rec.createdAt > MATCH_TTL) {
+    matchStore.delete(req.params.token);
+    return res.status(410).json({ error: 'expired' });
+  }
+  res.json({ voc: rec.voc, relation: rec.relation, elems: rec.elems });
+});
+
 // ── 정적 파일 ──────────────────────────────────────────────
 app.use(express.static(__dirname));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
