@@ -425,6 +425,14 @@
     font-family:'Pretendard',sans-serif;font-size:15px;font-weight:700;letter-spacing:.01em;color:#1a130a;
     background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep));box-shadow:0 6px 20px rgba(201,168,106,.32)}
   .match-make-btn:disabled{opacity:.6;cursor:default}
+  .match-link-box{margin-top:16px;padding:15px 14px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,106,.28)}
+  .mlb-label{font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:700;color:var(--gold-soft);margin-bottom:9px}
+  .mlb-link{font-family:'Pretendard',sans-serif;font-size:12px;color:rgba(239,233,219,.72);word-break:break-all;line-height:1.5;
+    padding:9px 11px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);margin-bottom:10px;text-align:left}
+  .mlb-btns{display:flex;gap:8px}
+  .mlb-btns button{flex:1;padding:11px 0;border-radius:11px;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:13px;font-weight:700}
+  .mlb-copy{border:none;color:#1a130a;background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep))}
+  .mlb-share{border:1px solid rgba(201,168,106,.4);background:transparent;color:var(--gold-soft)}
   /* 궁합 초대 진입 배너 */
   .match-banner{margin:14px auto 4px;max-width:420px;padding:16px 18px;border-radius:16px;text-align:center;
     background:linear-gradient(155deg,rgba(201,168,106,.14),rgba(201,168,106,.04));border:1px solid rgba(201,168,106,.3)}
@@ -1600,6 +1608,7 @@ function setMatchRel(rel, btn){
 async function createMatchLink(btn){
   var J=window.__SAJU; if(!J){ alert('먼저 사주 결과가 준비되어야 해요.'); return; }
   var _old=btn?btn.textContent:null;
+  var card=btn?btn.closest('.match-card'):null;
   try{
     if(btn){ btn.textContent='링크 만드는 중…'; btn.disabled=true; }
     var rel=window.__matchRel||'love';
@@ -1607,19 +1616,39 @@ async function createMatchLink(btn){
     var r=await fetch('/api/match/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     if(!r.ok) throw new Error('create failed');
     var data=await r.json();
+    if(!data||!data.token) throw new Error('no token');
     var link=location.origin+'/match/'+data.token;
-    var msg='나 방금 사주 봤는데 너랑 궁합 궁금해서! 1분만 눌러봐 → '+link;
-    if(btn){ btn.textContent='궁합 링크 만들기'; btn.disabled=false; }
-    if(navigator.share){
-      try{ await navigator.share({title:'마중사주 궁합', text:msg, url:link}); return; }
-      catch(err){ if(err&&err.name==='AbortError') return; }
-    }
-    try{ await navigator.clipboard.writeText(link); alert('궁합 링크를 복사했어요!\n친구에게 붙여넣어 보내주세요.\n\n'+link); }
-    catch(_){ prompt('아래 링크를 복사해 친구에게 보내주세요:', link); }
+    if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
+    showMatchLinkResult(card, link);
   }catch(e){
     if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
     alert('링크 생성에 실패했어요. 잠시 후 다시 시도해 주세요.');
   }
+}
+/* 발급된 링크를 카드 안에 바로 보여준다 — 데스크톱/모바일 모두 확실한 피드백 */
+function _copyText(t){
+  return (navigator.clipboard&&navigator.clipboard.writeText)
+    ? navigator.clipboard.writeText(t)
+    : new Promise(function(res,rej){ try{ var ta=document.createElement('textarea'); ta.value=t; ta.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); ta.remove(); res(); }catch(e){ rej(e); } });
+}
+function showMatchLinkResult(card, link){
+  if(!card) card=document.querySelector('#matchResult .match-card, #finalCtaZone .match-card');
+  if(!card){ prompt('아래 링크를 복사해 친구에게 보내주세요:', link); return; }
+  var ex=card.querySelector('.match-link-box'); if(ex) ex.remove();
+  var msg='나 방금 사주 봤는데 너랑 궁합 궁금해서! 1분만 눌러봐 → '+link;
+  var box=document.createElement('div'); box.className='match-link-box';
+  box.innerHTML='<div class="mlb-label">✦ 링크가 준비됐어요! 친구에게 보내주세요</div>'
+    +'<div class="mlb-link">'+_mesc(link)+'</div>'
+    +'<div class="mlb-btns"><button type="button" class="mlb-copy">링크 복사하기</button>'
+    +(navigator.share?'<button type="button" class="mlb-share">공유하기</button>':'')+'</div>';
+  card.appendChild(box);
+  box.querySelector('.mlb-copy').onclick=function(){
+    var self=this;
+    _copyText(link).then(function(){ self.textContent='복사됐어요 ✓'; }).catch(function(){ self.textContent='복사 실패'; });
+    setTimeout(function(){ self.textContent='링크 복사하기'; },1800);
+  };
+  var sb=box.querySelector('.mlb-share');
+  if(sb) sb.onclick=async function(){ try{ await navigator.share({title:'마중사주 궁합', text:msg, url:link}); }catch(err){} };
 }
 /* 두 사람의 오행 비율을 비교해 궁합 점수 + 관계별 톤 카피를 만든다 */
 function compareCompat(eA, eB, rel){
