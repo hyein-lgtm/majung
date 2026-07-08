@@ -1722,11 +1722,35 @@ function compareCompat(eA, eB, rel){
            headline:TONE[toneKey][tier], aDom:aDom, bDom:bDom, aDef:aDef, bDef:bDef,
            elnA:ELN[aDom], elnB:ELN[bDom], gen:gen, ELN:ELN };
 }
+/* 오행별 성향 한 줄(대표 기운의 성격) — 해석에 개인색을 입힌다 */
+var _ELTRAIT={
+  목:'쭉쭉 뻗어나가는 추진력과 성장의 기운',
+  화:'주변을 환하게 밝히는 열정과 표현력',
+  토:'묵직하게 중심을 잡아주는 안정감과 포용력',
+  금:'군더더기 없이 정리하는 결단력과 단단함',
+  수:'깊이 헤아리는 지혜와 유연한 통찰'
+};
+/* 관계별 어미(상대를 부르는 말) — 문장 자연스럽게 */
 function _pairDesc(r, aNm, bNm){
-  if(r.gen[r.aDom]===r.bDom) return aNm+'님의 '+r.elnA+' 기운이 '+bNm+'님의 '+r.elnB+' 기운을 살려주는 상생의 흐름이에요.';
-  if(r.gen[r.bDom]===r.aDom) return bNm+'님의 '+r.elnB+' 기운이 '+aNm+'님의 '+r.elnA+' 기운을 북돋아 주는 사이예요.';
-  if(r.aDom===r.bDom) return '두 사람 모두 '+r.elnA+'의 기운이 강해, 마음이 통하는 지점이 많아요.';
-  return aNm+'님의 '+r.elnA+'과(와) '+bNm+'님의 '+r.elnB+'이(가) 서로 다른 색으로 균형을 맞춰줘요.';
+  var ctrl={목:'토',토:'수',수:'화',화:'금',금:'목'}; /* 상극(극하는) 관계 */
+  var a=r.aDom, b=r.bDom;
+  var tA=_ELTRAIT[a]||'', tB=_ELTRAIT[b]||'';
+  var lead=aNm+'님은 '+tA+'을 지녔고, '+bNm+'님은 '+tB+'이 돋보여요. ';
+  /* 대표 기운이 같으면 성향 문장이 겹치므로 리드를 따로 쓴다 */
+  if(a===b){
+    return '두 분 다 '+r.elnA+'의 기운이 짙어요. '+aNm+'님도 '+bNm+'님도 '+tA+'을 함께 지녀서, 말하지 않아도 통하는 지점이 많고 같은 방향을 바라보는 사이랍니다.';
+  }
+  var dyn;
+  if(r.gen[a]===b){
+    dyn=aNm+'님의 '+r.elnA+' 기운이 '+bNm+'님의 '+r.elnB+' 기운에 힘을 실어주는 상생의 흐름이라, 함께할수록 '+bNm+'님이 더 빛나는 조합이에요.';
+  } else if(r.gen[b]===a){
+    dyn=bNm+'님의 '+r.elnB+' 기운이 '+aNm+'님의 '+r.elnA+' 기운을 북돋아 주는 상생의 흐름이라, 곁에 있을수록 '+aNm+'님에게 든든한 힘이 되는 사이예요.';
+  } else if(ctrl[a]===b || ctrl[b]===a){
+    dyn='두 기운이 팽팽하게 맞서는 자리라 가끔은 티격태격할 수 있지만, 그만큼 서로를 다잡아주고 느슨해지지 않게 잡아주는, 은근히 긴장감 있는 궁합이에요.';
+  } else {
+    dyn=r.elnA+'과(와) '+r.elnB+', 서로 다른 결의 두 기운이 부딪히기보다 나란히 균형을 맞춰줘서, 각자의 색을 지키면서도 편안하게 어울리는 사이랍니다.';
+  }
+  return lead+dyn;
 }
 function renderMatchResult(sB, AB, vocB, metaB){
   var M=window.__MATCHDATA||{};
