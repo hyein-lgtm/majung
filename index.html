@@ -442,6 +442,9 @@
   .mi-wrap{max-width:400px;margin:0 auto;padding-top:8vh;text-align:center}
   .mi-logo{height:40px;width:auto;object-fit:contain;margin-bottom:26px;opacity:.95}
   .mi-logo-txt{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:20px;color:var(--gold-soft);margin-bottom:26px;letter-spacing:.04em}
+  .mi-brandlock{display:flex;flex-direction:column;align-items:center;gap:9px;margin-bottom:26px}
+  .mi-majung{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:40px;letter-spacing:.04em;line-height:1;background:linear-gradient(100deg,var(--sage-deep),var(--gold-soft) 55%,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+  .mi-brandlock .mi-wbl{height:15px;width:auto;object-fit:contain;opacity:.5}
   .mi-badge{display:inline-block;padding:6px 16px;border-radius:999px;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:700;
     color:var(--gold-soft);background:rgba(201,168,106,.14);border:1px solid rgba(201,168,106,.36);letter-spacing:.02em}
   .mi-title{font-family:'Nanum Myeongjo',serif;font-weight:700;font-size:23px;line-height:1.55;color:var(--ink);margin:20px 0 0}
@@ -1686,25 +1689,30 @@ function compareCompat(eA, eB, rel){
   var raw=(comp/4)*0.6 + sim*0.4;
   var score=Math.round(52+raw*46);              /* 52~98, 늘 긍정적 범위 */
   var tier = score>=85?'high':(score>=70?'mid':'warm');
-  /* 관계 6종을 3계열(설렘·케미·따뜻함) 톤으로 공유. 관계명은 배지·해설에서 구분된다. */
+  /* 관계 6종을 4계열(설렘·케미·따뜻함·협업) 톤으로 공유. 관계명은 배지·해설에서 구분된다. */
   var TONE={
     affection:{
-      high:'서로에게 강하게 끌리는 설레는 궁합이에요. 함께 있으면 시간 가는 줄 모르는 사이!',
-      mid:'다른 결이 오히려 서로를 궁금하게 만드는, 알아갈수록 빠져드는 사이예요.',
-      warm:'천천히 데워지는 인연이에요. 서두르지 않아도 서로를 부드럽게 채워줄 수 있어요.'
+      high:'서로에게 강하게 끌리는, 자석 같은 궁합이에요. 한 사람의 기운이 상대가 은근히 갈망하던 부분을 정확히 채워줘서, 함께 있으면 시간 가는 줄 모르고 자꾸만 더 알고 싶어지는 사이랍니다.',
+      mid:'다른 결이 오히려 강한 끌림이 되는 궁합이에요. 닮은 듯 다른 두 기운이 만나 서로를 궁금하게 만들고, 알아갈수록 더 깊이 빠져드는 사이예요.',
+      warm:'천천히, 그러나 오래 데워지는 인연이에요. 처음엔 잔잔해도 서로의 부족한 자리를 부드럽게 메워주며, 시간이 지날수록 편안하고 단단해지는 사랑이랍니다.'
     },
     chem:{
-      high:'거의 환상의 짝꿍급 케미예요! 손발이 척척 맞아 뭘 해도 잘 통하는 사이.',
-      mid:'서로 없는 걸 채워주는, 은근히 죽이 잘 맞는 사이예요. 함께라면 뭐든 잘 풀릴 조합!',
-      warm:'스타일은 좀 다르지만 그래서 더 배울 게 많은 사이. 오래 볼수록 진국이에요!'
+      high:'거의 소울메이트급 케미예요! 한 사람의 넘치는 기운을 다른 사람이 딱 받아줘서, 만나기만 하면 배꼽 빠지게 웃고 뭘 해도 죽이 잘 맞는 사이랍니다.',
+      mid:'서로 없는 걸 자연스럽게 채워주는, 은근히 잘 맞는 사이예요. 한 사람이 벌이면 다른 사람이 수습하고, 같이 있으면 뭐든 잘 굴러가는 든든한 조합이에요.',
+      warm:'스타일은 서로 좀 다르지만, 그래서 더 배울 게 많은 사이예요. 티격태격하다가도 결국 서로를 챙기게 되는, 오래 볼수록 진국인 관계랍니다.'
     },
     warm:{
-      high:'서로를 깊이 감싸주는 따뜻한 궁합이에요. 곁에 있는 것만으로 든든한 사이랍니다.',
-      mid:'다른 듯 닮은 두 사람, 서로의 빈자리를 조용히 채워주는 사이예요.',
-      warm:'가끔 티격태격해도 결국은 서로의 온기가 되어주는, 뭉근하게 정 깊은 사이예요.'
+      high:'서로를 깊이 감싸 안는 따뜻한 궁합이에요. 한 사람의 기운이 상대의 지친 자리를 조용히 보듬어줘서, 곁에 있는 것만으로 마음이 놓이는 든든한 사이랍니다.',
+      mid:'다른 듯 닮은 두 사람이 서로의 빈자리를 메워주는 궁합이에요. 굳이 말하지 않아도 필요한 순간에 서로를 채워주는, 은근히 잘 맞는 사이예요.',
+      warm:'가끔 티격태격해도 결국은 서로의 온기가 되어주는 사이예요. 서로 다른 색을 지닌 두 기운이 오랜 시간 부딪히고 섞이며, 뭉근하게 정이 깊어지는 관계랍니다.'
+    },
+    work:{
+      high:'일할 때 손발이 착착 맞는 최고의 파트너예요. 한 사람의 강점이 다른 사람의 부족한 부분을 정확히 메워줘서, 함께라면 혼자서는 못 낼 결과까지 만들어내는 조합이랍니다.',
+      mid:'서로 다른 강점이 잘 맞물리는 실속 있는 궁합이에요. 한 사람이 놓치기 쉬운 지점을 다른 사람이 자연스럽게 채워줘서, 같이 일할수록 시너지가 커지는 사이예요.',
+      warm:'스타일은 서로 달라도 그게 오히려 팀엔 힘이 돼요. 다른 시각이 부딪히며 더 단단한 결론을 만들어내는, 곁에 두면 배울 게 많은 동료랍니다.'
     }
   };
-  var REL2TONE={love:'affection',date:'affection',couple:'affection',friend:'chem',work:'chem',family:'warm'};
+  var REL2TONE={love:'affection',date:'affection',couple:'affection',friend:'chem',work:'work',family:'warm'};
   var toneKey=REL2TONE[rel]||'chem';
   var ELN={목:'나무',화:'불',토:'흙',금:'금',수:'물'};
   return { score:score, tier:tier, relation:rel, relName:(_MREL_KO[rel]||'친구'),
@@ -1727,7 +1735,7 @@ function renderMatchResult(sB, AB, vocB, metaB){
   /* 본인과의 궁합 감지(막지 않고 안내만) */
   var selfNote='';
   var same=(aNm && aNm===bNm);
-  if(same){ selfNote='<div class="match-selfnote">본인과의 궁합을 보고 있는 것 같아요 :) 친구에게 링크를 보내 진짜 궁합을 확인해 보세요!</div>'; }
+  if(same){ selfNote='<div class="match-selfnote">앗, 같은 이름이네요! :) 상대에게 링크를 보내면 두 사람의 진짜 궁합을 확인할 수 있어요.</div>'; }
   var host=document.getElementById('matchResult');
   if(!host){ host=document.createElement('section'); host.id='matchResult'; host.className='screen'; document.body.appendChild(host); }
   window.__matchRel=rel; /* 재초대 카드에 같은 관계 기본 선택 */
@@ -1747,7 +1755,7 @@ function renderMatchResult(sB, AB, vocB, metaB){
       +'<button type="button" class="match-full-btn" onclick="showFullReportForB()">'+bNm+'님의 전체 사주도 보고 싶다면 →</button>'
       +'<button type="button" class="match-save-link" onclick="saveMatchResult(this)">궁합 이미지로 저장하기</button>'
     +'</div>'
-    +'<div class="match-reinvite-t">나도 다른 친구랑 궁합 볼래?</div>'
+    +'<div class="match-reinvite-t">나랑 잘 맞는 사람, 또 누가 있을까?</div>'
     +matchInviteCardHtml(vocB);
   var se=document.getElementById('screenEnter'); if(se) se.style.display='none';
   var ri=document.getElementById('result'); if(ri) ri.classList.remove('show');
@@ -1797,7 +1805,7 @@ function showMatchInviteScreen(data){
   var LOGO=(document.querySelector('.logo-mark')||{}).src||'';
   host.innerHTML=
     '<div class="mi-wrap">'
-    +(LOGO?'<img class="mi-logo" src="'+LOGO+'" alt="마중사주">':'<div class="mi-logo-txt">마중사주</div>')
+    +'<div class="mi-brandlock"><span class="mi-majung">마중</span>'+(LOGO?'<img class="mi-wbl" src="'+LOGO+'" alt="WBL">':'')+'</div>'
     +'<div class="mi-badge">'+relName+' 궁합 초대</div>'
     +'<div class="mi-title">'+aNm+'님이<br><b>'+relName+' 궁합</b>을 보고 싶어<br>당신을 초대했어요</div>'
     +'<div class="mi-desc">내 생년월일을 넣으면<br>두 사람의 오행 궁합을 1분 만에 볼 수 있어요.</div>'
