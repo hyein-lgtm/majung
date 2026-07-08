@@ -1605,6 +1605,8 @@ function renderFinal(s,A,voc){
    서버에는 '표시이름 + 오행비율 5개 + 관계'만 임시(7일) 저장한다. */
 function _mesc(s){ return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 var _MREL_KO={love:'연인',date:'썸',couple:'부부',friend:'친구',work:'동료',family:'가족'};
+/* 링크를 받을 상대를 부르는 말(관계별) */
+var _MREL_TO={love:'그 사람',date:'그 사람',couple:'배우자',friend:'친구',work:'동료',family:'가족'};
 function elemRatios(A){
   var wt=(A&&A.wt)||{}, keys=['목','화','토','금','수'], tot=0, o={};
   keys.forEach(function(k){ tot+=(+wt[k]||0); });
@@ -1618,7 +1620,7 @@ function matchInviteCardHtml(voc){
   var segs=rels.map(function(r){ return '<button type="button" class="match-rel'+(window.__matchRel===r[0]?' on':'')+'" onclick="setMatchRel(\''+r[0]+'\',this)">'+r[1]+'</button>'; }).join('');
   return '<div class="match-card">'
     +'<div class="match-title">우리, 얼마나 잘 맞을까?</div>'
-    +'<div class="match-desc">친구에게 링크를 보내면,<br>서로의 오행 궁합을 1분 만에 확인할 수 있어요.</div>'
+    +'<div class="match-desc">링크를 보내면,<br>서로의 오행 궁합을 1분 만에 확인할 수 있어요.</div>'
     +'<div class="match-rel-seg">'+segs+'</div>'
     +'<button type="button" class="match-make-btn" onclick="createMatchLink(this)">궁합 링크 만들기</button>'
     +'</div>';
@@ -1641,7 +1643,7 @@ async function createMatchLink(btn){
     if(!data||!data.token) throw new Error('no token');
     var link=location.origin+'/match/'+data.token;
     if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
-    showMatchLinkResult(card, link);
+    showMatchLinkResult(card, link, rel);
   }catch(e){
     if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
     alert('링크 생성에 실패했어요. 잠시 후 다시 시도해 주세요.');
@@ -1653,13 +1655,14 @@ function _copyText(t){
     ? navigator.clipboard.writeText(t)
     : new Promise(function(res,rej){ try{ var ta=document.createElement('textarea'); ta.value=t; ta.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); ta.remove(); res(); }catch(e){ rej(e); } });
 }
-function showMatchLinkResult(card, link){
+function showMatchLinkResult(card, link, rel){
+  var to=_MREL_TO[rel]||'상대';
   if(!card) card=document.querySelector('#matchResult .match-card, #finalCtaZone .match-card');
-  if(!card){ prompt('아래 링크를 복사해 친구에게 보내주세요:', link); return; }
+  if(!card){ prompt('아래 링크를 복사해 '+to+'에게 보내주세요:', link); return; }
   var ex=card.querySelector('.match-link-box'); if(ex) ex.remove();
-  var msg='나 방금 사주 봤는데 너랑 궁합 궁금해서! 1분만 눌러봐 → '+link;
+  var msg='나 방금 사주 봤는데 우리 궁합이 궁금해서! 1분이면 볼 수 있어 → '+link;
   var box=document.createElement('div'); box.className='match-link-box';
-  box.innerHTML='<div class="mlb-label">✦ 링크가 준비됐어요! 친구에게 보내주세요</div>'
+  box.innerHTML='<div class="mlb-label">✦ 링크가 준비됐어요! '+to+'에게 보내주세요</div>'
     +'<div class="mlb-link">'+_mesc(link)+'</div>'
     +'<div class="mlb-btns"><button type="button" class="mlb-copy">링크 복사하기</button>'
     +(navigator.share?'<button type="button" class="mlb-share">공유하기</button>':'')+'</div>';
