@@ -97,7 +97,7 @@ app.post('/api/match/create', (req, res) => {
   try {
     const b = req.body || {};
     const voc = (b.voc || '').toString().slice(0, 24); // 표시 이름만 (최소)
-    const relation = ['love', 'friend', 'family'].includes(b.relation) ? b.relation : 'friend';
+    const relation = ['love', 'date', 'couple', 'friend', 'work', 'family'].includes(b.relation) ? b.relation : 'friend';
     // 오행 비율: 정확히 목/화/토/금/수 5개 숫자만 허용
     const src = b.elems || {};
     const keys = ['목', '화', '토', '금', '수'];
