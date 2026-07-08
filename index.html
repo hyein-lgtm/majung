@@ -1720,7 +1720,7 @@ function compareCompat(eA, eB, rel){
   var ELN={목:'나무',화:'불',토:'흙',금:'금',수:'물'};
   return { score:score, tier:tier, relation:rel, relName:(_MREL_KO[rel]||'친구'),
            headline:TONE[toneKey][tier], aDom:aDom, bDom:bDom, aDef:aDef, bDef:bDef,
-           elnA:ELN[aDom], elnB:ELN[bDom], gen:gen, ELN:ELN };
+           elnA:ELN[aDom], elnB:ELN[bDom], gen:gen, ELN:ELN, eA:eA, eB:eB };
 }
 /* 오행별 성향 한 줄(대표 기운의 성격) — 해석에 개인색을 입힌다 */
 var _ELTRAIT={
@@ -1730,27 +1730,73 @@ var _ELTRAIT={
   금:'군더더기 없이 정리하는 결단력과 단단함',
   수:'깊이 헤아리는 지혜와 유연한 통찰'
 };
-/* 관계별 어미(상대를 부르는 말) — 문장 자연스럽게 */
+/* 오행이 채워주는 것(부족분 보완 서술용) */
+var _ELGIFT={
+  목:'뻗어나갈 추진력',
+  화:'따뜻한 활기와 표현력',
+  토:'든든하게 받쳐주는 안정감',
+  금:'매듭을 짓는 결단력',
+  수:'차분하게 헤아리는 여유'
+};
+/* 개인 오행 분포의 결(한 기운이 뚜렷/고루 퍼짐/은은) 판별 */
+function _elFlavor(e, dom){
+  var keys=['목','화','토','금','수'];
+  var vals=keys.map(function(k){ return e[k]||0; });
+  var mx=Math.max.apply(null,vals), mn=Math.min.apply(null,vals);
+  var sum=vals.reduce(function(x,y){return x+y;},0)||1;
+  var share=(e[dom]||0)/sum;
+  if(share>=0.34) return 'sharp';       /* 한 기운이 유독 강함 */
+  if((mx-mn)<=mx*0.45) return 'even';    /* 오행이 고루 퍼짐 */
+  return 'soft';                          /* 대표 기운이 은은히 앞섬 */
+}
+/* 받침 유무로 한국어 조사 선택 (이/가·을/를·과/와·은/는) */
+function _jong(w){ if(!w) return false; var c=w.charCodeAt(w.length-1); if(c<0xAC00||c>0xD7A3) return false; return (c-0xAC00)%28!==0; }
+function _J(w){ return w+(_jong(w)?'이':'가'); }      /* 주격 */
+function _Jl(w){ return w+(_jong(w)?'을':'를'); }     /* 목적격 */
+function _Jw(w){ return w+(_jong(w)?'과':'와'); }     /* 접속 */
+/* 실제 오행 분포 전체를 반영한 개인화 해석 (관계 무관) */
 function _pairDesc(r, aNm, bNm){
   var ctrl={목:'토',토:'수',수:'화',화:'금',금:'목'}; /* 상극(극하는) 관계 */
+  var eA=r.eA||{}, eB=r.eB||{}, ELN=r.ELN, gen=r.gen;
   var a=r.aDom, b=r.bDom;
   var tA=_ELTRAIT[a]||'', tB=_ELTRAIT[b]||'';
-  var lead=aNm+'님은 '+tA+'을 지녔고, '+bNm+'님은 '+tB+'이 돋보여요. ';
-  /* 대표 기운이 같으면 성향 문장이 겹치므로 리드를 따로 쓴다 */
-  if(a===b){
-    return '두 분 다 '+r.elnA+'의 기운이 짙어요. '+aNm+'님도 '+bNm+'님도 '+tA+'을 함께 지녀서, 말하지 않아도 통하는 지점이 많고 같은 방향을 바라보는 사이랍니다.';
+  /* 1) 각자의 시그니처 — 대표 기운 + 분포의 결까지 반영 */
+  function sig(nm, dom, e, t){
+    var f=_elFlavor(e, dom);
+    if(f==='sharp')  return nm+'님은 '+ELN[dom]+'의 기운이 유난히 뚜렷해 '+_J(t)+' 강하게 드러나요';
+    if(f==='even')   return nm+'님은 오행이 고루 퍼진 가운데 '+_J(ELN[dom])+' 살짝 앞서, '+_Jl(t)+' 바탕으로 두루 유연한 편이에요';
+    return nm+'님은 '+_Jl(ELN[dom])+' 중심으로 '+_J(t)+' 은은히 배어 있어요';
   }
+  var lead=sig(aNm,a,eA,tA)+'. '+sig(bNm,b,eB,tB)+'. ';
+  /* 2) 부족분 보완 — 실제 분포에서 상대가 내 약한 기운을 채워주는지 */
+  var aGivesB=(eA[r.bDef]||0)>(eB[r.bDef]||0); /* A가 B의 부족 기운을 더 가짐 */
+  var bGivesA=(eB[r.aDef]||0)>(eA[r.aDef]||0);
+  var giftB=_ELGIFT[r.bDef]||(ELN[r.bDef]+' 기운');
+  var giftA=_ELGIFT[r.aDef]||(ELN[r.aDef]+' 기운');
+  var fill='';
+  if(a!==b){
+    if(aGivesB && bGivesA){
+      fill=aNm+'님에게 부족한 '+ELN[r.aDef]+', '+bNm+'님에게 부족한 '+_Jl(ELN[r.bDef])+' 서로가 채워줘서, 빈자리가 딱 맞물리는 조합이에요. ';
+    } else if(aGivesB){
+      fill=aNm+'님이 '+bNm+'님에게 부족한 '+_Jl(giftB)+' 자연스럽게 보태주는 사이예요. ';
+    } else if(bGivesA){
+      fill=bNm+'님이 '+aNm+'님에게 부족한 '+_Jl(giftA)+' 채워주는 사이예요. ';
+    }
+  }
+  /* 3) 두 대표 기운의 관계(상생/상극/동일/무관) */
   var dyn;
-  if(r.gen[a]===b){
-    dyn=aNm+'님의 '+r.elnA+' 기운이 '+bNm+'님의 '+r.elnB+' 기운에 힘을 실어주는 상생의 흐름이라, 함께할수록 '+bNm+'님이 더 빛나는 조합이에요.';
-  } else if(r.gen[b]===a){
-    dyn=bNm+'님의 '+r.elnB+' 기운이 '+aNm+'님의 '+r.elnA+' 기운을 북돋아 주는 상생의 흐름이라, 곁에 있을수록 '+aNm+'님에게 든든한 힘이 되는 사이예요.';
+  if(a===b){
+    dyn='두 분 다 '+ELN[a]+'의 기운이 짙어서, 말하지 않아도 통하고 같은 방향을 바라보는 사이랍니다.';
+  } else if(gen[a]===b){
+    dyn=aNm+'님의 '+_J(ELN[a])+' '+bNm+'님의 '+ELN[b]+'에 힘을 실어주는 상생의 흐름이라, 함께할수록 '+bNm+'님이 더 빛나요.';
+  } else if(gen[b]===a){
+    dyn=bNm+'님의 '+_J(ELN[b])+' '+aNm+'님의 '+_Jl(ELN[a])+' 북돋아 주는 상생의 흐름이라, 곁에 있을수록 '+aNm+'님에게 든든한 힘이 돼요.';
   } else if(ctrl[a]===b || ctrl[b]===a){
-    dyn='두 기운이 팽팽하게 맞서는 자리라 가끔은 티격태격할 수 있지만, 그만큼 서로를 다잡아주고 느슨해지지 않게 잡아주는, 은근히 긴장감 있는 궁합이에요.';
+    dyn=_Jw(ELN[a])+' '+ELN[b]+', 팽팽하게 맞서는 두 기운이라 가끔 티격태격해도, 그만큼 서로를 다잡아주고 느슨해지지 않게 잡아주는 궁합이에요.';
   } else {
-    dyn=r.elnA+'과(와) '+r.elnB+', 서로 다른 결의 두 기운이 부딪히기보다 나란히 균형을 맞춰줘서, 각자의 색을 지키면서도 편안하게 어울리는 사이랍니다.';
+    dyn=_Jw(ELN[a])+' '+ELN[b]+', 서로 다른 결의 기운이 부딪히기보다 나란히 균형을 맞춰줘서, 각자의 색을 지키며 편안하게 어울려요.';
   }
-  return lead+dyn;
+  return lead+fill+dyn;
 }
 function renderMatchResult(sB, AB, vocB, metaB){
   var M=window.__MATCHDATA||{};
