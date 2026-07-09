@@ -2293,36 +2293,7 @@ function saveDestinyLine(btn){
       x.textAlign='center';
       x.fillStyle='#E3C98C'; x.textBaseline='alphabetic'; x.font='700 44px "Nanum Myeongjo", serif';
       x.fillText('✦', W/2, 214);
-      x.fillStyle='#F3EDDE'; var fs=52; x.font='700 '+fs+'px "Nanum Myeongjo", serif';
-      var maxW=W-280, lineH=fs*1.6, gap=fs*0.7;
-      var sents=txt.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]*/g)||[txt];
-      var wrapAt=function(words,w){ var ls=[],cur=''; for(var i=0;i<words.length;i++){ var t=cur?cur+' '+words[i]:words[i]; if(x.measureText(t).width>w && cur){ ls.push(cur); cur=words[i]; } else { cur=t; } } if(cur)ls.push(cur); return ls; };
-      var paras=[];
-      for(var p=0;p<sents.length;p++){
-        var words=sents[p].trim().split(' ');
-        if(!words.length||!words[0]) continue;
-        var base=wrapAt(words,maxW), L=base.length, best=base;
-        if(L>1){ var lo=0,hi=maxW; for(var it=0;it<18;it++){ var mid=(lo+hi)/2; var ln=wrapAt(words,mid); if(ln.length<=L){ best=ln; hi=mid; } else { lo=mid; } } }
-        paras.push(best);
-      }
-      var totalH=0;
-      for(var q=0;q<paras.length;q++){ totalH+=paras[q].length*lineH; if(q<paras.length-1) totalH+=gap; }
-      var y=H/2 - totalH/2 + lineH/2 + 6;
-      x.textBaseline='middle';
-      for(var q=0;q<paras.length;q++){
-        for(var j=0;j<paras[q].length;j++){ x.fillText(paras[q][j], W/2, y); y+=lineH; }
-        if(q<paras.length-1) y+=gap;
-      }
-      x.textBaseline='alphabetic';
-      var baseY=H-118;
-      if(logoImg && logoImg.width){
-        var lh=58, lw=logoImg.width*lh/logoImg.height;
-        try{ x.drawImage(logoImg, W/2-lw/2, baseY-138, lw, lh); }catch(_le){}
-      }
-      x.fillStyle='rgba(227,201,140,.92)'; x.font='700 32px "Nanum Myeongjo", serif';
-      x.fillText('마중', W/2, baseY-42);
-      x.fillStyle='rgba(239,233,219,.5)'; x.font='400 23px "Nanum Myeongjo", serif';
-      x.fillText(voc?voc+'의 한 문장':'운명을 마중 나가는 한 문장', W/2, baseY);
+      x.fillStyle='#F3EDDE'; var sents=txt.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]*/g)||[txt]; var maxW=W-280; var wrapAt=function(words,w){var ls=[],cur='';for(var i=0;i<words.length;i++){var t=cur?cur+' '+words[i]:words[i];if(x.measureText(t).width>w&&cur){ls.push(cur);cur=words[i];}else{cur=t;}}if(cur)ls.push(cur);return ls;}; var FOOT=158, GAPF=72, TOPM=190, BOTM=80, avail=H-TOPM-BOTM; var fs,lineH,gap,paras,textH; for(fs=52; fs>=34; fs-=2){   x.font='700 '+fs+'px "Nanum Myeongjo", serif';   lineH=fs*1.6; gap=fs*0.7; paras=[];   for(var p=0;p<sents.length;p++){     var words=sents[p].trim().split(' ');     if(!words.length||!words[0]) continue;     var base=wrapAt(words,maxW),L=base.length,best=base;     if(L>1){var lo=0,hi=maxW;for(var it=0;it<18;it++){var mid=(lo+hi)/2;var ln=wrapAt(words,mid);if(ln.length<=L){best=ln;hi=mid;}else{lo=mid;}}}     paras.push(best);   }   textH=0; for(var q=0;q<paras.length;q++){textH+=paras[q].length*lineH; if(q<paras.length-1) textH+=gap;}   if(textH+GAPF+FOOT<=avail) break; } var group=textH+GAPF+FOOT; var contentTop=TOPM+Math.max(0,(avail-group)/2); x.fillStyle='#E3C98C'; x.textBaseline='alphabetic'; x.font='700 44px "Nanum Myeongjo", serif'; x.fillText('\u2726', W/2, contentTop-34); x.fillStyle='#F3EDDE'; x.textBaseline='top'; x.font='700 '+fs+'px "Nanum Myeongjo", serif'; var y=contentTop; for(var q=0;q<paras.length;q++){   for(var j=0;j<paras[q].length;j++){ x.fillText(paras[q][j], W/2, y); y+=lineH; }   if(q<paras.length-1) y+=gap; } var footerTop=contentTop+textH+GAPF; if(logoImg && logoImg.width){ var lh=58, lw=logoImg.width*lh/logoImg.height; try{ x.drawImage(logoImg, W/2-lw/2, footerTop, lw, lh); }catch(_le){} } x.textBaseline='top'; x.fillStyle='rgba(227,201,140,.92)'; x.font='700 32px "Nanum Myeongjo", serif'; x.fillText('\ub9c8\uc911', W/2, footerTop+58+20); x.fillStyle='rgba(239,233,219,.5)'; x.font='400 23px "Nanum Myeongjo", serif'; x.fillText(voc?voc+'\uc758 \ud55c \ubb38\uc7a5':'\uc6b4\uba85\uc744 \ub9c8\uc911 \ub098\uac00\ub294 \ud55c \ubb38\uc7a5', W/2, footerTop+58+20+42);
       cv.toBlob(function(b){ if(!b){ alert('이미지 생성에 실패했어요. 잠시 후 다시 시도해 주세요.'); return; } var _old=btn.innerHTML; btn.innerHTML='저장 중…'; btn.disabled=true; Promise.resolve(saveImageFile(b, '마중_한문장.png')).then(function(){ btn.innerHTML='저장했어요 ✓'; setTimeout(function(){ btn.innerHTML=_old; btn.disabled=false; },1800); }).catch(function(){ btn.innerHTML=_old; btn.disabled=false; alert('저장에 실패했어요. 잠시 후 다시 시도해 주세요.'); }); },'image/png');
     };
     var run=function(){
