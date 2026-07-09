@@ -533,7 +533,7 @@ body.buybar-on{padding-bottom:76px}
   .match-link-box{margin-top:16px;padding:15px 14px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,106,.28)}
   .mlb-label{font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:700;color:var(--gold-soft);margin-bottom:9px}
   .mlb-link{font-family:'Pretendard',sans-serif;font-size:12px;color:rgba(239,233,219,.72);word-break:break-all;line-height:1.5;
-    padding:9px 11px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);margin-bottom:10px;text-align:left}
+    padding:9px 11px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);margin-bottom:10px;text-align:left;-webkit-user-select:all;user-select:all}
   .mlb-btns{display:flex;gap:8px}
   .mlb-btns button{flex:1;padding:11px 0;border-radius:11px;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:13px;font-weight:700}
   .mlb-copy{border:none;color:#1a130a;background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep))}
@@ -1824,7 +1824,7 @@ function renderBridge(s,A,voc){
   const prods=d.prods.map(prod).join('');
   const mascot=MASCOT[def]?`<img src="${MASCOT[def]}" alt="마중이">`:'';
   document.getElementById('bridgeZone').innerHTML=`<div class="mjcom" style="--ac:${d.ac};--glow:${d.glow};--c2:${d.c}">`+
-    `<div class="rxn-arch"><div class="rxn-aura"></div><div class="rxn-stamp"><span>${d.han}</span></div><div class="rxn-eyebrow">MAJUNG PRESCRIPTION</div><p class="rxn-open">${voc}의 타고난 우주를 모두 읽어냈습니다. 이제 당신의 기운을 완벽한 균형으로 이끌 <b>'운명의 처방'</b>이 시작됩니다.</p><h2 class="rxn-h2">${voc}께 지금 필요한 건<br><b>${nm0} 기운</b>이에요</h2><p class="rxn-need">${d.need}</p><div class="rxn-routine"><div class="rxn-row"><div class="rxn-num">1</div><div class="rxn-t"><b>일상 행동</b> ${d.act}<span>${d.actsub}</span></div></div><div class="rxn-row"><div class="rxn-num">2</div><div class="rxn-t"><b>공간 컬러</b> ${d.space}<span>${d.spacesub}</span></div></div></div></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-rx2"><div class="rxn-kick">24시간 밀착 처방</div><h3 class="rxn-rxh">몸에서 잠시도 떼지 않는<br>단 하나의 기운.</h3><p class="rxn-rxp">여린 살결 위에 <em>마중의 고유 인장이 새겨진 스톤</em>이 닿는 순간,<br>부족했던 기운이 당신의 맥박과 동조하여 온종일 살아 움직입니다.</p><div class="rxn-wearshot" aria-hidden="true">착용컷 이미지 자리</div><p class="rxn-why">인장이 없는 기성 원석에서는 결코 흐르지 않을, <b>오직 당신만을 위한 파동</b>입니다.</p></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-seal"><div class="rxn-badge">五行 印章 · MAJUNG SIGNATURE</div><div class="rxn-med"><div class="rxn-medaura"></div><div class="rxn-ring"><img class="rxn-emb" src="${EMB[def]||EMB['수']}" alt="마중 오행 인장"><span class="rxn-tip"></span></div></div><p class="rxn-proof">💡 마중의 모든 토템은 기성품과 달리 고유 오행 문양이 정밀 각인되어 제작됩니다.</p><h4 class="rxn-hero">${voc}님의 결핍을 채울 단 하나의 처방</h4><div class="rxn-name">마중 시그니처 오행 인장 · <b>${STONE[def].nm}</b></div><div class="rxn-sealtxt"><p>시중의 평범한 기성 원석은 그저 예쁜 장식품일 뿐입니다.</p><p>마중은 다릅니다. ${voc}님에게 가장 목마른 <b>${nm0}(${d.han}) 문양</b>을 스톤 위에 정교하게 각인합니다.</p><p>이 인장이 새겨진 토템만이, 옅어진 기운을 붙잡아두는 <b>유일한 스위치</b>가 됩니다.</p></div><div class="rxn-pill">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
+    `<div class="rxn-arch"><div class="rxn-aura"></div><div class="rxn-stamp"><span>${d.han}</span></div><div class="rxn-eyebrow">MAJUNG PRESCRIPTION</div><p class="rxn-open">${voc}의 타고난 우주를 모두 읽어냈습니다. 이제 당신의 기운을 완벽한 균형으로 이끌 <b>'운명의 처방'</b>이 시작됩니다.</p><h2 class="rxn-h2">${voc}께 지금 필요한 건<br><b>${nm0} 기운</b>이에요</h2><p class="rxn-need">${d.need}</p><div class="rxn-routine"><div class="rxn-row"><div class="rxn-num">1</div><div class="rxn-t"><b>일상 행동</b> ${d.act}<span>${d.actsub}</span></div></div><div class="rxn-row"><div class="rxn-num">2</div><div class="rxn-t"><b>공간 컬러</b> ${d.space}<span>${d.spacesub}</span></div></div></div></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-rx2"><div class="rxn-kick">24시간 밀착 처방</div><h3 class="rxn-rxh">몸에서 잠시도 떼지 않는<br>단 하나의 기운.</h3><p class="rxn-rxp">여린 살결 위에 <em>마중의 고유 인장이 새겨진 스톤</em>이 닿는 순간,<br>부족했던 기운이 당신의 맥박과 동조하여 온종일 살아 움직입니다.</p><div class="rxn-wearshot" aria-hidden="true">착용컷 이미지 자리</div><p class="rxn-why">인장이 없는 기성 원석에서는 결코 흐르지 않을, <b>오직 당신만을 위한 파동</b>입니다.</p></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-seal"><div class="rxn-badge">五行 印章 · MAJUNG SIGNATURE</div><div class="rxn-med"><div class="rxn-medaura"></div><div class="rxn-ring"><img class="rxn-emb" src="${EMB[def]||EMB['수']}" alt="마중 오행 인장"><span class="rxn-tip"></span></div></div><p class="rxn-proof">💡 마중의 모든 토템은 기성품과 달리 고유 오행 문양이 정밀 각인되어 제작됩니다.</p><h4 class="rxn-hero">${voc}의 결핍을 채울 단 하나의 처방</h4><div class="rxn-name">마중 시그니처 오행 인장 · <b>${STONE[def].nm}</b></div><div class="rxn-sealtxt"><p>시중의 평범한 기성 원석은 그저 예쁜 장식품일 뿐입니다.</p><p>마중은 다릅니다. ${voc}에게 가장 목마른 <b>${nm0}(${d.han}) 문양</b>을 스톤 위에 정교하게 각인합니다.</p><p>이 인장이 새겨진 토템만이, 옅어진 기운을 붙잡아두는 <b>유일한 스위치</b>가 됩니다.</p></div><div class="rxn-pill">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
     `<div class="mjc-oracle"><div class="mjc-oracle-tag">ORACLE · 오행 처방전</div>`+
     `<div class="mjc-orow"><span class="mjc-oico">${OEMO[def]}</span><span class="mjc-okey">부족한 기운</span><span class="mjc-oval"><b>${GIFT[def]}</b></span></div>`+
     `<div class="mjc-orow"><span class="mjc-oico">🩹</span><span class="mjc-okey">결핍된 흐름</span><span class="mjc-oval">${LACK[def]}</span></div>`+
@@ -1960,9 +1960,9 @@ async function createMatchLink(btn){
 }
 /* 발급된 링크를 카드 안에 바로 보여준다 — 데스크톱/모바일 모두 확실한 피드백 */
 function _copyText(t){
-  return (navigator.clipboard&&navigator.clipboard.writeText)
-    ? navigator.clipboard.writeText(t)
-    : new Promise(function(res,rej){ try{ var ta=document.createElement('textarea'); ta.value=t; ta.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); ta.remove(); res(); }catch(e){ rej(e); } });
+  function legacy(){ return new Promise(function(res,rej){ try{ var ta=document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly',''); ta.style.cssText='position:fixed;left:-9999px;top:0;opacity:0'; document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0,t.length); var ok=document.execCommand('copy'); ta.remove(); if(ok){res();}else{rej(new Error('copy failed'));} }catch(e){ rej(e); } }); }
+  if(navigator.clipboard&&navigator.clipboard.writeText){ return navigator.clipboard.writeText(t).catch(function(){ return legacy(); }); }
+  return legacy();
 }
 function showMatchLinkResult(card, link, rel){
   var to=_MREL_TO[rel]||'상대';
@@ -1978,7 +1978,7 @@ function showMatchLinkResult(card, link, rel){
   card.appendChild(box);
   box.querySelector('.mlb-copy').onclick=function(){
     var self=this;
-    _copyText(link).then(function(){ self.textContent='복사됐어요 ✓'; }).catch(function(){ self.textContent='복사 실패'; });
+    _copyText(link).then(function(){ self.textContent='복사됐어요 ✓'; }).catch(function(){ self.textContent='복사 실패 · 위 링크를 길게 눌러 복사해 주세요'; });
     setTimeout(function(){ self.textContent='링크 복사하기'; },1800);
   };
   var sb=box.querySelector('.mlb-share');
