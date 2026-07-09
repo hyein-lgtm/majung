@@ -1930,6 +1930,8 @@ function setMatchRel(rel, btn){
 }
 function _mEnc(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function _mDec(t){ t=String(t).replace(/-/g,'+').replace(/_/g,'/'); while(t.length%4)t+='='; return JSON.parse(decodeURIComponent(escape(atob(t)))); }
+/* 공유 링크 베이스 — 로컬 미리보기(cowork-file:// 등)에서는 배포 주소로 만들어야 외부에서 열린다 */
+function _shareBase(){ return /^https?:$/.test(location.protocol) ? (location.origin+location.pathname) : 'https://majungsaju.com/'; }
 async function createMatchLink(btn){
   var J=window.__SAJU; if(!J){ mjToast('먼저 사주 결과가 준비되어야 해요.'); return; }
   var _old=btn?btn.textContent:null;
@@ -1942,14 +1944,14 @@ async function createMatchLink(btn){
     if(!r.ok) throw new Error('create failed');
     var data=await r.json();
     if(!data||!data.token) throw new Error('no token');
-    var link=location.origin+'/match/'+data.token;
+    var link=(/^https?:$/.test(location.protocol)?location.origin:'https://majungsaju.com')+'/match/'+data.token;
     if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
     showMatchLinkResult(card, link, rel);
   }catch(e){
     /* 서버(API)가 없는 정적 호스팅 폴백: 데이터를 링크(해시)에 직접 담는다 */
     try{
       var tok2=_mEnc(body);
-      var link2=location.origin+location.pathname+'#m='+tok2;
+      var link2=_shareBase()+'#m='+tok2;
       if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
       showMatchLinkResult(card, link2, rel);
       return;
