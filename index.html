@@ -439,6 +439,18 @@
 .mjc-story-inner b{color:var(--ac,#E3C98C)}
 .mjc-viral-lead{text-align:center;font-size:13.5px;font-weight:700;color:rgba(239,233,219,.8);margin:24px 0 10px;font-family:'Pretendard',sans-serif}
 .resume-link{display:block;margin:14px auto 0;background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;color:rgba(227,201,140,.85);text-decoration:underline;text-underline-offset:3px;padding:6px}
+.msc-scoreline{font-family:'Pretendard',sans-serif;font-size:12.5px;line-height:1.7;color:rgba(239,233,219,.72);max-width:290px;margin:10px auto 0;text-align:center;word-break:keep-all;text-wrap:pretty}
+.msc-slogan{display:inline-block;font-family:'Pretendard',sans-serif;font-size:11.5px;font-weight:600;color:#E3C98C;border:1px solid rgba(201,168,106,.4);border-radius:999px;padding:6px 14px;margin-top:12px;word-break:keep-all}
+.msc-sthead span:first-child,.msc-sthead span:last-child{border-bottom:1px solid rgba(201,168,106,.45);padding-bottom:6px}
+.msc-syn1{font-family:'Pretendard',sans-serif;font-size:12.5px;line-height:1.7;color:rgba(239,233,219,.85);background:rgba(201,168,106,.08);border:1px solid rgba(201,168,106,.25);border-radius:12px;padding:12px 14px;margin:14px 2px 2px;text-align:left;word-break:keep-all}
+.msc-oracle3{max-width:420px;margin:18px auto 0;border:1px solid rgba(201,168,106,.35);border-radius:18px 18px 14px 14px;background:linear-gradient(180deg,rgba(201,168,106,.07),rgba(255,255,255,.02));padding:22px 18px 20px;text-align:left}
+.mo3-head{text-align:center;margin-bottom:16px}
+.mo3-en{font-family:'Pretendard',sans-serif;font-size:9.5px;letter-spacing:.18em;color:rgba(201,168,106,.75)}
+.mo3-title{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:17px;color:var(--ink);margin-top:6px}
+.mo3-p+.mo3-p{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(201,168,106,.25)}
+.mo3-kr{font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:800;color:#E3C98C;margin-bottom:6px}
+.mo3-t{font-family:'Pretendard',sans-serif;font-size:12.5px;line-height:1.75;color:rgba(239,233,219,.82);word-break:keep-all;text-wrap:pretty}
+
 .buybar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(12,17,25,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(201,168,106,.35);transform:translateY(110%);transition:transform .35s ease;font-family:'Pretendard',sans-serif}
 .buybar.show{transform:translateY(0)}
 .bb-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -1881,8 +1893,6 @@ function renderFinal(s,A,voc){
       `<button type="button" onclick="saveResult(this)" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">마중 리포트 카드 저장하기</button>`+
       `<i style="width:1px;height:12px;background:rgba(239,233,219,.18)"></i>`+
       `<button type="button" onclick="saveFullReport(this)" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">전체 리포트 저장하기</button>`+
-      `<i style="width:1px;height:12px;background:rgba(239,233,219,.18)"></i>`+
-      `<button type="button" onclick="shareResult()" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">카카오톡·SNS로 공유하기</button>`+
     `</div>`+
     `<p style="margin:6px auto 0;text-align:center;font-family:'Pretendard',sans-serif;font-size:11.5px;line-height:1.6;color:rgba(239,233,219,.42);word-break:keep-all">내 오행 균형과 필요한 기운을 담은 요약 카드로 저장돼요.</p>`+
     `<div class="mjc-viral-lead">나랑 잘 맞는 사람, 또 누가 있을까? 👇</div>`+
@@ -2054,48 +2064,69 @@ function _J(w){ return w+(_jong(w)?'이':'가'); }      /* 주격 */
 function _Jl(w){ return w+(_jong(w)?'을':'를'); }     /* 목적격 */
 function _Jw(w){ return w+(_jong(w)?'과':'와'); }     /* 접속 */
 /* 실제 오행 분포 전체를 반영한 개인화 해석 (관계 무관) */
+var _ELTRAIT2={목:'새순처럼 자라나는 성장의 힘',화:'마음을 가만히 데워주는 표현력',토:'무엇이든 넉넉히 품어 안는 깊은 포용력',금:'흔들림 없이 중심을 지키는 단단한 절제',수:'유연하게 스며드는 깊은 통찰'};
+var _SAMELYRIC={
+  목:'같은 숲에서 자란 두 그루의 나무는, 보이지 않는 뿌리 아래에서 서로의 물길을 나눕니다. 두 분의 인연도 그렇게, 깊은 곳에서부터 이미 이어져 있어요.',
+  화:'나란히 타오르는 두 불꽃은 서로의 빛을 가리지 않습니다. 서로의 온기를 빌려 더 오래, 더 은은하게 타오르는 인연이에요.',
+  토:'흙은 서두르는 법이 없습니다. 계절이 바뀌어도 제자리에서 씨앗을 품고, 피어날 날을 말없이 기다리지요. 두 분의 인연도 그렇습니다. 화려하게 타오르기보다, 서로의 계절을 견뎌주고 서로의 뿌리가 되어주는, 흙처럼 오래 남는 사이예요.',
+  금:'잘 벼려진 두 자루의 검은 부딪힐 때가 아니라 나란히 놓일 때 가장 빛납니다. 서로의 결을 한눈에 알아보는, 조용하고 단단한 인연이에요.',
+  수:'두 물줄기는 만나는 순간 하나의 강이 됩니다. 어디서 시작했는지보다, 어디로 함께 흘러갈지가 더 궁금해지는 인연이에요.'
+};
+var _GENLYRIC={
+  목:'나무가 제 몸을 내어 불을 피우듯, 아낌없이 건네는 마음이 이 인연을 오래도록 데워줄 거예요.',
+  화:'불이 지나간 자리에 비옥한 흙이 남듯, 함께 보낸 시간은 고스란히 두 분의 토양이 됩니다.',
+  토:'흙이 오랜 시간 품어 금을 빚어내듯, 이 인연은 기다림 속에서 더 귀해지는 사이예요.',
+  금:'바위틈에서 맑은 물이 스며 나오듯, 단단함 곁에서 깊은 유연함이 피어나는 인연이에요.',
+  수:'물이 소리 없이 숲을 기르듯, 티 나지 않는 보살핌이 이 인연을 무성하게 키워갑니다.'
+};
 function _pairDesc(r, aNm, bNm){
-  var ctrl={목:'토',토:'수',수:'화',화:'금',금:'목'}; /* 상극(극하는) 관계 */
+  var ctrl={목:'토',토:'수',수:'화',화:'금',금:'목'};
   var eA=r.eA||{}, eB=r.eB||{}, ELN=r.ELN, gen=r.gen;
   var a=r.aDom, b=r.bDom;
-  var tA=_ELTRAIT[a]||'', tB=_ELTRAIT[b]||'';
-  /* 1) 각자의 시그니처 — 대표 기운 + 분포의 결까지 반영 */
-  function sig(nm, dom, e, t){
+  var tA=_ELTRAIT[a]||'', tB=_ELTRAIT2[b]||'';
+  /* 두 사람의 시그니처 — 같은 기운이라도 어휘와 문장 구조를 달리해 개인화 */
+  function sigA(nm, dom, e, t){
     var f=_elFlavor(e, dom);
-    if(f==='sharp')  return nm+'님은 '+ELN[dom]+'의 기운이 유난히 뚜렷해 '+_J(t)+' 강하게 드러나요';
-    if(f==='even')   return nm+'님은 오행이 고루 퍼진 가운데 '+_J(ELN[dom])+' 살짝 앞서, '+_Jl(t)+' 바탕으로 두루 유연한 편이에요';
-    return nm+'님은 '+_Jl(ELN[dom])+' 중심으로 '+_J(t)+' 은은히 배어 있어요';
+    if(f==='sharp') return nm+'님은 '+ELN[dom]+'의 기운을 유난히 짙게 타고나셨네요. '+_J(t)+' 삶의 결 곳곳에 배어 있어요';
+    if(f==='even')  return nm+'님은 오행이 고르게 어우러진 가운데 '+_J(ELN[dom])+' 살며시 앞서 있어요. '+_Jl(t)+' 바탕으로 어디서든 유연하게 스며드는 분이에요';
+    return nm+'님에게는 '+ELN[dom]+'의 기운이 은은하게 흐르고 있어요. '+_J(t)+' 요란하지 않게, 그러나 분명하게 빛나는 분이시군요';
   }
-  var lead=sig(aNm,a,eA,tA)+'. '+sig(bNm,b,eB,tB)+'. ';
-  /* 2) 부족분 보완 — 실제 분포에서 상대가 내 약한 기운을 채워주는지 */
-  var aGivesB=(eA[r.bDef]||0)>(eB[r.bDef]||0); /* A가 B의 부족 기운을 더 가짐 */
+  function sigB(nm, dom, e, t){
+    var f=_elFlavor(e, dom);
+    if(f==='sharp') return nm+'님의 우주에는 '+ELN[dom]+'의 기운이 뚜렷하게 자리하고 있네요. '+_J(t)+' 관계의 중심을 지그시 받쳐주고 있답니다';
+    if(f==='even')  return nm+'님은 다섯 기운이 고루 스민 가운데 '+_J(ELN[dom])+' 결을 이끌고 있어요. '+_Jl(t)+' 품고 어떤 순간에도 부드럽게 어우러지는 분이랍니다';
+    return nm+'님에게는 '+_J(ELN[dom])+' 잔잔히 스며 있어, '+_J(t)+' 가까운 사람에게 가장 먼저 가닿는 분이시군요';
+  }
+  var lead=sigA(aNm,a,eA,tA)+'. '+sigB(bNm,b,eB,tB)+'.';
+  /* 부족분 보완 */
+  var aGivesB=(eA[r.bDef]||0)>(eB[r.bDef]||0);
   var bGivesA=(eB[r.aDef]||0)>(eA[r.aDef]||0);
   var giftB=_ELGIFT[r.bDef]||(ELN[r.bDef]+' 기운');
   var giftA=_ELGIFT[r.aDef]||(ELN[r.aDef]+' 기운');
   var fill='';
   if(a!==b){
     if(aGivesB && bGivesA){
-      fill=aNm+'님에게 부족한 '+ELN[r.aDef]+', '+bNm+'님에게 부족한 '+_Jl(ELN[r.bDef])+' 서로가 채워줘서, 빈자리가 딱 맞물리는 조합이에요. ';
+      fill=aNm+'님에게 부족한 '+ELN[r.aDef]+', '+bNm+'님에게 부족한 '+_Jl(ELN[r.bDef])+' 서로가 가만히 채워주고 있어요. 빈자리가 꼭 맞물리는, 참 다행스러운 인연이랍니다. ';
     } else if(aGivesB){
-      fill=aNm+'님이 '+bNm+'님에게 부족한 '+_Jl(giftB)+' 자연스럽게 보태주는 사이예요. ';
+      fill=aNm+'님은 '+bNm+'님에게 부족한 '+_Jl(giftB)+' 자신도 모르게 건네주고 계시는군요. ';
     } else if(bGivesA){
-      fill=bNm+'님이 '+aNm+'님에게 부족한 '+_Jl(giftA)+' 채워주는 사이예요. ';
+      fill=bNm+'님은 '+aNm+'님에게 부족한 '+_Jl(giftA)+' 곁에서 조용히 채워주고 계시는군요. ';
     }
   }
-  /* 3) 두 대표 기운의 관계(상생/상극/동일/무관) */
+  /* 상호작용과 시너지 — 관계 유형별 서정적 결론 */
   var dyn;
   if(a===b){
-    dyn='두 분 다 '+ELN[a]+'의 기운이 짙어서, 말하지 않아도 통하고 같은 방향을 바라보는 사이랍니다.';
+    dyn='두 분 모두 이처럼 깊은 '+ELN[a]+'의 성품을 공유하고 계시기에, 굳이 말로 꺼내지 않아도 서로의 속도와 침묵까지 헤아릴 수 있어요. 같은 곳을 바라보는 것을 넘어, 서로의 기반을 함께 가꾸어 가는 든든한 동반자의 흐름이 두 분 사이에 흐르고 있답니다.<br><br>'+(_SAMELYRIC[a]||'');
   } else if(gen[a]===b){
-    dyn=aNm+'님의 '+_J(ELN[a])+' '+bNm+'님의 '+ELN[b]+'에 힘을 실어주는 상생의 흐름이라, 함께할수록 '+bNm+'님이 더 빛나요.';
+    dyn=aNm+'님의 '+_J(ELN[a])+' '+bNm+'님의 '+_Jl(ELN[b])+' 살포시 피워내는 상생의 흐름을 타고나셨네요. 함께하는 시간이 쌓일수록 '+bNm+'님은 더 선명하게 빛나고, '+aNm+'님은 그 곁에서 자신이 건넨 온기를 다시 확인하게 될 거예요.<br><br>'+(_GENLYRIC[a]||'');
   } else if(gen[b]===a){
-    dyn=bNm+'님의 '+_J(ELN[b])+' '+aNm+'님의 '+_Jl(ELN[a])+' 북돋아 주는 상생의 흐름이라, 곁에 있을수록 '+aNm+'님에게 든든한 힘이 돼요.';
+    dyn=bNm+'님의 '+_J(ELN[b])+' '+aNm+'님의 '+_Jl(ELN[a])+' 살포시 피워내는 상생의 흐름을 타고나셨네요. 함께하는 시간이 쌓일수록 '+aNm+'님은 더 선명하게 빛나고, '+bNm+'님은 그 곁에서 자신이 건넨 온기를 다시 확인하게 될 거예요.<br><br>'+(_GENLYRIC[b]||'');
   } else if(ctrl[a]===b || ctrl[b]===a){
-    dyn=_Jw(ELN[a])+' '+ELN[b]+', 팽팽하게 맞서는 두 기운이라 가끔 티격태격해도, 그만큼 서로를 다잡아주고 느슨해지지 않게 잡아주는 궁합이에요.';
+    dyn=_Jw(ELN[a])+' '+ELN[b]+', 팽팽하게 마주 선 두 기운을 타고나셨네요. 가끔은 부딪히고 서로가 낯설게 느껴질 수도 있지만, 그 긴장이야말로 서로를 무디지 않게 벼려주는 힘이랍니다.<br><br>잘 벼려진 검이 그렇듯, 부딪힌 자리마다 두 분은 조금씩 더 단단해져요. 다름을 고치려는 마음 대신, 가만히 바라봐주는 마음이면 충분한 인연이에요.';
   } else {
-    dyn=_Jw(ELN[a])+' '+ELN[b]+', 서로 다른 결의 기운이 부딪히기보다 나란히 균형을 맞춰줘서, 각자의 색을 지키며 편안하게 어울려요.';
+    dyn=_Jw(ELN[a])+' '+ELN[b]+', 서로 다른 결의 기운이 다투지 않고 나란히 흐르고 있어요. 각자의 색을 잃지 않으면서도 서로에게 곁을 내어주는, 참 편안한 거리의 인연이랍니다.<br><br>서로 다른 두 악기가 하나의 화음을 이루듯, 두 분의 다름은 이 관계를 더 풍성하게 만들어 줄 거예요.';
   }
-  return lead+fill+dyn;
+  return lead+'<br><br>'+fill+dyn;
 }
 var _HANJA={목:'木',화:'火',토:'土',금:'金',수:'水'};
 /* 마중 아치 로고 (골드 게이트) — uid로 그라디언트 id 충돌 방지 */
@@ -2179,7 +2210,7 @@ function _matchStatsHtml(r, aNm, bNm){
       +'<div class="msc-bw r"><span class="msc-bar" style="width:'+wb+'%;background:'+col+'"></span></div>'
     +'</div>';
   });
-  return '<div class="msc-stats"><div class="msc-sthead"><span>'+aNm+'</span><span></span><span>'+bNm+'</span></div>'+rows+'</div>';
+  return '<div class="msc-stats"><div class="msc-sthead"><span>'+aNm+'님의 기운</span><span></span><span>'+bNm+'님의 기운</span></div>'+rows+'</div>';
 }
 /* 힙한 키워드 칩 */
 var _ELCHIP={목:'#든든한_성장동력',화:'#분위기_메이커',토:'#든든한_버팀목',금:'#믿음직한_결단력',수:'#깊이있는_통찰'};
@@ -2218,6 +2249,64 @@ function _matchCtaCopy(rel, bNm){
   /* 실제 결과(전체 사주 리포트)와 일치하는 정직한 카피 + 가벼운 후킹 */
   return '🔮 '+bNm+'님의 사주로 보는 성향과 속마음 ➔';
 }
+/* ---- 궁합 결과 인지성 헬퍼 ---- */
+function _relKind(r){
+  var a=r.aDom,b=r.bDom,gen=r.gen||{};
+  if(a===b) return {k:'same',el:a};
+  if(gen[a]===b) return {k:'gen',g:a,t:b};
+  if(gen[b]===a) return {k:'gen',g:b,t:a};
+  if(_MCTRL[a]===b||_MCTRL[b]===a) return {k:'ctrl'};
+  return {k:'neutral'};
+}
+function _scoreLine(r){
+  var k=_relKind(r).k;
+  if(k==='same') return '안정감이 강한 상생 궁합이에요. 비슷한 결의 기운이라 함께 있을수록 단단하고 편안해지는 사이입니다.';
+  if(k==='gen') return '흐름이 좋은 상생 궁합이에요. 한 사람의 기운이 다른 사람을 자연스럽게 살려주는 사이입니다.';
+  if(k==='ctrl') return '긴장감이 살아 있는 궁합이에요. 서로 다른 기운이 부딪히며 오히려 서로를 성장시키는 사이입니다.';
+  return '서로 다른 결이 만나는 궁합이에요. 각자의 기운이 상대의 빈 곳을 채워주며 균형을 이루는 사이입니다.';
+}
+function _slogan(r){
+  var k=_relKind(r).k;
+  if(k==='same') return '서로에게 흔들리지 않는 안정감을 주는 현실형 궁합';
+  if(k==='gen') return '한 사람의 기운이 다른 사람을 피워내는 성장형 궁합';
+  if(k==='ctrl') return '서로를 단단하게 벼려주는 긴장형 궁합';
+  return '서로의 빈 곳을 나란히 채워주는 균형형 궁합';
+}
+var _SYNTRAIT={목:'추진력과 성장',화:'열정과 표현',토:'현실감과 책임감',금:'결단과 절제',수:'공감과 지혜'};
+function _synLine(r,aNm,bNm){
+  var rk=_relKind(r);
+  if(rk.k==='same') return '두 사람 모두 '+_HANJA[rk.el]+'('+rk.el+')의 기운이 뚜렷하여 '+_SYNTRAIT[rk.el]+'의 주파수가 아주 잘 맞물립니다.';
+  if(rk.k==='gen') return _HANJA[rk.g]+'('+rk.g+')의 기운이 '+_HANJA[rk.t]+'('+rk.t+')의 기운을 자연스럽게 키워주어, 함께할수록 기운의 순환이 좋아지는 궁합입니다.';
+  if(rk.k==='ctrl') return _HANJA[r.aDom]+'('+r.aDom+')와 '+_HANJA[r.bDom]+'('+r.bDom+')의 기운이 팽팽하게 맞서 있어, 서로의 다름을 인정할수록 더 강해지는 궁합입니다.';
+  return _HANJA[r.aDom]+'('+r.aDom+')와 '+_HANJA[r.bDom]+'('+r.bDom+')의 기운이 서로 다른 결로 스미며, 상대의 빈 곳을 채워주는 궁합입니다.';
+}
+function _oracle3Html(r,aNm,bNm){
+  var rk=_relKind(r);
+  var syn,fric,rx;
+  if(rk.k==='same'){
+    syn='말하지 않아도 통하는 부분이 많은 사이입니다. 같은 결의 기운을 타고난 두 사람은 생활의 리듬과 가치관이 닮아, 오래 볼수록 편안해지고 신뢰가 쌓입니다.';
+    fric='각자의 기준이 너무 뚜렷하다 보니, 마음속 깊은 서운함이나 감정 표현이 한 박자 늦어져 오해가 생길 수 있습니다.';
+    rx='좋아하는 마음을 말보다 태도로만 증명하려 하지 마세요. 가끔은 직접적인 말로 서로의 확신을 마중 나가주세요.';
+  } else if(rk.k==='gen'){
+    syn='한 사람의 기운이 다른 한 사람을 자연스럽게 살려주는 사이입니다. 함께 있을수록 서로의 장점이 더 선명해지고, 혼자일 때보다 더 좋은 선택을 하게 됩니다.';
+    fric='주는 쪽과 받는 쪽의 역할이 한쪽으로 기울면, 한 사람만 애쓰고 있다는 느낌이 쌓일 수 있습니다.';
+    rx='받은 만큼 표현하세요. 작은 고마움을 그때그때 말로 돌려주는 것만으로 이 궁합의 순환은 오래 이어집니다.';
+  } else if(rk.k==='ctrl'){
+    syn='서로 다른 방식으로 세상을 보는 두 사람입니다. 그 차이가 맞부딪는 순간마다 혼자서는 내릴 수 없던 결론에 닿게 되는, 뜻밖의 시너지가 있는 사이입니다.';
+    fric='의견이 갈릴 때 서로를 이기려 하면 기운이 소모됩니다. 설득보다 먼저 필요한 건 인정입니다.';
+    rx='다름을 고치려 하지 말고 그대로 두세요. 서로의 방식을 존중하는 말 한마디가 이 궁합의 가장 강한 처방입니다.';
+  } else {
+    syn='서로의 기운이 직접 부딪히지 않아 편안한 거리감이 있는 사이입니다. 각자의 세계를 지키면서도 상대의 빈 곳을 자연스럽게 채워줍니다.';
+    fric='부딪음이 적은 만큼, 서로에게 무심해지기 쉽습니다. 편안함이 무관심으로 변하지 않도록 먼저 안부를 묻는 습관이 필요합니다.';
+    rx='정기적으로 서로의 근황을 먼저 묻고, 작은 약속을 자주 만드세요. 작은 접점이 쌓일수록 이 궁합은 단단해집니다.';
+  }
+  return '<div class="msc-oracle3">'
+    +'<div class="mo3-head"><span class="mo3-en">RELATIONSHIP ORACLE</span><div class="mo3-title">두 사람의 인연 방정식</div></div>'
+    +'<div class="mo3-p"><div class="mo3-kr">✦ 우리의 시너지</div><div class="mo3-t">'+syn+'</div></div>'
+    +'<div class="mo3-p"><div class="mo3-kr">✦ 조심해야 할 점</div><div class="mo3-t">'+fric+'</div></div>'
+    +'<div class="mo3-p"><div class="mo3-kr">✦ 더 단단해지는 법</div><div class="mo3-t">'+rx+'</div></div>'
+  +'</div>';
+}
 function renderMatchResult(sB, AB, vocB, metaB){
   var M=window.__MATCHDATA||{};
   var eA=M.elems||{}, eB=elemRatios(AB);
@@ -2241,13 +2330,16 @@ function renderMatchResult(sB, AB, vocB, metaB){
       +'<div class="msc-fusion">'+_matchFusionSVG(r)+'</div>'
       +'<div class="msc-rate"><div class="msc-rate-l">인연 상생률</div>'
         +'<div class="msc-rate-n">'+r.score+'<small>%</small></div></div>'
+      +'<div class="msc-scoreline">'+_scoreLine(r)+'</div>'
       +'<div class="msc-poetic">「'+_poeticCompat(r).title+'」</div>'
+      +'<div class="msc-slogan">'+_slogan(r)+'</div>'
       +_matchStatsHtml(r, aNm, bNm)
+      +'<div class="msc-syn1">💡 '+_synLine(r,aNm,bNm)+'</div>'
       +_matchChipsHtml(r)
-      +'<div class="msc-desc">'+_pairShort(r, aNm, bNm)+'</div>'
       +'<div class="msc-mark">'+_archSvg('seal',24,28)+'<span>마중사주</span></div>'
     +'</div>'
     +selfNote
+    +_oracle3Html(r,aNm,bNm)
     +'<details class="match-acc"><summary>상세 궁합 풀이 <span class="maccy">▾</span></summary>'
       +'<div class="match-acc-body">'+_pairDesc(r, aNm, bNm)+'</div></details>'
     +'<div class="match-cta-wrap">'
