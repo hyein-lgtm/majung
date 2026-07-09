@@ -411,7 +411,8 @@
   .prod .gem-ic{position:relative;overflow:hidden}
   .prod .glint{position:absolute;top:-30%;left:0;width:34%;height:160%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);transform:translateX(-220%) rotate(18deg);animation:ctaGlint 4s ease-in-out infinite}
   @keyframes ctaGlint{0%,70%{transform:translateX(-220%) rotate(18deg)}86%,100%{transform:translateX(420%) rotate(18deg)}}
-  @media (prefers-reduced-motion:reduce){.cta-aura::before,.prod .glint{animation:none}.cta-aura .spark,.cta-aura .ripple{display:none}}
+  .msc-desc{margin:10px 4px 2px;font-size:13px;line-height:1.65;color:rgba(239,233,219,.78);text-align:center;word-break:keep-all}
+@media (prefers-reduced-motion:reduce){.cta-aura::before,.prod .glint{animation:none}.cta-aura .spark,.cta-aura .ripple{display:none}}
   .splash{position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(130% 100% at 50% 28%,#16233c 0%,#0E1520 55%,#070b12 100%);opacity:0;transition:opacity .6s ease}
   .splash.on{display:flex;opacity:1}
   .splash.off{opacity:0}
@@ -2093,6 +2094,27 @@ function _matchChipsHtml(r){
   arr.forEach(function(c){ if(c && !seen[c]){ seen[c]=1; out.push('<span class="msc-chip">'+c+'</span>'); } });
   return '<div class="msc-chips">'+out.join('')+'</div>';
 }
+function _pairShort(r, aNm, bNm){
+  try{
+    var a=r.aDom, b=r.bDom, EL=r.ELN||{목:'나무',화:'불',토:'흙',금:'쇠',수:'물'};
+    var HJ={목:'木',화:'火',토:'土',금:'金',수:'水'};
+    var lead=aNm+'님은 '+HJ[a]+'('+a+'), '+bNm+'님은 '+HJ[b]+'('+b+')의 기운이 가장 짙어요. ';
+    var gen={목:'화',화:'토',토:'금',금:'수',수:'목'};
+    var dyn;
+    if(a===b) dyn='같은 결의 기운이라 말하지 않아도 통하는 사이예요.';
+    else if(gen[a]===b||gen[b]===a){
+      var g=gen[a]===b?[a,b]:[b,a];
+      dyn=_J(EL[g[0]])+' '+_Jl(EL[g[1]])+' 살려주는 상생의 흐름이에요.';
+    }
+    else{
+      var ctrl={목:'토',토:'수',수:'화',화:'금',금:'목'};
+      if(ctrl[a]===b||ctrl[b]===a) dyn='팽팽히 맞서며 서로를 단단하게 벼려주는 기운이에요.';
+      else dyn='서로 다른 결이 나란히 균형을 이루는 흐름이에요.';
+    }
+    return lead+dyn;
+  }catch(_){ return ''; }
+}
+
 /* 관계별 CTA 문구 (친구인데 '연애' 같은 어색함 방지) */
 function _matchCtaCopy(rel, bNm){
   /* 실제 결과(전체 사주 리포트)와 일치하는 정직한 카피 + 가벼운 후킹 */
@@ -2124,6 +2146,7 @@ function renderMatchResult(sB, AB, vocB, metaB){
       +'<div class="msc-poetic">「'+_poeticCompat(r).title+'」</div>'
       +_matchStatsHtml(r, aNm, bNm)
       +_matchChipsHtml(r)
+      +'<div class="msc-desc">'+_pairShort(r, aNm, bNm)+'</div>'
       +'<div class="msc-mark">'+_archSvg('seal',24,28)+'<span>마중사주</span></div>'
     +'</div>'
     +selfNote
@@ -2150,12 +2173,28 @@ function renderMatchResult(sB, AB, vocB, metaB){
   host.style.display='block';
   window.scrollTo({top:0});
 }
+window.__CAST_ORIG=(document.getElementById('cast')||{}).innerHTML||'';
+window.__SUB_ORIG=(document.getElementById('enterSub')||{}).innerHTML||'';
+window.__RP_ORIG=(document.getElementById('reportPreview')||{}).innerHTML||'';
+function mjRestoreEnter(){
+  try{
+    var mb=document.getElementById('matchBanner'); if(mb) mb.remove();
+    var cb=document.getElementById('cast'); if(cb){ cb.innerHTML=window.__CAST_ORIG; cb.disabled=false; }
+    var es=document.getElementById('enterSub'); if(es) es.innerHTML=window.__SUB_ORIG;
+    var rp=document.getElementById('reportPreview'); if(rp) rp.innerHTML=window.__RP_ORIG;
+    var cf=document.getElementById('ctaFloat'); if(cf){ cf.classList.remove('show'); cf.setAttribute('aria-hidden','true'); }
+    document.body.classList.remove('cta-on');
+    try{ if(window.__ctaObs){ window.__ctaObs.disconnect(); window.__ctaObs=null; } }catch(_){}
+    window.__castGen=(window.__castGen||0)+1;
+  }catch(_){}
+}
 function showFullReportForB(){
   window.__MATCH=null; window.__MATCHDATA=null;
   var mr=document.getElementById('matchResult'); if(mr) mr.style.display='none';
   var se=document.getElementById('screenEnter'); if(se) se.style.display='block';
   var rz=document.getElementById('result'); if(rz){ rz.style.display=''; rz.classList.remove('show'); }
   var mi=document.getElementById('matchIntro'); if(mi) mi.style.display='none';
+  mjRestoreEnter();
   var cb=document.getElementById('cast'); if(cb) cb.click(); /* 폼 값 유지된 채 일반 리포트 재생성 */
 }
 async function saveMatchResult(btn){
@@ -2364,9 +2403,7 @@ function saveDestinyLine(btn){
       x.fillStyle=g; x.fillRect(0,0,W,H);
       x.strokeStyle='rgba(227,201,140,.45)'; x.lineWidth=2; x.strokeRect(60,60,W-120,H-120);
       x.textAlign='center';
-      x.fillStyle='#E3C98C'; x.textBaseline='alphabetic'; x.font='700 44px "Nanum Myeongjo", serif';
-      x.fillText('✦', W/2, 214);
-      x.fillStyle='#F3EDDE'; var sents=txt.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]*/g)||[txt]; var maxW=W-280; var wrapAt=function(words,w){var ls=[],cur='';for(var i=0;i<words.length;i++){var t=cur?cur+' '+words[i]:words[i];if(x.measureText(t).width>w&&cur){ls.push(cur);cur=words[i];}else{cur=t;}}if(cur)ls.push(cur);return ls;}; var FOOT=158, GAPF=72, TOPM=190, BOTM=80, avail=H-TOPM-BOTM; var fs,lineH,gap,paras,textH; for(fs=52; fs>=34; fs-=2){   x.font='700 '+fs+'px "Nanum Myeongjo", serif';   lineH=fs*1.6; gap=fs*0.7; paras=[];   for(var p=0;p<sents.length;p++){     var words=sents[p].trim().split(' ');     if(!words.length||!words[0]) continue;     var base=wrapAt(words,maxW),L=base.length,best=base;     if(L>1){var lo=0,hi=maxW;for(var it=0;it<18;it++){var mid=(lo+hi)/2;var ln=wrapAt(words,mid);if(ln.length<=L){best=ln;hi=mid;}else{lo=mid;}}}     paras.push(best);   }   textH=0; for(var q=0;q<paras.length;q++){textH+=paras[q].length*lineH; if(q<paras.length-1) textH+=gap;}   if(textH+GAPF+FOOT<=avail) break; } var group=textH+GAPF+FOOT; var contentTop=TOPM+Math.max(0,(avail-group)/2); x.fillStyle='#E3C98C'; x.textBaseline='alphabetic'; x.font='700 44px "Nanum Myeongjo", serif'; x.fillText('\u2726', W/2, contentTop-34); x.fillStyle='#F3EDDE'; x.textBaseline='top'; x.font='700 '+fs+'px "Nanum Myeongjo", serif'; var y=contentTop; for(var q=0;q<paras.length;q++){   for(var j=0;j<paras[q].length;j++){ x.fillText(paras[q][j], W/2, y); y+=lineH; }   if(q<paras.length-1) y+=gap; } var footerTop=contentTop+textH+GAPF; if(logoImg && logoImg.width){ var lh=58, lw=logoImg.width*lh/logoImg.height; try{ x.drawImage(logoImg, W/2-lw/2, footerTop, lw, lh); }catch(_le){} } x.textBaseline='top'; x.fillStyle='rgba(227,201,140,.92)'; x.font='700 32px "Nanum Myeongjo", serif'; x.fillText('\ub9c8\uc911', W/2, footerTop+58+20); x.fillStyle='rgba(239,233,219,.5)'; x.font='400 23px "Nanum Myeongjo", serif'; x.fillText(voc?voc+'\uc758 \ud55c \ubb38\uc7a5':'\uc6b4\uba85\uc744 \ub9c8\uc911 \ub098\uac00\ub294 \ud55c \ubb38\uc7a5', W/2, footerTop+58+20+42);
+      x.fillStyle='#F3EDDE'; var sents=txt.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]*/g)||[txt]; var maxW=W-280; var wrapAt=function(words,w){var ls=[],cur='';for(var i=0;i<words.length;i++){var t=cur?cur+' '+words[i]:words[i];if(x.measureText(t).width>w&&cur){ls.push(cur);cur=words[i];}else{cur=t;}}if(cur)ls.push(cur);return ls;}; var FOOT=158, GAPF=72, TOPM=190, BOTM=80, avail=H-TOPM-BOTM; var fs,lineH,gap,paras,textH; for(fs=52; fs>=34; fs-=2){   x.font='700 '+fs+'px "Nanum Myeongjo", serif';   lineH=fs*1.6; gap=fs*0.7; paras=[];   for(var p=0;p<sents.length;p++){     var words=sents[p].trim().split(' ');     if(!words.length||!words[0]) continue;     var base=wrapAt(words,maxW),L=base.length,best=base;     if(L>1){var lo=0,hi=maxW;for(var it=0;it<18;it++){var mid=(lo+hi)/2;var ln=wrapAt(words,mid);if(ln.length<=L){best=ln;hi=mid;}else{lo=mid;}}}     paras.push(best);   }   textH=0; for(var q=0;q<paras.length;q++){textH+=paras[q].length*lineH; if(q<paras.length-1) textH+=gap;}   if(textH+GAPF+FOOT<=avail) break; } var group=textH+GAPF+FOOT; var contentTop=TOPM+Math.max(0,(avail-group)/2); x.fillStyle='#E3C98C'; x.textBaseline='alphabetic'; x.font='700 44px "Nanum Myeongjo", serif'; x.fillText('\u2726', W/2, contentTop-64); x.fillStyle='#F3EDDE'; x.textBaseline='top'; x.font='700 '+fs+'px "Nanum Myeongjo", serif'; var y=contentTop; for(var q=0;q<paras.length;q++){   for(var j=0;j<paras[q].length;j++){ x.fillText(paras[q][j], W/2, y); y+=lineH; }   if(q<paras.length-1) y+=gap; } var footerTop=contentTop+textH+GAPF; if(logoImg && logoImg.width){ var lh=58, lw=logoImg.width*lh/logoImg.height; try{ x.drawImage(logoImg, W/2-lw/2, footerTop, lw, lh); }catch(_le){} } x.textBaseline='top'; x.fillStyle='rgba(227,201,140,.92)'; x.font='700 32px "Nanum Myeongjo", serif'; x.fillText('\ub9c8\uc911', W/2, footerTop+58+20); x.fillStyle='rgba(239,233,219,.5)'; x.font='400 23px "Nanum Myeongjo", serif'; x.fillText(voc?voc+'\uc758 \ud55c \ubb38\uc7a5':'\uc6b4\uba85\uc744 \ub9c8\uc911 \ub098\uac00\ub294 \ud55c \ubb38\uc7a5', W/2, footerTop+58+20+42);
       cv.toBlob(function(b){ if(!b){ mjToast('이미지 생성에 실패했어요. 잠시 후 다시 시도해 주세요.'); return; } var _old=btn.innerHTML; btn.innerHTML='저장 중…'; btn.disabled=true; Promise.resolve(saveImageFile(b, '마중_한문장.png')).then(function(){ btn.innerHTML='저장했어요 ✓'; setTimeout(function(){ btn.innerHTML=_old; btn.disabled=false; },1800); }).catch(function(){ btn.innerHTML=_old; btn.disabled=false; mjToast('저장에 실패했어요. 잠시 후 다시 시도해 주세요.'); }); },'image/png');
     };
     var run=function(){
@@ -2470,6 +2507,7 @@ function mjToast(msg, opts){
 }
 document.getElementById('cast').onclick=async()=>{
   const btn=document.getElementById('cast');
+  window.__castGen=(window.__castGen||0)+1; const _gen=window.__castGen;
   const name=(document.getElementById('name').value||'').trim();
   const y=+document.getElementById('y').value, m=+document.getElementById('m').value, d=+document.getElementById('d').value;
   const sjEl=document.getElementById('saji');
@@ -2541,9 +2579,9 @@ document.getElementById('cast').onclick=async()=>{
   //   AI는 ~30초 걸리므로 로딩 배너로 진행 중임을 분명히 보여주고, 도착하면 도착 배너로 알린다.
   window.__streamingReport=true; // AI 도착 전 nav 재빌드 억제
   fetchReport(s,A,meta)
-    .then(rep=>{ window.__streamingReport=false; try{ renderReport(rep,tip,ctaText); showDeepArrived(rz); try{ if(!window.__MATCH){ var _st=mjLoadState(); if(_st){ _st.report=rep; _st.ts=Date.now(); mjSaveState(_st); } } }catch(_){} }catch(_){} })
+    .then(rep=>{ if(_gen!==window.__castGen) return; window.__streamingReport=false; try{ renderReport(rep,tip,ctaText); showDeepArrived(rz); try{ if(!window.__MATCH){ var _st=mjLoadState(); if(_st){ _st.report=rep; _st.ts=Date.now(); mjSaveState(_st); } } }catch(_){} }catch(_){} })
     .catch(()=>{ window.__streamingReport=false; hideDeepLoading(); })
-    .finally(()=>{ btn.disabled=false; btn.textContent='오행 리포트 보기'; });
+    .finally(()=>{ if(_gen!==window.__castGen) return; btn.disabled=false; btn.innerHTML=window.__CAST_ORIG||'오행 리포트 보기'; });
 };
 
 /* ───────── SNS 공유 카드 (9:16) + 저장/공유 ───────── */
@@ -2738,7 +2776,7 @@ async function shareResult(){
 function showScreen(id){['screenIntro','screenEnter'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display=(x===id)?'block':'none';});window.scrollTo({top:0,behavior:'smooth'});}
 document.getElementById('toEnter').onclick=()=>showScreen('screenEnter');
 document.getElementById('backIntro').onclick=()=>showScreen('screenIntro');
-var _rb=document.getElementById('resBack'); if(_rb)_rb.onclick=()=>{document.getElementById('result').classList.remove('show');showScreen('screenEnter');};
+var _rb=document.getElementById('resBack'); if(_rb)_rb.onclick=()=>{document.getElementById('result').classList.remove('show');mjRestoreEnter();showScreen('screenEnter');};
 var _restart=document.getElementById('restartBtn'); if(_restart)_restart.onclick=()=>{const r=document.getElementById('result');r.classList.remove('show');const cf=document.getElementById('ctaFloat');if(cf){cf.classList.remove('show');cf.setAttribute('aria-hidden','true');}document.body.classList.remove('cta-on');showScreen('screenIntro');};
 var _rs=document.getElementById('resShare'); if(_rs)_rs.onclick=()=>{ var su={title:'마중 리포트', text:'내 오행 균형과 마중 처방, 30초면 나와요', url:location.origin+'/'}; if(navigator.share){navigator.share(su).catch(()=>{});} else if(typeof _copyText==='function'){ _copyText(su.url).then(()=>mjToast('링크를 복사했어요. 원하는 곳에 붙여넣어 공유해 보세요!')).catch(()=>mjToast('이 링크를 복사해 공유해 보세요:<br>'+su.url,{dur:5000})); } else { mjToast('이 링크를 복사해 공유해 보세요:<br>'+su.url,{dur:5000}); } };
 var _oi=document.getElementById('ohaeInfo'); if(_oi)_oi.onclick=()=>mjToast('오행(나무·불·흙·쇠·물) 다섯 기운의 이야기예요.<br>마중은 다섯 기운의 균형을 읽어 강한 기운과<br>채우면 좋은 기운, 삶의 방향을 알려드려요.',{dur:6000});
