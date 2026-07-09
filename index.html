@@ -439,6 +439,17 @@
 .mjc-story-inner b{color:var(--ac,#E3C98C)}
 .mjc-viral-lead{text-align:center;font-size:13.5px;font-weight:700;color:rgba(239,233,219,.8);margin:24px 0 10px;font-family:'Pretendard',sans-serif}
 .resume-link{display:block;margin:14px auto 0;background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;color:rgba(227,201,140,.85);text-decoration:underline;text-underline-offset:3px;padding:6px}
+.buybar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(12,17,25,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(201,168,106,.35);transform:translateY(110%);transition:transform .35s ease;font-family:'Pretendard',sans-serif}
+.buybar.show{transform:translateY(0)}
+.bb-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bb-nm{font-size:11px;color:rgba(239,233,219,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-price{display:flex;align-items:baseline;gap:6px}
+.bb-price b{font-size:15.5px;color:#EFE9DB;font-weight:800}
+.bb-price i{font-style:normal;font-size:11.5px;font-weight:800;color:#E3C98C}
+.bb-price s{font-size:11px;color:rgba(239,233,219,.4)}
+.bb-btn{flex:none;text-decoration:none;background:linear-gradient(135deg,#E9C583,#C9A86A);color:#0C1119;font-size:13.5px;font-weight:800;border-radius:12px;padding:12px 18px;box-shadow:0 0 18px rgba(201,168,106,.35)}
+body.buybar-on .cta-float{opacity:0;pointer-events:none}
+body.buybar-on{padding-bottom:76px}
 .msc-desc{margin:10px 4px 2px;font-size:13px;line-height:1.65;color:rgba(239,233,219,.78);text-align:center;word-break:keep-all}
 @media (prefers-reduced-motion:reduce){.cta-aura::before,.prod .glint{animation:none}.cta-aura .spark,.cta-aura .ripple{display:none}}
   .splash{position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(130% 100% at 50% 28%,#16233c 0%,#0E1520 55%,#070b12 100%);opacity:0;transition:opacity .6s ease}
@@ -1783,7 +1794,9 @@ function renderBridge(s,A,voc){
 .mjcom .rxn-ring svg{width:62px;height:74px;filter:drop-shadow(0 3px 9px rgba(0,0,0,.5)) drop-shadow(0 0 8px color-mix(in srgb,var(--ac) 55%,transparent))}
 .mjcom .rxn-tip{position:absolute;left:50%;top:16%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 9px 3px color-mix(in srgb,var(--gold-soft) 80%,#fff);animation:rxnTip 2.4s ease-in-out infinite}
 @keyframes rxnTip{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(.7)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}}
-.mjcom .rxn-sealtxt{font-family:'Nanum Myeongjo',serif;font-size:18.5px;line-height:1.95;color:#F6EFDD;word-break:keep-all;max-width:310px;margin:0 auto}
+.mjcom .rxn-sealtxt{font-family:'Nanum Myeongjo',serif;font-size:17.5px;line-height:1.9;color:#F6EFDD;word-break:keep-all;overflow-wrap:break-word;text-wrap:pretty;max-width:310px;margin:0 auto;text-align:left}
+.mjcom .rxn-sealtxt p{margin:0 0 16px}
+.mjcom .rxn-sealtxt p:last-child{margin-bottom:0}
 .mjcom .rxn-sealtxt b{font-weight:700;color:var(--ac)}
 .mjcom .rxn-pill{margin-top:34px;display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:12.5px;font-family:'Nanum Myeongjo',serif;border:1px solid color-mix(in srgb,var(--c2) 45%,rgba(201,168,106,.4));background:color-mix(in srgb,var(--c2) 8%,rgba(255,255,255,.03));color:var(--ac)}.mjcom .rxn-badge{display:inline-block;font-size:10.5px;letter-spacing:.26em;color:var(--ac);padding:6px 15px;border-radius:999px;margin-bottom:26px;border:1px solid color-mix(in srgb,var(--ac) 40%,transparent);background:color-mix(in srgb,var(--ac) 8%,transparent)}.mjcom .rxn-emb{width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 3px 9px rgba(0,0,0,.5)) drop-shadow(0 0 8px color-mix(in srgb,var(--ac) 45%,transparent))}.mjcom .rxn-proof{font-size:11.5px;line-height:1.7;color:rgba(239,233,219,.5);max-width:300px;margin:20px auto 0;word-break:keep-all;font-weight:400}.mjcom .rxn-hero{font-size:19px;font-weight:800;line-height:1.5;color:#F6EFDD;margin:26px auto 0;max-width:320px;word-break:keep-all}.mjcom .rxn-name{font-size:13px;color:rgba(239,233,219,.7);margin:14px auto 20px;display:flex;align-items:center;justify-content:center;gap:10px;word-break:keep-all}.mjcom .rxn-name::before,.mjcom .rxn-name::after{content:'';width:22px;height:1px;background:linear-gradient(90deg,transparent,var(--ac))}.mjcom .rxn-name::after{background:linear-gradient(90deg,var(--ac),transparent)}.mjcom .rxn-name b{color:var(--gold-soft);font-weight:800}.mjcom .rxn-sealtxt b.soft{color:rgba(239,233,219,.42);font-weight:400}
 @media(prefers-reduced-motion:reduce){.mjcom .rxn-aura,.mjcom .rxn-medaura,.mjcom .rxn-tip,.mjcom .rxn-flow span{animation:none}}
@@ -1799,7 +1812,7 @@ function renderBridge(s,A,voc){
   const prods=d.prods.map(prod).join('');
   const mascot=MASCOT[def]?`<img src="${MASCOT[def]}" alt="마중이">`:'';
   document.getElementById('bridgeZone').innerHTML=`<div class="mjcom" style="--ac:${d.ac};--glow:${d.glow};--c2:${d.c}">`+
-    `<div class="rxn-arch"><div class="rxn-aura"></div><div class="rxn-stamp"><span>${d.han}</span></div><div class="rxn-eyebrow">MAJUNG PRESCRIPTION</div><p class="rxn-open">${voc}의 타고난 우주를 모두 읽어냈습니다. 이제 당신의 기운을 완벽한 균형으로 이끌 <b>'운명의 처방'</b>이 시작됩니다.</p><h2 class="rxn-h2">${voc}께 지금 필요한 건<br><b>${nm0} 기운</b>이에요</h2><p class="rxn-need">${d.need}</p><div class="rxn-routine"><div class="rxn-row"><div class="rxn-num">1</div><div class="rxn-t"><b>일상 행동</b> ${d.act}<span>${d.actsub}</span></div></div><div class="rxn-row"><div class="rxn-num">2</div><div class="rxn-t"><b>공간 컬러</b> ${d.space}<span>${d.spacesub}</span></div></div></div></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-rx2"><div class="rxn-kick">24시간 밀착 처방</div><h3 class="rxn-rxh">몸에서 잠시도 떼지 않는<br>단 하나의 기운.</h3><p class="rxn-rxp">여린 살결 위에 <em>마중의 고유 인장이 새겨진 스톤</em>이 닿는 순간,<br>부족했던 기운이 당신의 맥박과 동조하여 온종일 살아 움직입니다.</p><div class="rxn-wearshot" aria-hidden="true">착용컷 이미지 자리</div><p class="rxn-why">인장이 없는 기성 원석에서는 결코 흐르지 않을, <b>오직 당신만을 위한 파동</b>입니다.</p></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-seal"><div class="rxn-badge">五行 印章 · MAJUNG SIGNATURE</div><div class="rxn-med"><div class="rxn-medaura"></div><div class="rxn-ring"><img class="rxn-emb" src="${EMB[def]||EMB['수']}" alt="마중 오행 인장"><span class="rxn-tip"></span></div></div><p class="rxn-proof">💡 마중의 모든 토템은 기성품과 달리 고유 오행 문양이 정밀 각인되어 제작됩니다.</p><h4 class="rxn-hero">${voc}님의 결핍을 채울 단 하나의 처방</h4><div class="rxn-name">마중 시그니처 오행 인장 · <b>${STONE[def].nm}</b></div><p class="rxn-sealtxt">시중의 평범한 기성 원석은 그저 <b class="soft">예쁜 장식품</b>일 뿐입니다. 오직 마중의 고유 <b>${d.han}</b> 문양이 정교하게 각인된 토템만이, ${voc}님의 옅어진 기운을 붙잡아두는 <b>유일한 스위치</b>가 됩니다.</p><div class="rxn-pill">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
+    `<div class="rxn-arch"><div class="rxn-aura"></div><div class="rxn-stamp"><span>${d.han}</span></div><div class="rxn-eyebrow">MAJUNG PRESCRIPTION</div><p class="rxn-open">${voc}의 타고난 우주를 모두 읽어냈습니다. 이제 당신의 기운을 완벽한 균형으로 이끌 <b>'운명의 처방'</b>이 시작됩니다.</p><h2 class="rxn-h2">${voc}께 지금 필요한 건<br><b>${nm0} 기운</b>이에요</h2><p class="rxn-need">${d.need}</p><div class="rxn-routine"><div class="rxn-row"><div class="rxn-num">1</div><div class="rxn-t"><b>일상 행동</b> ${d.act}<span>${d.actsub}</span></div></div><div class="rxn-row"><div class="rxn-num">2</div><div class="rxn-t"><b>공간 컬러</b> ${d.space}<span>${d.spacesub}</span></div></div></div></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-rx2"><div class="rxn-kick">24시간 밀착 처방</div><h3 class="rxn-rxh">몸에서 잠시도 떼지 않는<br>단 하나의 기운.</h3><p class="rxn-rxp">여린 살결 위에 <em>마중의 고유 인장이 새겨진 스톤</em>이 닿는 순간,<br>부족했던 기운이 당신의 맥박과 동조하여 온종일 살아 움직입니다.</p><div class="rxn-wearshot" aria-hidden="true">착용컷 이미지 자리</div><p class="rxn-why">인장이 없는 기성 원석에서는 결코 흐르지 않을, <b>오직 당신만을 위한 파동</b>입니다.</p></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-seal"><div class="rxn-badge">五行 印章 · MAJUNG SIGNATURE</div><div class="rxn-med"><div class="rxn-medaura"></div><div class="rxn-ring"><img class="rxn-emb" src="${EMB[def]||EMB['수']}" alt="마중 오행 인장"><span class="rxn-tip"></span></div></div><p class="rxn-proof">💡 마중의 모든 토템은 기성품과 달리 고유 오행 문양이 정밀 각인되어 제작됩니다.</p><h4 class="rxn-hero">${voc}님의 결핍을 채울 단 하나의 처방</h4><div class="rxn-name">마중 시그니처 오행 인장 · <b>${STONE[def].nm}</b></div><div class="rxn-sealtxt"><p>시중의 평범한 기성 원석은 그저 예쁜 장식품일 뿐입니다.</p><p>마중은 다릅니다. ${voc}님에게 가장 목마른 <b>${nm0}(${d.han}) 문양</b>을 스톤 위에 정교하게 각인합니다.</p><p>이 인장이 새겨진 토템만이, 옅어진 기운을 붙잡아두는 <b>유일한 스위치</b>가 됩니다.</p></div><div class="rxn-pill">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
     `<div class="mjc-oracle"><div class="mjc-oracle-tag">ORACLE · 오행 처방전</div>`+
     `<div class="mjc-orow"><span class="mjc-oico">${OEMO[def]}</span><span class="mjc-okey">부족한 기운</span><span class="mjc-oval"><b>${GIFT[def]}</b></span></div>`+
     `<div class="mjc-orow"><span class="mjc-oico">🩹</span><span class="mjc-okey">결핍된 흐름</span><span class="mjc-oval">${LACK[def]}</span></div>`+
@@ -1818,6 +1831,7 @@ function renderBridge(s,A,voc){
       `</div>`+
     `</div>`+
     `<a class="mjc-finalcta" href="https://www.wblbeauty.com/event/lookbook/26summer2.html" target="_blank" rel="noopener"><span class="mjc-ar"></span><span class="mjc-lb">처방 토템 마중하기 →</span></a>`+
+    `<div class="mjc-trust" style="margin-top:14px"><span>무료 배송</span><i></i><span>7일 내 반품</span><i></i><span>기운 큐레이션 보증</span></div>`+
     `<p class="mjc-guide">${d.guide}</p>`+
     `<div class="mjc-check"><div class="mjc-check-h">왜 이 팔찌여야만 하나요?</div>`+
     `<div class="mjc-ck"><i>✓</i><span>마중 고유의 <b>오행 문양 정밀 각인</b></span></div>`+
@@ -1827,15 +1841,30 @@ function renderBridge(s,A,voc){
     `</div>`+
     `<div class="mjc-story"><button type="button" class="mjc-story-btn" onclick="mjcToggleStory(this)"><span class="lb">마중의 깊은 명리 서사 더보기</span><span class="pm">＋</span></button>`+
     `<div class="mjc-story-body"><div class="mjc-story-inner"><p>시중의 평범한 기성 원석은, 아직 아무 이름도 새겨지지 않은 예쁜 돌일 뿐입니다.</p><p>마중은 ${voc}의 사주를 읽어 다섯 기운 중 가장 목마른 하나, <b>${nm0}(${d.han})</b>의 문양을 골라 스톤 위에 정성껏 새깁니다.</p><p>인장이 새겨지는 순간, 돌은 비로소 <b>당신의 토템</b>이 됩니다.</p><p>${SEALV[def]} 품은 이 작은 원석이 손목 위에서 맥박을 따라 흐르며, 하루의 흔들림마다 당신의 균형을 다시 마중 나갑니다.</p></div></div></div>`+
+    `<p style="margin:16px auto 0;text-align:center;font-size:11.5px;line-height:1.6;color:rgba(239,233,219,.45);letter-spacing:.02em;word-break:keep-all">✦ 마중이가 ${voc} 사주에 맞춰 준비한 기운 팔찌예요 ✦</p>`+
     `<div class="mjc-syn">`+
       `<div class="mjc-syn-tag">＋ SYNERGY</div>`+
       `<div class="mjc-syn-h">함께 차면, 기운이 완성돼요</div>`+
       `<div class="mjc-syn-p">오행 팔찌가 부족한 기운을 <b>채운다면</b>,<br>개운팔찌는 그 위에서 전체 운을 <b>끌어올려요.</b></div>`+
       `<div class="mjc-syn-card"><div class="mjc-syn-th"></div><div class="mjc-syn-bd"><div class="mjc-syn-nm">개운 팔찌</div><div class="mjc-syn-nt">채움 위에 더하는 상승의 기운</div><span class="mjc-syn-link">개운팔찌도 보러가기 →</span></div></div>`+
     `</div>`+
-    `<p style="margin:16px auto 0;text-align:center;font-size:11.5px;line-height:1.6;color:rgba(239,233,219,.45);letter-spacing:.02em;word-break:keep-all">✦ 마중이가 ${voc} 사주에 맞춰 준비한 기운 팔찌예요 ✦</p>`+
-    `<div class="mjc-trust"><span>무료 배송</span><i></i><span>7일 내 반품</span><i></i><span>기운 큐레이션 보증</span></div>`+
     `</div>`;
+  /* ── 하단 고정 구매바: 처방 구간에 들어오면 가격+CTA가 따라온다 ── */
+  var _bb=document.getElementById('buyBar');
+  if(!_bb){ _bb=document.createElement('div'); _bb.id='buyBar'; _bb.className='buybar'; _bb.setAttribute('aria-hidden','true'); document.body.appendChild(_bb); }
+  _bb.innerHTML='<div class="bb-info"><span class="bb-nm">'+nm0+' 오행 팔찌 · 나의 처방 토템</span><span class="bb-price"><b>53,820원</b><i>10%</i><s>59,800원</s></span></div>'
+    +'<a class="bb-btn" href="https://www.wblbeauty.com/event/lookbook/26summer2.html" target="_blank" rel="noopener">마중하기 →</a>';
+  try{
+    if(window.__bbObs1){ window.__bbObs1.disconnect(); }
+    if(window.__bbObs2){ window.__bbObs2.disconnect(); }
+    var _bCta=document.querySelector('.mjc-finalcta'), _bBz=document.getElementById('bridgeZone');
+    var _bCv=false, _bIz=false;
+    var _bbUpd=function(){ var sh=_bIz&&!_bCv; _bb.classList.toggle('show',sh); _bb.setAttribute('aria-hidden',sh?'false':'true'); document.body.classList.toggle('buybar-on',sh); };
+    window.__bbObs1=new IntersectionObserver(function(es){ es.forEach(function(e){ _bCv=e.isIntersecting; }); _bbUpd(); },{threshold:.15});
+    if(_bCta) window.__bbObs1.observe(_bCta);
+    window.__bbObs2=new IntersectionObserver(function(es){ es.forEach(function(e){ _bIz=e.isIntersecting||e.boundingClientRect.top<0; }); _bbUpd(); },{threshold:0});
+    if(_bBz) window.__bbObs2.observe(_bBz);
+  }catch(_){}
 }
 function mjcToggleStory(btn){
   var box=btn.parentNode, body=box.querySelector('.mjc-story-body');
@@ -1847,13 +1876,15 @@ function renderFinal(s,A,voc){
   const def=chartFrame(s,A).def, nm=(voc||'').replace('님','')||'YOU';
   const NM={'목':'나무','화':'불','토':'흙','금':'금','수':'물'}, c=MCOL[def]; const [e1,e2,kind]=ENERGY[def]||ENERGY['수'];
   document.getElementById('finalCtaZone').innerHTML=
-    `<div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:18px 0 4px">`+
-      `<button type="button" onclick="saveResult(this)" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">공유용 리포트 카드 저장하기</button>`+
+    `<div class="mjc-div" style="margin-top:34px"><span>SHARE</span></div>`+
+    `<div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:14px 0 4px">`+
+      `<button type="button" onclick="saveResult(this)" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">마중 리포트 카드 저장하기</button>`+
       `<i style="width:1px;height:12px;background:rgba(239,233,219,.18)"></i>`+
       `<button type="button" onclick="saveFullReport(this)" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">전체 리포트 저장하기</button>`+
       `<i style="width:1px;height:12px;background:rgba(239,233,219,.18)"></i>`+
       `<button type="button" onclick="shareResult()" style="background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(239,233,219,.6);padding:6px 2px">카카오톡·SNS로 공유하기</button>`+
     `</div>`+
+    `<p style="margin:6px auto 0;text-align:center;font-family:'Pretendard',sans-serif;font-size:11.5px;line-height:1.6;color:rgba(239,233,219,.42);word-break:keep-all">내 오행 균형과 필요한 기운을 담은 요약 카드로 저장돼요.</p>`+
     `<div class="mjc-viral-lead">나랑 잘 맞는 사람, 또 누가 있을까? 👇</div>`+
     matchInviteCardHtml(voc);
 }
@@ -2251,6 +2282,9 @@ function mjRestoreEnter(){
     var rp=document.getElementById('reportPreview'); if(rp) rp.innerHTML=window.__RP_ORIG;
     var cf=document.getElementById('ctaFloat'); if(cf){ cf.classList.remove('show'); cf.setAttribute('aria-hidden','true'); }
     document.body.classList.remove('cta-on');
+    var bb=document.getElementById('buyBar'); if(bb){ bb.classList.remove('show'); bb.setAttribute('aria-hidden','true'); }
+    document.body.classList.remove('buybar-on');
+    try{ if(window.__bbObs1){ window.__bbObs1.disconnect(); window.__bbObs1=null; } if(window.__bbObs2){ window.__bbObs2.disconnect(); window.__bbObs2=null; } }catch(_){}
     try{ if(window.__ctaObs){ window.__ctaObs.disconnect(); window.__ctaObs=null; } }catch(_){}
     window.__castGen=(window.__castGen||0)+1;
   }catch(_){}
