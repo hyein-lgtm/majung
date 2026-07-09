@@ -450,6 +450,31 @@
 .mo3-p+.mo3-p{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(201,168,106,.25)}
 .mo3-kr{font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:800;color:#E3C98C;margin-bottom:6px}
 .mo3-t{font-family:'Pretendard',sans-serif;font-size:12.5px;line-height:1.75;color:rgba(239,233,219,.82);word-break:keep-all;text-wrap:pretty}
+  .msc-basis{font-family:'Pretendard',sans-serif;font-size:10.5px;color:rgba(239,233,219,.45);margin-top:6px}
+  .msc-bw{position:relative;background:linear-gradient(rgba(255,255,255,.05),rgba(255,255,255,.05)) center/100% 2px no-repeat}
+  .msc-bw.l{box-shadow:inset -1px 0 0 rgba(239,233,219,.18)}
+  .msc-bw.r{box-shadow:inset 1px 0 0 rgba(239,233,219,.18)}
+  .msc-val{font-style:normal;font-family:'Pretendard',sans-serif;font-size:9.5px;color:rgba(239,233,219,.55);flex:0 0 auto;line-height:1;white-space:nowrap}
+  .msc-bw.l .msc-val{margin-right:6px}.msc-bw.r .msc-val{margin-left:6px}
+  .msc-val.low{color:rgba(227,201,140,.9);font-weight:700}
+  .msc-stnote{font-family:'Pretendard',sans-serif;font-size:10px;color:rgba(239,233,219,.42);margin-top:4px;text-align:center;word-break:keep-all}
+  .msc-stnote i{font-style:normal;color:rgba(227,201,140,.85);font-weight:700}
+  @media(min-width:860px){
+    #matchResult{padding:0 40px 90px}
+    .match-share-card{max-width:600px;padding:44px 52px 38px}
+    .msc-stats{max-width:440px}
+    .msc-scoreline{max-width:400px}
+    .msc-syn1{margin-left:auto;margin-right:auto;max-width:440px}
+    .msc-oracle3{max-width:780px;padding:30px 34px 28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 26px}
+    .msc-oracle3 .mo3-head{grid-column:1/-1}
+    .msc-oracle3 .mo3-p+.mo3-p{margin-top:0;padding-top:0;border-top:none;border-left:1px dashed rgba(201,168,106,.25);padding-left:26px}
+    .match-acc{max-width:780px}
+    .match-acc-body{column-gap:34px}
+    .match-cta-wrap{max-width:480px}
+    .match-card{max-width:520px}
+    .match-selfnote{max-width:600px;margin-left:auto;margin-right:auto}
+  }
+
 
 .buybar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(12,17,25,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(201,168,106,.35);transform:translateY(110%);transition:transform .35s ease;font-family:'Pretendard',sans-serif}
 .buybar.show{transform:translateY(0)}
@@ -526,9 +551,9 @@ body.buybar-on{padding-bottom:76px}
     font-family:'Pretendard',sans-serif;font-size:13.5px;font-weight:600;
     background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(239,233,219,.62);transition:all .18s}
   .match-rel.on{background:linear-gradient(135deg,var(--gold),var(--gold-deep));border-color:transparent;color:#1a130a;box-shadow:0 4px 14px rgba(201,168,106,.3)}
-  .match-make-btn{width:100%;padding:14px 0;border:none;border-radius:14px;cursor:pointer;
-    font-family:'Pretendard',sans-serif;font-size:15px;font-weight:700;letter-spacing:.01em;color:#1a130a;
-    background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep));box-shadow:0 6px 20px rgba(201,168,106,.32)}
+  .match-make-btn{width:100%;padding:14px 0;border:1px solid rgba(201,168,106,.5);border-radius:14px;cursor:pointer;
+    font-family:'Pretendard',sans-serif;font-size:14.5px;font-weight:700;letter-spacing:.01em;color:var(--gold-soft);
+    background:rgba(201,168,106,.07)}
   .match-make-btn:disabled{opacity:.6;cursor:default}
   .match-link-box{margin-top:16px;padding:15px 14px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,106,.28)}
   .mlb-label{font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:700;color:var(--gold-soft);margin-bottom:9px}
@@ -625,12 +650,16 @@ body.buybar-on{padding-bottom:76px}
     font-family:'Pretendard',sans-serif;font-size:12px;line-height:1.6;color:rgba(239,233,219,.62);
     background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09)}
   .match-cta-wrap{max-width:420px;margin:22px auto 0;display:flex;flex-direction:column;gap:12px}
-  .match-full-btn{width:100%;padding:15px 0;border:none;border-radius:14px;cursor:pointer;
-    font-family:'Pretendard',sans-serif;font-size:14.5px;font-weight:700;color:#1a130a;
-    background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep));box-shadow:0 6px 20px rgba(201,168,106,.3)}
-  .match-save-link{width:100%;padding:11px 0;border:1px solid rgba(201,168,106,.35);border-radius:14px;cursor:pointer;
-    font-family:'Pretendard',sans-serif;font-size:13px;font-weight:600;color:var(--gold-soft);background:transparent}
+  .match-full-btn{width:100%;padding:9px 0;border:none;border-radius:0;cursor:pointer;background:transparent;box-shadow:none;
+    font-family:'Pretendard',sans-serif;font-size:13px;font-weight:600;color:rgba(227,201,140,.82);
+    text-decoration:underline;text-underline-offset:3px}
+  .match-save-link{width:100%;padding:15px 0;border:1.5px solid rgba(201,168,106,.55);border-radius:14px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-family:'Pretendard',sans-serif;font-size:14.5px;font-weight:700;color:var(--gold-soft);
+    background:rgba(201,168,106,.10);box-shadow:0 6px 18px -8px rgba(201,168,106,.35)}
   .match-save-link:disabled{opacity:.6;cursor:default}
+  .msv-ic{flex:0 0 auto}
+  .msv-sub{font-family:'Pretendard',sans-serif;font-size:11px;color:rgba(239,233,219,.5);text-align:center;margin-top:-4px;word-break:keep-all}
   .match-reinvite-t{text-align:center;font-family:'Nanum Myeongjo',serif;font-weight:700;font-size:15px;color:var(--ink);margin:34px 0 2px}
   /* 궁합 오류 안내 */
   #matchError{padding:0 20px}
@@ -2118,15 +2147,15 @@ function _pairDesc(r, aNm, bNm){
   /* 상호작용과 시너지 — 관계 유형별 서정적 결론 */
   var dyn;
   if(a===b){
-    dyn='두 분 모두 이처럼 깊은 '+ELN[a]+'의 성품을 공유하고 계시기에, 굳이 말로 꺼내지 않아도 서로의 속도와 침묵까지 헤아릴 수 있어요. 같은 곳을 바라보는 것을 넘어, 서로의 기반을 함께 가꾸어 가는 든든한 동반자의 흐름이 두 분 사이에 흐르고 있답니다.<br><br>'+(_SAMELYRIC[a]||'');
+    dyn='두 분 모두 이처럼 깊은 '+ELN[a]+'의 성품을 공유하고 계시기에, 굳이 말로 꺼내지 않아도 서로의 속도와 침묵까지 헤아릴 수 있어요.<br><br>'+(_SAMELYRIC[a]||'');
   } else if(gen[a]===b){
-    dyn=aNm+'님의 '+_J(ELN[a])+' '+bNm+'님의 '+_Jl(ELN[b])+' 살포시 피워내는 상생의 흐름을 타고나셨네요. 함께하는 시간이 쌓일수록 '+bNm+'님은 더 선명하게 빛나고, '+aNm+'님은 그 곁에서 자신이 건넨 온기를 다시 확인하게 될 거예요.<br><br>'+(_GENLYRIC[a]||'');
+    dyn=aNm+'님의 '+_J(ELN[a])+' '+bNm+'님의 '+_Jl(ELN[b])+' 살포시 피워내는 상생의 흐름을 타고나셨네요.<br><br>'+(_GENLYRIC[a]||'');
   } else if(gen[b]===a){
-    dyn=bNm+'님의 '+_J(ELN[b])+' '+aNm+'님의 '+_Jl(ELN[a])+' 살포시 피워내는 상생의 흐름을 타고나셨네요. 함께하는 시간이 쌓일수록 '+aNm+'님은 더 선명하게 빛나고, '+bNm+'님은 그 곁에서 자신이 건넨 온기를 다시 확인하게 될 거예요.<br><br>'+(_GENLYRIC[b]||'');
+    dyn=bNm+'님의 '+_J(ELN[b])+' '+aNm+'님의 '+_Jl(ELN[a])+' 살포시 피워내는 상생의 흐름을 타고나셨네요.<br><br>'+(_GENLYRIC[b]||'');
   } else if(ctrl[a]===b || ctrl[b]===a){
-    dyn=_Jw(ELN[a])+' '+ELN[b]+', 팽팽하게 마주 선 두 기운을 타고나셨네요. 가끔은 부딪히고 서로가 낯설게 느껴질 수도 있지만, 그 긴장이야말로 서로를 무디지 않게 벼려주는 힘이랍니다.<br><br>잘 벼려진 검이 그렇듯, 부딪힌 자리마다 두 분은 조금씩 더 단단해져요. 다름을 고치려는 마음 대신, 가만히 바라봐주는 마음이면 충분한 인연이에요.';
+    dyn=_Jw(ELN[a])+' '+ELN[b]+', 팽팽하게 마주 선 두 기운을 타고나셨네요. 가끔은 부딪히고 서로가 낯설게 느껴질 수도 있지만, 그 긴장이야말로 서로를 무디지 않게 벼려주는 힘이랍니다.<br><br>잘 벼려진 검이 그렇듯, 부딪힌 자리마다 두 분은 조금씩 더 단단해져요.';
   } else {
-    dyn=_Jw(ELN[a])+' '+ELN[b]+', 서로 다른 결의 기운이 다투지 않고 나란히 흐르고 있어요. 각자의 색을 잃지 않으면서도 서로에게 곁을 내어주는, 참 편안한 거리의 인연이랍니다.<br><br>서로 다른 두 악기가 하나의 화음을 이루듯, 두 분의 다름은 이 관계를 더 풍성하게 만들어 줄 거예요.';
+    dyn=_Jw(ELN[a])+' '+ELN[b]+', 서로 다른 결의 기운이 다투지 않고 나란히 흐르고 있어요. 각자의 색을 잃지 않으면서도 서로에게 곁을 내어주는, 참 편안한 거리의 인연이랍니다. 서로 다른 두 악기가 하나의 화음을 이루듯, 두 분의 다름은 이 관계를 더 풍성하게 만들어 줄 거예요.';
   }
   return lead+'<br><br>'+fill+dyn;
 }
@@ -2205,14 +2234,19 @@ function _matchStatsHtml(r, aNm, bNm){
   var rows='';
   els.forEach(function(e){
     var col=_ELC[e]||'#C4A85E';
-    var wa=((eA[e]||0)/mx*100).toFixed(0), wb=((eB[e]||0)/mx*100).toFixed(0);
+    var va=eA[e]||0, vb=eB[e]||0;
+    var pa=Math.round(va*100), pb=Math.round(vb*100);
+    var la_low=pa<=7, lb_low=pb<=7;
+    var wa=Math.max(va/mx*100, la_low?4:0).toFixed(0), wb=Math.max(vb/mx*100, lb_low?4:0).toFixed(0);
+    var la=la_low?'<i class="msc-val low">'+pa+'% 부족</i>':'<i class="msc-val">'+pa+'%</i>';
+    var lb=lb_low?'<i class="msc-val low">부족 '+pb+'%</i>':'<i class="msc-val">'+pb+'%</i>';
     rows+='<div class="msc-strow">'
-      +'<div class="msc-bw l"><span class="msc-bar" style="width:'+wa+'%;background:'+col+'"></span></div>'
+      +'<div class="msc-bw l">'+la+'<span class="msc-bar" style="width:'+wa+'%;background:'+col+'"></span></div>'
       +'<div class="msc-el">'+_HANJA[e]+'</div>'
-      +'<div class="msc-bw r"><span class="msc-bar" style="width:'+wb+'%;background:'+col+'"></span></div>'
+      +'<div class="msc-bw r"><span class="msc-bar" style="width:'+wb+'%;background:'+col+'"></span>'+lb+'</div>'
     +'</div>';
   });
-  return '<div class="msc-stats"><div class="msc-sthead"><span>'+aNm+'님의 기운</span><span></span><span>'+bNm+'님의 기운</span></div>'+rows+'</div>';
+  return '<div class="msc-stats"><div class="msc-sthead"><span>'+aNm+'님의 기운</span><span></span><span>'+bNm+'님의 기운</span></div>'+rows+'<div class="msc-stnote">가운데에서 길게 뻗을수록 강한 기운 · <i>부족</i>은 채우면 좋은 기운이에요</div></div>';
 }
 /* 힙한 키워드 칩 */
 var _ELCHIP={목:'#든든한_성장동력',화:'#분위기_메이커',토:'#든든한_버팀목',금:'#믿음직한_결단력',수:'#깊이있는_통찰'};
@@ -2333,6 +2367,7 @@ function renderMatchResult(sB, AB, vocB, metaB){
       +'<div class="msc-rate"><div class="msc-rate-l">인연 상생률</div>'
         +'<div class="msc-rate-n">'+r.score+'<small>%</small></div></div>'
       +'<div class="msc-scoreline">'+_scoreLine(r)+'</div>'
+      +'<div class="msc-basis">오행의 상생·상극 관계를 기반으로 계산했어요</div>'
       +'<div class="msc-poetic">「'+_poeticCompat(r).title+'」</div>'
       +'<div class="msc-slogan">'+_slogan(r)+'</div>'
       +_matchStatsHtml(r, aNm, bNm)
@@ -2345,8 +2380,9 @@ function renderMatchResult(sB, AB, vocB, metaB){
     +'<details class="match-acc"><summary>상세 궁합 풀이 <span class="maccy">▾</span></summary>'
       +'<div class="match-acc-body">'+_pairDesc(r, aNm, bNm)+'</div></details>'
     +'<div class="match-cta-wrap">'
+      +'<button type="button" class="match-save-link" onclick="saveMatchResult(this)"><svg class="msv-ic" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg> 궁합 이미지로 저장하기</button>'
+      +'<div class="msv-sub">두 사람의 결과를 카드 한 장으로 간직하고, 상대에게도 보내주세요</div>'
       +'<button type="button" class="match-full-btn" onclick="showFullReportForB()">'+_matchCtaCopy(rel, bNm)+'</button>'
-      +'<button type="button" class="match-save-link" onclick="saveMatchResult(this)">궁합 이미지로 저장하기</button>'
     +'</div>'
     +_archDivider('pair')
     +'<div class="match-pair">'
