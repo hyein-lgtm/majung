@@ -438,6 +438,7 @@
 .mjc-story-inner p:last-child{margin-bottom:0}
 .mjc-story-inner b{color:var(--ac,#E3C98C)}
 .mjc-viral-lead{text-align:center;font-size:13.5px;font-weight:700;color:rgba(239,233,219,.8);margin:24px 0 10px;font-family:'Pretendard',sans-serif}
+.resume-link{display:block;margin:14px auto 0;background:transparent;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:12.5px;font-weight:600;color:rgba(227,201,140,.85);text-decoration:underline;text-underline-offset:3px;padding:6px}
 .msc-desc{margin:10px 4px 2px;font-size:13px;line-height:1.65;color:rgba(239,233,219,.78);text-align:center;word-break:keep-all}
 @media (prefers-reduced-motion:reduce){.cta-aura::before,.prod .glint{animation:none}.cta-aura .spark,.cta-aura .ripple{display:none}}
   .splash{position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(130% 100% at 50% 28%,#16233c 0%,#0E1520 55%,#070b12 100%);opacity:0;transition:opacity .6s ease}
@@ -2907,6 +2908,7 @@ function mjClearState(){ try{ localStorage.removeItem(MJ_KEY); }catch(_){} }
 (function(){
   try{
     if(/^\/match\//.test(location.pathname||'')) return;
+    if(/^#m=/.test(location.hash||'')) return; /* 궁합 초대 링크로 들어온 경우 복원 안 함 */
     var st=mjLoadState(); if(!st||!st.inp) return;
     var inp=st.inp;
     var nm=document.getElementById('name'); if(nm) nm.value=inp.name||'';
@@ -2922,9 +2924,19 @@ function mjClearState(){ try{ localStorage.removeItem(MJ_KEY); }catch(_){} }
     var lp=document.getElementById('leap'); if(lp) lp.checked=!!inp.leap;
     var lw=document.getElementById('leapWrap'); if(lw) lw.style.display=(calMode==='lunar')?'flex':'none';
     if(gender!=='여' && gender!=='남') return;
-    window.__RESTORING=true; window.__RESTORE_REPORT=st.report||null;
-    if(typeof showScreen==='function') showScreen('screenEnter');
-    var cb=document.getElementById('cast'); if(cb) cb.click();
+    /* 자동으로 결과 화면을 띄우지 않고, 인트로에 '이어보기' 버튼만 제공 */
+    var anchor=document.getElementById('toEnter');
+    if(anchor && !document.getElementById('resumeBtn')){
+      var rb=document.createElement('button');
+      rb.type='button'; rb.id='resumeBtn'; rb.className='resume-link';
+      rb.textContent=((inp.name||'')?inp.name+'님, ':'')+'지난 리포트 이어보기 →';
+      rb.onclick=function(){
+        window.__RESTORING=true; window.__RESTORE_REPORT=st.report||null;
+        if(typeof showScreen==='function') showScreen('screenEnter');
+        var cb=document.getElementById('cast'); if(cb) cb.click();
+      };
+      anchor.insertAdjacentElement('afterend', rb);
+    }
   }catch(_){ window.__RESTORING=false; }
 })();
 /* /match/:token 진입 감지 — 궁합 초대 링크로 들어온 경우 초대 화면부터 시작 */
