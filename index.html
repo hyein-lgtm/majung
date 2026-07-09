@@ -259,10 +259,10 @@
   .loading .spinner{width:42px;height:42px;margin:0 auto 18px;border-radius:50%;border:2px solid rgba(224,184,94,.18);border-top-color:var(--gold);border-right-color:var(--sage);animation:spin 1s linear infinite}
   .loading .lt{font-family:'Pretendard',serif;font-size:15px;color:var(--sage-deep);animation:fade 1.8s ease-in-out infinite}
   @keyframes fade{0%,100%{opacity:.45}50%{opacity:1}}
-  footer{text-align:center;margin-top:40px;color:var(--muted);display:none}
+  footer{text-align:center;margin-top:40px;padding-bottom:calc(104px + env(safe-area-inset-bottom));color:var(--muted);display:none}
   body:has(#result.show) footer{display:block}
   footer .fb{font-family:'Nanum Myeongjo',serif;letter-spacing:.4em;font-size:15px;text-indent:.4em;color:var(--sage-deep)}
-  footer .ft{font-family:'Nanum Myeongjo',serif;font-style:italic;font-size:13px;margin-top:9px;color:rgba(239,233,219,0.55)}
+  footer .ft{font-family:'Nanum Myeongjo',serif;font-style:italic;font-size:13px;margin-top:9px;color:rgba(239,233,219,0.55)}footer .legal{margin-top:20px;font-family:'Pretendard',sans-serif;font-size:11.5px;line-height:1.85;color:rgba(239,233,219,.36);word-break:keep-all}footer .legal a{color:rgba(239,233,219,.55);text-decoration:none;border-bottom:1px solid rgba(239,233,219,.22);cursor:pointer}footer .legal .sep{margin:0 6px;opacity:.45}footer .legal .cpy{display:block;margin-top:9px;letter-spacing:.02em;opacity:.85}.pv-ov{position:fixed;inset:0;background:rgba(4,7,11,.74);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;z-index:99999;align-items:center;justify-content:center;padding:20px}.pv-ov.show{display:flex}.pv-modal{position:relative;background:#0E1520;border:1px solid rgba(201,168,106,.28);border-radius:20px;max-width:520px;width:100%;max-height:82vh;overflow-y:auto;padding:32px 26px 34px;color:#EFE9DB;font-family:'Pretendard',sans-serif;text-align:left;box-shadow:0 24px 60px -20px rgba(0,0,0,.7)}.pv-modal h2{font-family:'Nanum Myeongjo',serif;font-size:19px;color:#E3C98C;margin:0 0 8px;text-align:center}.pv-modal .pv-intro{font-size:12.5px;line-height:1.75;color:rgba(239,233,219,.6);margin:0 0 20px;text-align:center;word-break:keep-all}.pv-modal h3{font-size:13.5px;color:#C9A86A;margin:18px 0 5px;font-weight:700}.pv-modal p{font-size:12.5px;line-height:1.85;color:rgba(239,233,219,.78);margin:0;word-break:keep-all}.pv-modal .pv-eff{margin-top:24px;padding-top:14px;border-top:1px solid rgba(201,168,106,.14);font-size:11.5px;color:rgba(239,233,219,.45);text-align:center}.pv-close{position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(239,233,219,.55);font-size:24px;line-height:1;cursor:pointer;padding:2px 6px}
   .restart-link{background:none;border:none;cursor:pointer;color:rgba(239,233,219,0.4);font-family:'Pretendard',sans-serif;font-size:12px;text-decoration:underline;text-underline-offset:3px;margin-top:18px}
   .disc{font-size:10.5px;color:#8a8068;margin-top:20px;max-width:470px;margin-left:auto;margin-right:auto;line-height:1.7}
 
@@ -683,8 +683,11 @@
     <div class="ft">go out to meet your fate.</div>
     <p class="disc">본 리딩은 사주명리학의 원리를 바탕으로 한 해석으로,<br>자기 탐색과 영감을 위한 것입니다.</p>
     <button id="restartBtn" type="button" class="restart-link">다른 좌표로 다시 마중하기</button>
+    <div class="legal">운영 WBL(더블유비엘)<span class="sep">·</span><a onclick="document.getElementById('pvOv').classList.add('show');return false;">개인정보처리방침</a><span class="sep">·</span><a href="https://pf.kakao.com/_ZvxixiE" target="_blank" rel="noopener">카카오톡 문의</a><span class="cpy">© 2026 WBL. All rights reserved.</span></div>
   </footer>
 </div>
+
+<div class="pv-ov" id="pvOv"><div class="pv-modal"><button class="pv-close" onclick="document.getElementById('pvOv').classList.remove('show')" aria-label="닫기">×</button><h2>개인정보처리방침</h2><p class="pv-intro">WBL(더블유비엘, 이하 &quot;운영자&quot;)은 마중(majungsaju.com) 서비스 운영에 필요한 최소한의 정보를 다음과 같이 처리합니다.</p><h3>1. 수집 항목 및 목적</h3><p>이용자가 직접 입력하는 이름(닉네임), 생년월일, 성별, 출생시각을 사주 풀이 및 궁합 결과 생성 목적으로만 이용합니다. 회원가입이 없으며, 연락처·주소 등 다른 정보는 수집하지 않습니다.</p><h3>2. 처리 위탁 및 국외 이전</h3><p>풀이 문장 생성을 위해 입력 정보가 Anthropic(미국)의 Claude API로 전송·처리됩니다. 해당 API에 전송된 데이터는 AI 학습에 사용되지 않으며, Anthropic의 데이터 보관 정책에 따라 일정 기간 후 파기됩니다.</p><h3>3. 보관 및 파기</h3><p>궁합 링크 생성 시 입력 정보는 링크 기능 제공을 위해 서버에 보관되며, 생성일로부터 7일 후 자동 파기됩니다. 그 외 리포트 조회만 한 경우 정보를 별도 보관하지 않습니다.</p><h3>4. 이용자 권리</h3><p>정보 삭제를 원하시면 아래 문의처로 요청하실 수 있습니다.</p><h3>5. 문의처</h3><p>더블유비엘 카카오톡 채널 실시간 상담</p><div class="pv-eff">시행일: 2026년 7월 27일</div></div></div>
 
 <script>
 /* ───────── starfield ───────── */
