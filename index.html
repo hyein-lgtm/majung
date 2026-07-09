@@ -2357,18 +2357,32 @@ function showDeepArrived(rz){
 }
 
 /* ───────── 메인 ───────── */
-function runSplash(voc, onDone){
+function runSplash(voc, onDone, opts){
+  opts=opts||{};
   var sp=document.getElementById('splash');
-  var steps=sp?sp.querySelectorAll('.sp-step'):[];
-  if(!sp||!steps.length){ if(onDone)onDone(); return; }
-  var DUR=9000, n=steps.length;
+  var allSteps=sp?sp.querySelectorAll('.sp-step'):[];
+  if(!sp||!allSteps.length){ if(onDone)onDone(); return; }
+  var DUR=opts.dur||9000;
+  var data=opts.steps||null, n;
+  if(data){
+    n=data.length;
+    for(var q=0;q<allSteps.length;q++){
+      if(q<n){ allSteps[q].style.display='';
+        var _m=allSteps[q].querySelector('.sp-step-main'), _s=allSteps[q].querySelector('.sp-step-sub');
+        if(_m)_m.textContent=data[q].main; if(_s)_s.textContent=data[q].sub;
+      } else { allSteps[q].style.display='none'; }
+    }
+  } else { n=allSteps.length; for(var q2=0;q2<allSteps.length;q2++){ allSteps[q2].style.display=''; } }
+  var steps=[]; for(var q3=0;q3<n;q3++){ steps.push(allSteps[q3]); }
   sp.classList.remove('off'); sp.classList.add('on');
   for(var k=0;k<n;k++){ steps[k].classList.remove('active','done'); }
   function activate(i){
     if(i>0&&steps[i-1]){ steps[i-1].classList.remove('active'); steps[i-1].classList.add('done'); }
     if(steps[i]){ steps[i].classList.add('active'); }
   }
-  var times=[140, Math.round(DUR*0.27), Math.round(DUR*0.52), Math.round(DUR*0.76)];
+  var times;
+  if(n===4){ times=[140, Math.round(DUR*0.27), Math.round(DUR*0.52), Math.round(DUR*0.76)]; }
+  else { times=[140]; for(var tt=1;tt<n;tt++){ times.push(Math.round(DUR*tt/n*0.9)); } }
   for(var i=0;i<n;i++){ (function(j){ setTimeout(function(){ activate(j); }, (times[j]!=null?times[j]:140+j*1200)); })(i); }
   setTimeout(function(){ if(steps[n-1]){ steps[n-1].classList.remove('active'); steps[n-1].classList.add('done'); } }, Math.round(DUR*0.94));
   setTimeout(function(){ sp.classList.add('off'); setTimeout(function(){ sp.classList.remove('on'); sp.classList.remove('off'); if(onDone)onDone(); },620); }, DUR);
@@ -2417,7 +2431,14 @@ document.getElementById('cast').onclick=async()=>{
 
   const voc = (name||'').trim() ? (name.trim()+'님') : '당신';
   window.__SCALE_HTML=scaleHtml(s,A); window.__SAJU={s,A,voc,meta};
-  if(window.__MATCH){ try{ renderMatchResult(s,A,voc,meta); }catch(e){ console.error(e); } btn.disabled=false; return; }
+  if(window.__MATCH){
+    runSplash(voc, function(){ try{ renderMatchResult(s,A,voc,meta); }catch(e){ console.error(e); } btn.disabled=false; }, {dur:3800, steps:[
+      {main:'두 사람의 기운을 마주 세우는 중', sub:'각자의 오행이 서로를 마주 봅니다'},
+      {main:'오행의 결을 맞대어 보는 중', sub:'어떤 기운이 끌리고, 어떤 기운이 채우는지'},
+      {main:'두 사람의 인연을 마중하는 중', sub:'곧 두 기운의 이야기가 도착합니다'}
+    ]});
+    return;
+  }
   heroLine(s,A,voc); renderBalance(s,A,voc); renderBridge(s,A,voc); renderFinal(s,A,voc);
 
   const r=document.getElementById('result');
