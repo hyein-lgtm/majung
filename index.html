@@ -3245,11 +3245,14 @@ function mjReportPayload(){
     ce:F.dEl, nd:F.def, ts:Date.now() };
 }
 function mjReportHashLink(){ var p=mjReportPayload(); if(!p) return null; return _shareBase()+'#r='+_mEnc(p); }
-/* 서버 단축 링크 우선(카톡에서 짧고 깔끔), 실패 시 해시 링크 폴백 */
+/* 서버 단축 링크 우선(카톡에서 짧고 깔끔), 실패 시 해시 링크 폴백.
+   서버는 voc·relation·elems만 저장하고 relation을 화이트리스트로 바꾸므로,
+   리포트 표식(ce·nd·cnt)은 voc 문자열에 '|r|' 마커로 함께 실어 보낸다 */
 async function mjReportShortLink(){
   var p=mjReportPayload(); if(!p) return null;
   try{
-    var r=await _mFetchTO('/api/match/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)},6000);
+    var body={ voc:(p.voc||'')+'|r|'+p.ce+'|'+p.nd+'|'+[p.cnt['목'],p.cnt['화'],p.cnt['토'],p.cnt['금'],p.cnt['수']].join(','), relation:'friend', elems:p.elems, ts:p.ts };
+    var r=await _mFetchTO('/api/match/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)},6000);
     if(r.ok){ var d=await r.json(); if(d&&d.token) return (/^https?:$/.test(location.protocol)?location.origin:'https://majungsaju.com')+'/match/'+d.token; }
   }catch(_){}
   return mjReportHashLink();
@@ -3276,8 +3279,19 @@ async function mjCopyReportLink(btn){
   }catch(e){ if(btn){ btn.innerHTML=_o; btn.disabled=false; } mjToast('링크 복사에 실패했어요. 잠시 후 다시 시도해 주세요.'); }
 }
 /* ── 링크 수신자: 리포트 티저 화면 — 친구 리포트 미리보기 → 내 리포트 유도(바이럴 루프) ── */
-function mjIsReportPayload(d){ return !!(d && (d.t==='r' || d.relation==='report')); }
+function mjIsReportPayload(d){ return !!(d && (d.t==='r' || d.relation==='report' || (typeof d.voc==='string' && d.voc.indexOf('|r|')>-1))); }
+/* 서버에서 받은 데이터의 voc에 '|r|' 마커가 있으면 이름·중심기운·필요기운·오행개수로 복원 */
+function mjParseReportData(d){
+  try{
+    if(!d || typeof d.voc!=='string' || d.voc.indexOf('|r|')<0) return d;
+    var sp=d.voc.split('|r|'), rest=(sp[1]||'').split('|');
+    var ks=['목','화','토','금','수'], cs=(rest[2]||'').split(','), cnt=null;
+    if(cs.length===5){ cnt={}; ks.forEach(function(k,i){ cnt[k]=parseInt(cs[i],10)||0; }); }
+    return { t:'r', voc:sp[0], relation:'report', elems:d.elems, cnt:cnt, ce:rest[0]||'', nd:rest[1]||'' };
+  }catch(_){ return d; }
+}
 function showReportInviteScreen(data){
+  data=mjParseReportData(data)||data;
   var aNm=_mesc((data.voc||'친구').replace('님',''));
   var host=document.getElementById('reportIntro');
   if(!host){ host=document.createElement('section'); host.id='reportIntro'; host.className='screen'; document.body.appendChild(host); }
@@ -3285,7 +3299,7 @@ function showReportInviteScreen(data){
   var _hj={'목':'木','화':'火','토':'土','금':'金','수':'水'};
   var bars='';
   try{
-    var cnt=data.cnt||{}, mx=1, ks=['목','화','토','금','수'];
+    var cnt=data.cnt||data.elems||{}, mx=0.0001, ks=['목','화','토','금','수'];
     ks.forEach(function(k){ if((cnt[k]||0)>mx) mx=cnt[k]||0; });
     bars='<div style="display:flex;align-items:flex-end;justify-content:center;gap:14px;height:86px;margin:18px auto 6px;max-width:280px">';
     ks.forEach(function(k){
