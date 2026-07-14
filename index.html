@@ -562,7 +562,6 @@ body.buybar-on{padding-bottom:76px}
   .mlb-btns{display:flex;gap:8px}
   .mlb-btns button{flex:1;padding:11px 0;border-radius:11px;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:13px;font-weight:700}
   .mlb-copy{border:none;color:#1a130a;background:linear-gradient(135deg,var(--gold-soft),var(--gold-deep))}
-  .mlb-share{border:1px solid rgba(201,168,106,.4);background:transparent;color:var(--gold-soft)}
   /* 궁합 초대 진입 배너 */
   /* 궁합 초대 인트로(1단계) */
   #matchIntro{padding:0 22px 60px}
@@ -2044,8 +2043,8 @@ function showMatchLinkResult(card, link, rel){
     +'<div class="mlb-link">'+_mesc(link)+'</div>'
     +'<div class="mlb-btns" style="flex-direction:column">'
     +'<button type="button" class="mlb-kakao" style="background:#FEE500;color:#191919;border:none;border-radius:10px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.8 1.86 5.26 4.66 6.66l-.95 3.52c-.08.31.27.56.54.38l4.13-2.74c.53.05 1.07.08 1.62.08 5.52 0 10-3.54 10-7.9S17.52 3 12 3z" fill="#191919"/></svg>카카오톡으로 보내기</button>'
-    +'<div style="display:flex;gap:8px"><button type="button" class="mlb-copy" style="flex:1">링크 복사하기</button>'
-    +(navigator.share?'<button type="button" class="mlb-share" style="flex:1">공유하기</button>':'')+'</div></div>';
+    +'<div style="display:flex;gap:8px"><button type="button" class="mlb-copy" style="flex:1">링크 복사하기</button></div></div>';
+    /* '공유하기'(시스템 공유창) 버튼 제거 — 카톡+복사 2택으로 선택지를 줄여 전환 집중 */
   card.appendChild(box);
   var kb=box.querySelector('.mlb-kakao');
   if(kb) kb.onclick=function(){ mjKakaoShare({ title:'우리, 얼마나 잘 맞을까? ✦ 마중 궁합', desc:'나 방금 사주 봤는데 우리 궁합이 궁금해서! 1분이면 볼 수 있어', url:link, btn:'궁합 확인하기' }); };
@@ -2054,8 +2053,6 @@ function showMatchLinkResult(card, link, rel){
     _copyText(link).then(function(){ self.textContent='복사됐어요 ✓'; }).catch(function(){ self.textContent='복사 실패 · 위 링크를 길게 눌러 복사해 주세요'; });
     setTimeout(function(){ self.textContent='링크 복사하기'; },1800);
   };
-  var sb=box.querySelector('.mlb-share');
-  if(sb) sb.onclick=async function(){ try{ await navigator.share({title:'마중사주 궁합', text:msg, url:link}); }catch(err){} };
 }
 /* 두 사람의 오행 비율을 비교해 궁합 점수 + 관계별 톤 카피를 만든다 */
 function compareCompat(eA, eB, rel){
@@ -2765,6 +2762,8 @@ function runSplash(voc, onDone, opts){
   var allSteps=sp?sp.querySelectorAll('.sp-step'):[];
   if(!sp||!allSteps.length){ if(onDone)onDone(); return; }
   var DUR=opts.dur||7000; /* 기본 9s→7s: 결과는 이미 준비된 상태라 연출만 담당 — 몰입은 지키고 이탈은 줄임 */
+  /* 원본 스텝 텍스트 백업 — 궁합 로딩이 텍스트를 덮어쓴 뒤에도 일반 리포트 로딩이 제 문구로 나오게 */
+  if(!window.__SP_ORIG){ window.__SP_ORIG=[]; for(var q0=0;q0<allSteps.length;q0++){ var _m0=allSteps[q0].querySelector('.sp-step-main'), _s0=allSteps[q0].querySelector('.sp-step-sub'); window.__SP_ORIG.push({m:_m0?_m0.textContent:'', s:_s0?_s0.textContent:''}); } }
   var data=opts.steps||null, n;
   if(data){
     n=data.length;
@@ -2774,7 +2773,15 @@ function runSplash(voc, onDone, opts){
         if(_m)_m.textContent=data[q].main; if(_s)_s.textContent=data[q].sub;
       } else { allSteps[q].style.display='none'; }
     }
-  } else { n=allSteps.length; for(var q2=0;q2<allSteps.length;q2++){ allSteps[q2].style.display=''; } }
+  } else {
+    n=allSteps.length;
+    for(var q2=0;q2<allSteps.length;q2++){
+      allSteps[q2].style.display='';
+      var _m2=allSteps[q2].querySelector('.sp-step-main'), _s2=allSteps[q2].querySelector('.sp-step-sub');
+      if(_m2&&window.__SP_ORIG[q2])_m2.textContent=window.__SP_ORIG[q2].m;
+      if(_s2&&window.__SP_ORIG[q2])_s2.textContent=window.__SP_ORIG[q2].s;
+    }
+  }
   var steps=[]; for(var q3=0;q3<n;q3++){ steps.push(allSteps[q3]); }
   sp.classList.remove('off'); sp.classList.add('on');
   sp.setAttribute('aria-hidden','false'); sp.setAttribute('role','status'); sp.setAttribute('aria-label','사주를 읽는 중');
@@ -2967,8 +2974,9 @@ function buildShareHtml(s,A,voc,meta){
       '</div>'+
       '<div style="margin-top:auto;width:100%;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-top:10px">'+
         (window.__MJQR
-          ?'<div style="display:flex;flex-direction:column;align-items:flex-start"><div style="background:#fff;padding:10px;border-radius:14px;line-height:0"><img src="'+window.__MJQR+'" style="width:150px;height:150px;display:block" alt=""></div><div style="font-size:19px;letter-spacing:1px;color:rgba(239,233,219,0.55);margin-top:10px;white-space:nowrap">majungsaju.com</div></div>'
-          :'<div style="font-size:22px;letter-spacing:2px;color:rgba(239,233,219,0.55);white-space:nowrap;padding-bottom:6px">majungsaju.com</div>')+
+          /* QR은 작게(스캔은 사진앱 인식으로 충분), URL 텍스트를 메인으로 — 카드 디자인 방해 최소화 */
+          ?'<div style="display:flex;align-items:flex-end;gap:14px"><div style="background:#fff;padding:7px;border-radius:10px;line-height:0"><img src="'+window.__MJQR+'" style="width:88px;height:88px;display:block" alt=""></div><div style="font-size:24px;font-weight:700;letter-spacing:1.5px;color:rgba(239,233,219,0.8);white-space:nowrap;padding-bottom:6px">majungsaju.com</div></div>'
+          :'<div style="font-size:24px;font-weight:700;letter-spacing:1.5px;color:rgba(239,233,219,0.8);white-space:nowrap;padding-bottom:6px">majungsaju.com</div>')+
         '<div style="display:flex;flex-direction:column;align-items:flex-end">'+
         '<div style="display:inline-flex;align-items:center;gap:13px;padding:15px 30px;border-radius:999px;border:1px solid rgba(227,201,140,0.5);background:rgba(255,255,255,0.06)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span style="font-family:'+FH+';font-weight:800;font-size:36px;letter-spacing:3px;color:#EFE9DB;white-space:nowrap">마중 사주</span></div>'+
         '<div style="font-size:18px;letter-spacing:2px;color:rgba(239,233,219,0.4);margin-top:10px;text-align:right;white-space:nowrap">지금 검색하고 나의 기운을 마중하세요</div>'+
