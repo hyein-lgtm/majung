@@ -1963,7 +1963,27 @@ function setMatchRel(rel, btn){
   try{ Array.prototype.forEach.call(btn.parentNode.querySelectorAll('.match-rel'),function(b){ b.classList.toggle('on', b===btn); }); }catch(_){}
 }
 function _mEnc(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
-function _mDec(t){ t=String(t).replace(/-/g,'+').replace(/_/g,'/'); while(t.length%4)t+='='; return JSON.parse(decodeURIComponent(escape(atob(t)))); }
+function _mDec(t){ t=String(t).replace(/-/g,'+').replace(/_/g,'/'); while(t.length%4)t+='='; var s=decodeURIComponent(escape(atob(t))); try{ return JSON.parse(s); }catch(_){ return {v:s}; } }
+/* ── 해시 폴백 압축 코덱 ──
+   서버(API)에 못 붙는 환경(로컬 파일로 열었을 때 등)에서 만들어지는 #m=/#r= 링크가
+   길어지지 않도록 JSON 대신 최소 문자열로 담는다. 이미 보낸 구형(JSON) 링크도 그대로 읽힌다. */
+function _mEncS(s){ return btoa(unescape(encodeURIComponent(String(s)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+var _MREL_C={love:'l',date:'d',couple:'c',friend:'f',work:'w',family:'y'};
+var _MREL_X={l:'love',d:'date',c:'couple',f:'friend',w:'work',y:'family'};
+function _mPack(b){
+  var e=b.elems||{}, ks=['목','화','토','금','수'];
+  return (b.voc||'').replace(/~/g,' ')+'~'+(_MREL_C[b.relation]||'l')+'~'
+    +ks.map(function(k){ return Math.round((e[k]||0)*100); }).join(',')+'~'+Math.floor((b.ts||Date.now())/1000);
+}
+function _mUnpack(d){
+  if(!d || d.v===undefined) return d; /* 구형(JSON) 링크는 그대로 통과 */
+  var v=String(d.v);
+  if(v.indexOf('|r|')>-1) return { t:'r', voc:v, elems:{} }; /* 리포트 압축형 — cnt는 티저 화면에서 복원 */
+  var sp=v.split('~'); if(sp.length<3) return d;
+  var ks=['목','화','토','금','수'], el={};
+  (sp[2]||'').split(',').forEach(function(n,i){ if(i<5) el[ks[i]]=(parseInt(n,10)||0)/100; });
+  return { voc:sp[0], relation:_MREL_X[sp[1]]||'love', elems:el, ts:(parseInt(sp[3],10)||0)*1000 };
+}
 /* 공유 링크 베이스 — 로컬 미리보기(cowork-file:// 등)에서는 배포 주소로 만들어야 외부에서 열린다 */
 function _shareBase(){ return /^https?:$/.test(location.protocol) ? (location.origin+location.pathname) : 'https://majungsaju.com/'; }
 /* API가 느리거나 응답이 없을 때 무한 대기하지 않도록 타임아웃 fetch */
@@ -1982,7 +2002,9 @@ async function createMatchLink(btn){
     if(btn){ btn.textContent='링크 만드는 중…'; btn.disabled=true; }
     var rel=window.__matchRel||'love';
     var body={ voc:(J.voc||'').replace('님',''), relation:rel, elems:elemRatios(J.A), ts:Date.now() };
-    var r=await _mFetchTO('/api/match/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)},6000);
+    var _req={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)};
+    var r; try{ r=await _mFetchTO('/api/match/create',_req,6000); }
+    catch(e1){ r=await _mFetchTO('/api/match/create',_req,8000); } /* 일시적 네트워크 오류면 1회 재시도 — 긴 해시 폴백을 최대한 피한다 */
     if(!r.ok) throw new Error('create failed');
     var data=await r.json();
     if(!data||!data.token) throw new Error('no token');
@@ -1995,7 +2017,7 @@ async function createMatchLink(btn){
   }catch(e){
     /* 서버(API)가 없는 정적 호스팅 폴백: 데이터를 링크(해시)에 직접 담는다 */
     try{
-      var tok2=_mEnc(body);
+      var tok2=_mEncS(_mPack(body)); /* 압축형 — 링크 길이 최소화 */
       var link2=_shareBase()+'#m='+tok2;
       if(btn){ btn.textContent=_old||'궁합 링크 만들기'; btn.disabled=false; }
       showMatchLinkResult(card, link2, rel);
@@ -2470,7 +2492,7 @@ async function saveMatchResult(btn){
 }
 function startMatchFlowLocal(tok){
   try{
-    var data=_mDec(tok);
+    var data=_mUnpack(_mDec(tok));
     if(!data||!data.elems){ showMatchError('error'); return; }
     /* 리포트 공유 링크는 만료 검사 전에 분기 — 저장 카드 QR은 영구히 살아 있어야 한다 */
     if(mjIsReportPayload(data)){ showReportInviteScreen(data); return; }
@@ -3245,7 +3267,12 @@ function mjReportPayload(){
     cnt:{'목':J.A.cnt['목']||0,'화':J.A.cnt['화']||0,'토':J.A.cnt['토']||0,'금':J.A.cnt['금']||0,'수':J.A.cnt['수']||0},
     ce:F.dEl, nd:F.def, ts:Date.now() };
 }
-function mjReportHashLink(){ var p=mjReportPayload(); if(!p) return null; return _shareBase()+'#r='+_mEnc(p); }
+function mjReportHashLink(){
+  var p=mjReportPayload(); if(!p) return null;
+  /* 압축형: 파이프 문자열 하나면 충분 — 티저 화면(mjParseReportData)이 cnt·ce·nd를 여기서 복원한다 */
+  var pipe=(p.voc||'')+'|r|'+p.ce+'|'+p.nd+'|'+[p.cnt['목'],p.cnt['화'],p.cnt['토'],p.cnt['금'],p.cnt['수']].join(',');
+  return _shareBase()+'#r='+_mEncS(pipe);
+}
 /* 서버 단축 링크 우선(카톡에서 짧고 깔끔), 실패 시 해시 링크 폴백.
    서버는 voc·relation·elems만 저장하고 relation을 화이트리스트로 바꾸므로,
    리포트 표식(ce·nd·cnt)은 voc 문자열에 '|r|' 마커로 함께 실어 보낸다 */
@@ -3253,7 +3280,9 @@ async function mjReportShortLink(){
   var p=mjReportPayload(); if(!p) return null;
   try{
     var body={ voc:(p.voc||'')+'|r|'+p.ce+'|'+p.nd+'|'+[p.cnt['목'],p.cnt['화'],p.cnt['토'],p.cnt['금'],p.cnt['수']].join(','), relation:'friend', elems:p.elems, ts:p.ts };
-    var r=await _mFetchTO('/api/match/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)},6000);
+    var _req={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)};
+    var r; try{ r=await _mFetchTO('/api/match/create',_req,6000); }
+    catch(e1){ r=await _mFetchTO('/api/match/create',_req,8000); } /* 1회 재시도 */
     /* '#r' 플래그: 토큰 만료 시에도 리포트 링크임을 알 수 있게 2글자만 덧붙인다 */
     if(r.ok){ var d=await r.json(); if(d&&d.token) return (/^https?:$/.test(location.protocol)?location.origin:'https://majungsaju.com')+'/match/'+d.token+'#r'; }
   }catch(_){}
@@ -3366,7 +3395,7 @@ async function mjQrDataUrl(text, px){
     var rr=(location.hash||'').match(/^#r=([A-Za-z0-9_\-]+)/);
     if(m&&m[1]){ startMatchFlow(decodeURIComponent(m[1]), h&&h[1]?h[1]:null); }
     else if(h&&h[1]){ startMatchFlowLocal(h[1]); }
-    else if(rr&&rr[1]){ try{ var _d=_mDec(rr[1]); if(mjIsReportPayload(_d)){ showReportInviteScreen(_d); } }catch(_){} }
+    else if(rr&&rr[1]){ try{ var _d=_mUnpack(_mDec(rr[1])); if(mjIsReportPayload(_d)){ showReportInviteScreen(_d); } }catch(_){} }
   }catch(_){}
 })();
 </script>
