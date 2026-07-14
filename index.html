@@ -1983,7 +1983,7 @@ function matchInviteCardHtml(voc){
   var segs=rels.map(function(r){ return '<button type="button" class="match-rel'+(window.__matchRel===r[0]?' on':'')+'" onclick="setMatchRel(\''+r[0]+'\',this)">'+r[1]+'</button>'; }).join('');
   return '<div class="match-card">'
     +'<div class="match-title">우리, 얼마나 잘 맞을까?</div>'
-    +'<div class="match-desc">링크를 보내면,<br>서로의 오행 궁합을 1분 만에 확인할 수 있어요.</div>'
+    +'<div class="match-desc">링크를 보내면,<br>서로의 오행 궁합을 30초 만에 확인할 수 있어요.</div>'
     +'<div class="match-rel-seg">'+segs+'</div>'
     +'<button type="button" class="match-make-btn" onclick="createMatchLink(this)">궁합 링크 만들기</button>'
     +'</div>';
@@ -2073,7 +2073,7 @@ function showMatchLinkResult(card, link, rel){
   if(!card) card=document.querySelector('#matchResult .match-card, #finalCtaZone .match-card');
   if(!card){ prompt('아래 링크를 복사해 '+to+'에게 보내주세요:', link); return; }
   var ex=card.querySelector('.match-link-box'); if(ex) ex.remove();
-  var msg='나 방금 사주 봤는데 우리 궁합이 궁금해서! 1분이면 볼 수 있어 → '+link;
+  var msg='나 방금 사주 봤는데 우리 궁합이 궁금해서! 30초면 볼 수 있어 → '+link;
   var box=document.createElement('div'); box.className='match-link-box';
   box.innerHTML='<div class="mlb-label">✦ 링크가 준비됐어요! '+to+'에게 보내주세요</div>'
     +'<div class="mlb-link">'+_mesc(link)+'</div>'
@@ -2083,7 +2083,7 @@ function showMatchLinkResult(card, link, rel){
     /* '공유하기'(시스템 공유창) 버튼 제거 — 카톡+복사 2택으로 선택지를 줄여 전환 집중 */
   card.appendChild(box);
   var kb=box.querySelector('.mlb-kakao');
-  if(kb) kb.onclick=function(){ mjKakaoShare({ title:'우리, 얼마나 잘 맞을까? ✦ 마중 궁합', desc:'나 방금 사주 봤는데 우리 궁합이 궁금해서! 1분이면 볼 수 있어', url:link, btn:'궁합 확인하기' }); };
+  if(kb) kb.onclick=function(){ mjKakaoShare({ title:'우리, 얼마나 잘 맞을까? ✦ 마중 궁합', desc:'나 방금 사주 봤는데 우리 궁합이 궁금해서! 30초면 볼 수 있어', url:link, btn:'궁합 확인하기' }); };
   box.querySelector('.mlb-copy').onclick=function(){
     var self=this;
     _copyText(link).then(function(){ self.textContent='복사됐어요 ✓'; }).catch(function(){ self.textContent='복사 실패 · 위 링크를 길게 눌러 복사해 주세요'; });
@@ -2563,7 +2563,7 @@ function showMatchInviteScreen(data){
     +'<div class="mi-brandlock"><span class="mi-majung">마중</span>'+(LOGO?'<img class="mi-wbl" src="'+LOGO+'" alt="WBL">':'')+'</div>'
     +'<div class="mi-badge">'+relName+' 궁합 초대</div>'
     +'<div class="mi-title">'+aNm+'님이<br><b>'+relName+' 궁합</b>을 보고 싶어<br>당신을 초대했어요</div>'
-    +'<div class="mi-desc">내 생년월일을 넣으면<br>두 사람의 오행 궁합을 1분 만에 볼 수 있어요.</div>'
+    +'<div class="mi-desc">내 생년월일을 넣으면<br>두 사람의 오행 궁합을 30초 만에 볼 수 있어요.</div>'
     +'<button type="button" class="match-make-btn mi-btn" onclick="enterMatchForm()">내 기운 넣고 궁합 보기</button>'
     +'<div class="mi-privacy"><span>🔒</span> 입력한 생년월일은 <b>저장되지 않아요.</b><br>궁합 계산에만 잠깐 쓰이고 사라져요.</div>'
     +'<div class="mi-brand">마중사주 · majungsaju.com</div>'
@@ -3142,6 +3142,7 @@ async function saveImageFile(blob, filename){
       var f=new File([blob], filename, {type:'image/png'});
       if(navigator.canShare({files:[f]})){
         await navigator.share({files:[f], title:'마중사주'});
+        mjToast('공유 시트에서 ‘이미지 저장’을 누르면<br>사진첩에 저장돼요 ✓',{dur:3600});
         return true;
       }
     }
@@ -3152,6 +3153,7 @@ async function saveImageFile(blob, filename){
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a'); a.href=url; a.download=filename; a.rel='noopener'; a.target='_blank';
   document.body.appendChild(a); a.click(); a.remove();
+  mjToast('이미지를 저장했어요 ✓<br>다운로드 폴더를 확인해 보세요.',{dur:3600});
   setTimeout(function(){ try{URL.revokeObjectURL(url);}catch(_){ } }, 4000);
   return false;
 }
