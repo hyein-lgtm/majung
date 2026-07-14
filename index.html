@@ -260,6 +260,10 @@
   .reading-doc li::before{content:'\2736';position:absolute;left:1px;top:2px;color:var(--gold);font-size:12px}
   .reading-doc blockquote{margin:22px 0;padding:18px 22px;border-left:3px solid var(--gold);border-radius:0 12px 12px 0;background:linear-gradient(180deg,rgba(224,184,94,.13),rgba(224,184,94,.05));font-family:'Pretendard',serif;font-size:15px;line-height:1.92;color:#e7ddc8;box-shadow:0 4px 16px rgba(0,0,0,.25)}
   .reading-doc blockquote strong{color:var(--gold-soft)}
+  /* '운명 한 문장' 전용: 중앙 정렬 포스터형 — 문장마다 한 호흡씩 띄운다 */
+  .reading-doc blockquote.destiny-quote{text-align:center;border-left:0;border:1px solid rgba(224,184,94,.35);border-radius:14px;padding:28px clamp(18px,5vw,30px);font-family:'Nanum Myeongjo',serif;font-size:16.5px;line-height:1.95;word-break:keep-all}
+  .reading-doc blockquote.destiny-quote p{margin:0;font-family:inherit;font-size:inherit;line-height:inherit;color:inherit}
+  .reading-doc blockquote.destiny-quote p+p{margin-top:16px}
   .cta-buy{display:block;max-width:440px;margin:18px auto 0;text-align:center;text-decoration:none;padding:17px 22px;border-radius:16px;font-family:'Pretendard',serif;font-weight:700;font-size:15.5px;letter-spacing:.02em;color:#1d160c;background:linear-gradient(100deg,var(--gold-soft),var(--gold) 55%,var(--gold-deep));box-shadow:0 12px 30px rgba(224,184,94,.30);transition:transform .25s,box-shadow .25s,filter .25s}
   .cta-buy:hover{transform:translateY(-2px);box-shadow:0 16px 42px rgba(224,184,94,.46);filter:brightness(1.06)}
   .cta-buy:active{transform:translateY(0)}
@@ -1871,7 +1875,7 @@ function renderBridge(s,A,voc){
   var _dow=((new Date()).getDay()+6)%7;                /* 월=0 … 일=6 */
   var _wn=103+(_wk%5)*7+_dow*11;
   document.getElementById('bridgeZone').innerHTML=`<div class="mjcom" style="--ac:${d.ac};--glow:${d.glow};--c2:${d.c}">`+
-    `<div class="rxn-arch"><div class="rxn-aura"></div><div class="rxn-stamp"><span>${d.han}</span></div><div class="rxn-eyebrow">MAJUNG PRESCRIPTION</div><p class="rxn-open">${voc}의 타고난 우주를 모두 읽어냈습니다. 이제 당신의 기운을 완벽한 균형으로 이끌 <b>'운명의 처방'</b>이 시작됩니다.</p><h2 class="rxn-h2">${voc}께 지금 필요한 건<br><b>${nm0} 기운</b>이에요</h2><p class="rxn-need">${d.need}</p><div class="rxn-routine"><div class="rxn-row"><div class="rxn-num">1</div><div class="rxn-t"><b>일상 행동</b> ${d.act}<span>${d.actsub}</span></div></div><div class="rxn-row"><div class="rxn-num">2</div><div class="rxn-t"><b>공간 컬러</b> ${d.space}<span>${d.spacesub}</span></div></div></div></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-rx2"><div class="rxn-kick">24시간 밀착 처방</div><h3 class="rxn-rxh">몸에서 잠시도 떼지 않는<br>단 하나의 기운.</h3><p class="rxn-rxp">여린 살결 위에 <em>마중의 고유 인장이 새겨진 스톤</em>이 닿는 순간,<br>부족했던 기운이 당신의 맥박과 동조하여 온종일 살아 움직입니다.</p><div class="rxn-wearshot" aria-hidden="true">착용컷 이미지 자리</div><p class="rxn-why">인장이 없는 기성 원석에서는 결코 흐르지 않을, <b>오직 당신만을 위한 파동</b>입니다.</p></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-seal"><div class="rxn-badge">五行 印章 · MAJUNG SIGNATURE</div><div class="rxn-med"><div class="rxn-medaura"></div><div class="rxn-ring"><img class="rxn-emb" src="${EMB[def]||EMB['수']}" alt="마중 오행 인장"><span class="rxn-tip"></span></div></div><p class="rxn-proof">💡 마중의 모든 토템은 기성품과 달리 고유 오행 문양이 정밀 각인되어 제작됩니다.</p><h4 class="rxn-hero">${voc}의 결핍을 채울 단 하나의 처방</h4><div class="rxn-name">마중 시그니처 오행 인장 · <b>${STONE[def].nm}</b></div><div class="rxn-sealtxt"><p>시중의 평범한 기성 원석은 그저 예쁜 장식품일 뿐입니다.</p><p>마중은 다릅니다. ${voc}에게 가장 목마른 <b>${nm0}(${d.han}) 문양</b>을 스톤 위에 정교하게 각인합니다.</p><p>이 인장이 새겨진 토템만이, 옅어진 기운을 붙잡아두는 <b>유일한 스위치</b>가 됩니다.</p></div><div class="rxn-pill">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
+    `<div class="rxn-arch"><div class="rxn-aura"></div><div class="rxn-stamp"><span>${d.han}</span></div><div class="rxn-eyebrow">MAJUNG PRESCRIPTION</div><p class="rxn-open">${voc}의 타고난 우주를 모두 읽어냈습니다. 이제 당신의 기운을 완벽한 균형으로 이끌 <b>'운명의 처방'</b>이 시작됩니다.</p><h2 class="rxn-h2">${voc}께 지금 필요한 건<br><b>${nm0} 기운</b>이에요</h2><p class="rxn-need">${d.need}</p><div class="rxn-routine"><div class="rxn-row"><div class="rxn-num">1</div><div class="rxn-t"><b>일상 행동</b> ${d.act}<span>${d.actsub}</span></div></div><div class="rxn-row"><div class="rxn-num">2</div><div class="rxn-t"><b>공간 컬러</b> ${d.space}<span>${d.spacesub}</span></div></div></div></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-rx2"><div class="rxn-kick">24시간 밀착 처방</div><h3 class="rxn-rxh">몸에서 잠시도 떼지 않는<br>단 하나의 기운.</h3><p class="rxn-rxp">여린 살결 위에 <em>마중의 고유 인장이 새겨진 스톤</em>이 닿는 순간, 부족했던 기운이 맥박과 동조하여 온종일 살아 움직입니다.</p><div class="rxn-wearshot" aria-hidden="true">착용컷 이미지 자리</div><p class="rxn-why">인장이 없는 기성 원석에서는 결코 흐르지 않을, <b>오직 당신만을 위한 파동</b>입니다.</p></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-seal"><div class="rxn-badge">五行 印章 · MAJUNG SIGNATURE</div><div class="rxn-med"><div class="rxn-medaura"></div><div class="rxn-ring"><img class="rxn-emb" src="${EMB[def]||EMB['수']}" alt="마중 오행 인장"><span class="rxn-tip"></span></div></div><p class="rxn-proof">💡 마중의 모든 토템은 기성품과 달리 고유 오행 문양이 정밀 각인되어 제작됩니다.</p><h4 class="rxn-hero">${voc}의 결핍을 채울 단 하나의 처방</h4><div class="rxn-name">마중 시그니처 오행 인장 · <b>${STONE[def].nm}</b></div><div class="rxn-sealtxt"><p>시중의 평범한 기성 원석은 그저 예쁜 장식품일 뿐입니다.</p><p>마중은 다릅니다. ${voc}에게 가장 목마른 <b>${nm0}(${d.han}) 문양</b>을 스톤 위에 정교하게 각인합니다.</p><p>이 인장이 새겨진 토템만이, 옅어진 기운을 붙잡아두는 <b>유일한 스위치</b>가 됩니다.</p></div><div class="rxn-pill">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
     `<div class="mjc-oracle"><div class="mjc-oracle-tag">ORACLE · 오행 처방전</div>`+
     `<div class="mjc-orow"><span class="mjc-oico">${OEMO[def]}</span><span class="mjc-okey">부족한 기운</span><span class="mjc-oval"><b>${GIFT[def]}</b></span></div>`+
     `<div class="mjc-orow"><span class="mjc-oico">🩹</span><span class="mjc-okey">결핍된 흐름</span><span class="mjc-oval">${LACK[def]}</span></div>`+
@@ -2755,6 +2759,17 @@ function renderReport(md,tipHtml,ctaText){
     }
   }catch(_e){}
   try{ __doc=__doc.replace(/(<h2>[^<]*운명[^<]*문장[^<]*<\/h2>\s*<blockquote>[\s\S]*?<\/blockquote>)/, '$1<div class="save-line-wrap"><button type="button" class="save-line-btn" onclick="saveDestinyLine(this)"><span class="sl-ic">🔖</span> 이 문장 저장하기</button></div>'); }catch(_e2){}
+  /* '운명 한 문장' 인용구: 빽빽한 본문형 → 문장마다 여백을 둔 중앙 포스터형 */
+  try{
+    __doc=__doc.replace(/(<h2>[^<]*운명[^<]*문장[^<]*<\/h2>\s*)<blockquote>([\s\S]*?)<\/blockquote>/, function(_a,_h,_q){
+      var parts=[];
+      _q.split(/<br\s*\/?>/).forEach(function(seg){
+        seg=seg.replace(/([.!?…])\s+(?=[^\s<])/g,'$1|SPLIT|'); /* 문장 경계 표식 */
+        seg.split('|SPLIT|').forEach(function(s){ s=s.trim(); if(s) parts.push(s); });
+      });
+      return _h+'<blockquote class="destiny-quote">'+parts.map(function(s){ return '<p>'+s+'</p>'; }).join('')+'</blockquote>';
+    });
+  }catch(_e3){}
   document.getElementById('reportZone').innerHTML=`<div class="glass reading-doc">${__doc}</div>`+(tipHtml||'');
   const cf=document.getElementById('ctaFloat');
   cf.innerHTML=`<a href="#bridgeZone" onclick="jumpTo('bridgeZone');return false;">✦ 내 처방 보기</a>`;
