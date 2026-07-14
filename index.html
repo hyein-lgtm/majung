@@ -2547,13 +2547,14 @@ function enterMatchForm(){
 }
 function showMatchError(kind){
   window.__MATCH=null; window.__MATCHDATA=null;
+  var isR=(location.hash==='#r'); /* 리포트 공유 링크였는지 — 만료 안내를 리포트 톤으로 */
   var msg = kind==='expired'
-    ? '이 궁합 링크는 만료되었어요.<br>(링크는 만들어진 뒤 7일간 유효해요)'
-    : '궁합 링크를 찾을 수 없어요.<br>링크가 정확한지 확인해 주세요.';
+    ? '이 '+(isR?'리포트':'궁합')+' 링크는 만료되었어요.<br>(링크는 만들어진 뒤 7일간 유효해요)'
+    : (isR?'리포트':'궁합')+' 링크를 찾을 수 없어요.<br>링크가 정확한지 확인해 주세요.';
   var host=document.getElementById('matchError');
   if(!host){ host=document.createElement('section'); host.id='matchError'; host.className='screen'; document.body.appendChild(host); }
   host.innerHTML='<div class="match-err-box"><div class="me-emoji">🕰️</div><div class="me-t">'+msg+'</div>'
-    +'<button type="button" class="match-make-btn" style="max-width:280px" onclick="location.href=\'/\'">내 사주 보러 가기</button></div>';
+    +'<button type="button" class="match-make-btn" style="max-width:280px" onclick="location.href=\'/\'">'+(isR?'나도 30초 만에 내 리포트 보기':'내 사주 보러 가기')+'</button></div>';
   ['screenIntro','screenEnter','result','matchResult'].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.display=(id==='result')?'':'none'; if(id==='result'&&e) e.classList.remove('show'); });
   host.style.display='block';
 }
@@ -3253,7 +3254,8 @@ async function mjReportShortLink(){
   try{
     var body={ voc:(p.voc||'')+'|r|'+p.ce+'|'+p.nd+'|'+[p.cnt['목'],p.cnt['화'],p.cnt['토'],p.cnt['금'],p.cnt['수']].join(','), relation:'friend', elems:p.elems, ts:p.ts };
     var r=await _mFetchTO('/api/match/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)},6000);
-    if(r.ok){ var d=await r.json(); if(d&&d.token) return (/^https?:$/.test(location.protocol)?location.origin:'https://majungsaju.com')+'/match/'+d.token; }
+    /* '#r' 플래그: 토큰 만료 시에도 리포트 링크임을 알 수 있게 2글자만 덧붙인다 */
+    if(r.ok){ var d=await r.json(); if(d&&d.token) return (/^https?:$/.test(location.protocol)?location.origin:'https://majungsaju.com')+'/match/'+d.token+'#r'; }
   }catch(_){}
   return mjReportHashLink();
 }
@@ -3315,7 +3317,7 @@ function showReportInviteScreen(data){
     +'<div class="mi-badge">오행 리포트 공유</div>'
     +'<div class="mi-title">'+aNm+'님이 자신의<br><b>오행 리포트</b>를 보내왔어요</div>'
     +bars+line
-    +'<div class="mi-desc" style="margin-top:16px">당신의 오행 균형은 어떤 모양일까요?<br>생년월일만 넣으면 바로 볼 수 있어요.</div>'
+    +'<div class="mi-desc" style="margin-top:16px">'+(data.nd?aNm+'님에게 필요한 <b>'+_mesc(data.nd)+'</b> 기운,<br>혹시 당신에게 있을까요?':'당신의 오행 균형은 어떤 모양일까요?')+'<br>생년월일만 넣으면 30초 만에 알 수 있어요.</div>'
     +'<button type="button" class="match-make-btn mi-btn" onclick="mjStartMyReport()">나도 30초 만에 내 리포트 보기</button>'
     +'<div class="mi-privacy"><span>🔒</span> 회원가입 없이 · 무료 · 30초<br>입력한 생년월일은 <b>저장되지 않아요.</b></div>'
     +'<div class="mi-brand">마중사주 · majungsaju.com</div>'
