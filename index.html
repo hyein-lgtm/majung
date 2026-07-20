@@ -1804,15 +1804,6 @@ function renderBridge(s,A,voc){
 .mjc-trust i{width:3px;height:3px;border-radius:50%;background:rgba(201,168,106,.5);align-self:center}
 .mjc-deadline{margin-top:9px;text-align:center;font-size:11.5px;letter-spacing:.02em;color:rgba(227,201,140,.85);word-break:keep-all}
 .mjc-deadline b{font-weight:800;color:#E3C98C}
-.mjc-week{margin:18px auto 10px;text-align:center;font-size:12.5px;color:rgba(239,233,219,.72);word-break:keep-all}
-.mjc-week b{font-weight:800;color:#F0E2BE}
-.mjc-rev{margin:22px 0 6px;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 16px 6px;background:rgba(255,255,255,.025)}
-.mjc-rev-h{text-align:center;font-size:13px;font-weight:800;color:#EFE9DB;margin-bottom:12px}
-.mjc-rev-c{padding:11px 4px 12px}
-.mjc-rev-c+.mjc-rev-c{border-top:1px solid rgba(255,255,255,.06)}
-.mjc-rev-s{font-size:11px;letter-spacing:2px;color:#E3C98C;margin-bottom:5px}
-.mjc-rev-c p{margin:0;font-size:12.5px;line-height:1.65;color:rgba(239,233,219,.8);word-break:keep-all}
-.mjc-rev-c span{display:block;margin-top:6px;font-size:11px;color:rgba(239,233,219,.42)}
 .mjcom .rxn-arch{position:relative;text-align:center;border:1px solid rgba(201,168,106,.28);border-radius:100px 100px 24px 24px;padding:92px 20px 30px;margin-top:8px;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 60%);box-shadow:inset 0 0 54px -34px color-mix(in srgb,var(--c2) 65%,transparent)}
 .mjcom .rxn-aura{position:absolute;left:50%;top:-4px;width:140px;height:140px;border-radius:50%;filter:blur(15px);pointer-events:none;background:radial-gradient(circle,color-mix(in srgb,var(--c2) 60%,transparent),transparent 62%);animation:rxnBreath 3.6s ease-in-out infinite}
 @keyframes rxnBreath{0%,100%{opacity:.4;transform:translateX(-50%) scale(.9)}50%{opacity:.85;transform:translateX(-50%) scale(1.1)}}
@@ -1871,9 +1862,6 @@ function renderBridge(s,A,voc){
   var _dl=new Date((_st0.ts||Date.now())+7*864e5);
   var _dlTxt=(_dl.getMonth()+1)+'월 '+_dl.getDate()+'일';
   /* ── 주간 카운터: 실데이터 연동 전 임시 산식(주 초 100명대→주말 170명대, 하루 단위 증가). 배포 후 실제 집계로 교체 권장 ── */
-  var _wk=Math.floor((Date.now()+3*864e5)/6048e5);     /* 월요일 기준 주차 */
-  var _dow=((new Date()).getDay()+6)%7;                /* 월=0 … 일=6 */
-  var _wn=103+(_wk%5)*7+_dow*11;
   document.getElementById('bridgeZone').innerHTML=`<div class="mjcom" style="--ac:${d.ac};--glow:${d.glow};--c2:${d.c}">`+
     `<div class="rxn-arch"><div class="rxn-aura"></div><div class="rxn-stamp"><span>${d.han}</span></div><div class="rxn-eyebrow">MAJUNG PRESCRIPTION</div><p class="rxn-open">${voc}의 타고난 우주를 모두 읽어냈습니다. 이제 당신의 기운을 완벽한 균형으로 이끌 <b>'운명의 처방'</b>이 시작됩니다.</p><h2 class="rxn-h2">${voc}께 지금 필요한 건<br><b>${nm0} 기운</b>이에요</h2><p class="rxn-need">${d.need}</p><div class="rxn-routine"><div class="rxn-row"><div class="rxn-num">1</div><div class="rxn-t"><b>일상 행동</b> ${d.act}<span>${d.actsub}</span></div></div><div class="rxn-row"><div class="rxn-num">2</div><div class="rxn-t"><b>공간 컬러</b> ${d.space}<span>${d.spacesub}</span></div></div></div></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-rx2"><div class="rxn-kick">24시간 밀착 처방</div><h3 class="rxn-rxh">몸에서 잠시도 떼지 않는<br>단 하나의 기운.</h3><p class="rxn-rxp">여린 살결 위에 <em>마중의 고유 인장이 새겨진 스톤</em>이 닿는 순간, 부족했던 기운이 맥박과 동조하여 온종일 살아 움직입니다.</p><div class="rxn-wearshot" aria-hidden="true">착용컷 이미지 자리</div><p class="rxn-why">인장이 없는 기성 원석에서는 결코 흐르지 않을, <b>오직 당신만을 위한 파동</b>입니다.</p></div><div class="rxn-flow"><span></span><span></span><span></span></div><div class="rxn-seal"><div class="rxn-badge">五行 印章 · MAJUNG SIGNATURE</div><div class="rxn-med"><div class="rxn-medaura"></div><div class="rxn-ring"><img class="rxn-emb" src="${EMB[def]||EMB['수']}" alt="마중 오행 인장"><span class="rxn-tip"></span></div></div><p class="rxn-proof">💡 마중의 모든 토템은 기성품과 달리 고유 오행 문양이 정밀 각인되어 제작됩니다.</p><h4 class="rxn-hero">${voc}의 결핍을 채울 단 하나의 처방</h4><div class="rxn-name">마중 시그니처 오행 인장 · <b>${STONE[def].nm}</b></div><div class="rxn-sealtxt"><p>시중의 평범한 기성 원석은 그저 예쁜 장식품일 뿐입니다.</p><p>마중은 다릅니다. ${voc}에게 가장 목마른 <b>${nm0}(${d.han}) 문양</b>을 스톤 위에 정교하게 각인합니다.</p><p>이 인장이 새겨진 토템만이, 옅어진 기운을 붙잡아두는 <b>유일한 스위치</b>가 됩니다.</p></div><div class="rxn-pill">${nm0} 기운이 필요한 분께 · 마중이 큐레이션</div></div>`+
     `<div class="mjc-oracle"><div class="mjc-oracle-tag">ORACLE · 오행 처방전</div>`+
@@ -1894,7 +1882,6 @@ function renderBridge(s,A,voc){
         `<div class="mjc-deadline">내 리포트 기준 <b>7일간</b>의 처방가 · <b>${_dlTxt}까지</b></div>`+
       `</div>`+
     `</div>`+
-    `<div class="mjc-week">이번 주 <b>${_wn}명</b>이 자신의 오행 처방을 확인했어요</div>`+
     `<a class="mjc-finalcta" href="https://wblbeauty.com/event/2026/half-awards.html" target="_blank" rel="noopener"><span class="mjc-ar"></span><span class="mjc-lb">처방 토템 마중하기 →</span></a>`+
     `<div class="mjc-trust" style="margin-top:14px"><span>무료 배송</span><i></i><span>7일 내 반품</span><i></i><span>기운 큐레이션 보증</span></div>`+
     `<p class="mjc-guide">${d.guide}</p>`+
@@ -1903,12 +1890,6 @@ function renderBridge(s,A,voc){
     `<div class="mjc-ck"><i>✓</i><span>그 기운을 하루 종일 담아두는 그릇, 엄선된 <b>천연 ${stoneNm} 원석</b></span></div>`+
     `<div class="mjc-ck"><i>✓</i><span>차고만 있으면 돼요 — 맥박이 뛰는 손목 위에서 <b>의식하지 않아도 24시간</b> 채워져요</span></div>`+
     `<div class="mjc-ck"><i>✓</i><span>상자를 여는 순간 알게 되는 <b>프리미엄 인장 패키지</b> — 나에게 주는 개운 선물</span></div>`+
-    `</div>`+
-    /* ── 체험단 후기: 임시 문안 — 정식 오픈 전 실제 체험단 후기로 교체(표시광고법 유의) ── */
-    `<div class="mjc-rev"><div class="mjc-rev-h">먼저 마중 나간 분들의 이야기</div>`+
-    `<div class="mjc-rev-c"><div class="mjc-rev-s">★★★★★</div><p>"리포트에서 부족하다던 기운이 요즘 제 상태랑 신기하게 맞아서 반신반의로 시작했는데, 각인 디테일이 사진보다 훨씬 예뻐요. 매일 차고 나가요."</p><span>김*연 · 체험단 · 오행 팔찌</span></div>`+
-    `<div class="mjc-rev-c"><div class="mjc-rev-s">★★★★★</div><p>"기성 원석 팔찌랑 뭐가 다른가 했는데, 문양이 새겨져 있으니 진짜 '내 것'이라는 느낌이 달라요. 선물용으로 하나 더 주문했어요."</p><span>박*진 · 체험단 · 오행 팔찌</span></div>`+
-    `<div class="mjc-rev-c"><div class="mjc-rev-s">★★★★☆</div><p>"배송 빠르고 패키지가 고급스러워요. 리포트 읽고 나서 받으니 팔찌에 담긴 의미가 더 와닿았습니다."</p><span>이*호 · 체험단 · 오행 팔찌</span></div>`+
     `</div>`+
     `<div class="mjc-story"><button type="button" class="mjc-story-btn" onclick="mjcToggleStory(this)"><span class="lb">마중의 깊은 명리 서사 더보기</span><span class="pm">＋</span></button>`+
     `<div class="mjc-story-body"><div class="mjc-story-inner"><p>시중의 평범한 기성 원석은, 아직 아무 이름도 새겨지지 않은 예쁜 돌일 뿐입니다.</p><p>마중은 ${voc}의 사주를 읽어 다섯 기운 중 가장 목마른 하나, <b>${nm0}(${d.han})</b>의 문양을 골라 스톤 위에 정성껏 새깁니다.</p><p>인장이 새겨지는 순간, 돌은 비로소 <b>당신의 토템</b>이 됩니다.</p><p>${SEALV[def]} 품은 이 작은 원석이 손목 위에서 맥박을 따라 흐르며, 하루의 흔들림마다 당신의 균형을 다시 마중 나갑니다.</p></div></div></div>`+
