@@ -1958,7 +1958,6 @@ function renderFinal(s,A,voc){
     `<div class="mjc-div" style="margin-top:34px"><span>SHARE</span></div>`+
     `<div style="display:flex;flex-direction:column;align-items:center;gap:9px;margin:16px auto 4px;width:100%;max-width:340px">`+
       `<button type="button" onclick="mjShareReportKakao(this)" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#FEE500;border:none;border-radius:12px;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:14.5px;font-weight:700;color:#191919;padding:14px 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="#191919" aria-hidden="true"><path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.8 1.86 5.26 4.66 6.66l-.95 3.52c-.08.31.27.56.54.38l4.19-2.79c.51.05 1.03.08 1.56.08 5.52 0 10-3.54 10-7.85C22 6.54 17.52 3 12 3z"/></svg>카카오톡으로 내 리포트 공유하기</button>`+
-      `<button type="button" onclick="mjCopyReportLink(this)" style="width:100%;background:transparent;border:1px solid rgba(227,201,140,.45);border-radius:12px;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:13.5px;font-weight:600;color:var(--gold-soft,#C9A86A);padding:12px 18px">내 리포트 링크 복사하기</button>`+
     `</div>`+
     `<p style="margin:8px auto 0;text-align:center;font-family:'Pretendard',sans-serif;font-size:11.5px;line-height:1.6;color:rgba(239,233,219,.42);word-break:keep-all">링크를 받은 친구는 회원가입 없이 30초 만에<br>자기 오행 리포트도 볼 수 있어요.</p>`+
     `<div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:14px 0 4px">`+
@@ -2552,8 +2551,8 @@ async function _renderMatchShare(){
     stage.style.transform='translateX(-50%) scale('+scale+')';
     stage.style.top=(topPad+(avail-ch*scale)/2)+'px';
     var __fec=await mjFontEmbedCSS(wrap.textContent)||undefined;
-    for(var _w=0;_w<2;_w++){ try{ await window.htmlToImage.toPng(wrap,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:1,backgroundColor:'#0E1520',fontEmbedCSS:__fec}); }catch(_){ } await new Promise(function(r){setTimeout(r,150);}); }
-    url=await window.htmlToImage.toPng(wrap,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:2,cacheBust:true,backgroundColor:'#0E1520',fontEmbedCSS:__fec});
+    for(var _w=0;_w<2;_w++){ try{ await window.htmlToImage.toPng(wrap,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:1,backgroundColor:'#0E1520',fontEmbedCSS:__fec,style:{position:'static',left:'0px',top:'0px'}}); }catch(_){ } await new Promise(function(r){setTimeout(r,150);}); }
+    url=await window.htmlToImage.toPng(wrap,{width:1080,height:1920,canvasWidth:1080,canvasHeight:1920,pixelRatio:2,cacheBust:true,backgroundColor:'#0E1520',fontEmbedCSS:__fec,style:{position:'static',left:'0px',top:'0px'}});
   } finally { document.body.removeChild(wrap); }
   return url;
 }
