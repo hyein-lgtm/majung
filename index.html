@@ -2798,7 +2798,7 @@ function renderReport(md,tipHtml,ctaText){
       var __ELC={목:['#7E9A61','#B8D6A0'],화:['#C05E66','#E8898F'],토:['#C47A50','#E7C083'],금:['#9AA3B2','#EDEFF4'],수:['#6A8A9C','#A9C6E8']};
       var __cp=__ELC[__def]||['#C9A86A','#E3C98C'];
       var __arch='<div class="portal-archwrap"><svg class="portal-arch" viewBox="0 0 238.54 341.29" xmlns="http://www.w3.org/2000/svg" fill="#DFBB6F" aria-hidden="true"><path d="M136.04,48.21L115.84,0l-20.65,49.33C40.86,60.47,0,108.54,0,166.17v156.79c0,10.13,8.21,18.34,18.34,18.34s18.34-8.21,18.34-18.34v-156.78c0-45.54,37.05-82.59,82.59-82.59s82.6,37.05,82.6,82.59v156.78c0,10.13,8.21,18.34,18.34,18.34s18.34-8.21,18.34-18.34v-156.79c0-60.16-44.59-109.79-102.5-117.96Z"/><circle cx="119.27" cy="204.99" r="30.88"/></svg><span class="portal-tip"></span></div>';
-      var __blk='<div class="portal" style="--acc:'+__cp[0]+';--acc-soft:'+__cp[1]+'"><div class="portal-halo"></div>'+__arch+'<div class="portal-kicker">운명의 문 앞에서</div><p class="portal-l1">'+__voc+'의 <em>타고난 우주</em>를<br>모두 읽어냈어요.</p><p class="portal-l2">이제 당신의 기운을 완벽한 균형으로 이끌<br><b>‘운명의 처방’</b>이 시작돼요.</p><div class="portal-flow"><span></span><span></span><span></span></div></div>';
+      var __blk='<div class="portal" style="--acc:'+__cp[0]+';--acc-soft:'+__cp[1]+'"><div class="portal-halo"></div>'+__arch+'<div class="portal-kicker">운명의 문 앞에서</div><p class="portal-l1">'+__voc+'의 <em>타고난 우주</em>를<br>모두 읽어냈어요.</p><div class="portal-flow"><span></span><span></span><span></span></div></div>';
       __doc=__doc.replace(/<h2>([^<]*운명[^<]*문장[^<]*)<\/h2>/, __blk+'<h2>$1</h2>');
     }
   }catch(_e){}
@@ -3413,17 +3413,21 @@ async function mjShareReportKakao(btn){
     await mjKakaoShare({ title:p.voc+'님의 오행 리포트가 도착했어요 ✦ 마중', desc:'중심 기운은 '+p.ce+', 채우면 좋은 기운은 '+p.nd+'. 너의 오행 균형도 30초면 볼 수 있어!', url:link, btn:'리포트 보러 가기' });
   } finally { if(btn){ btn.innerHTML=_o; btn.disabled=false; } }
 }
-/* 궁합 결과 화면 상단 공유 버튼(#matchShare) 핸들러 — renderMatchResult()가 저장해 둔 window.__MATCHRESULT 스냅샷 사용 */
+/* 궁합 결과 화면 상단 공유 버튼(#matchShare) 핸들러 — renderMatchResult()가 저장해 둔 window.__MATCHRESULT 스냅샷 사용
+   주의: mr.url은 A가 처음 만든 '초대 링크'(/match/:token)를 그대로 가리킨다 — 이 앱은 두 사람의 완성된 결과를
+   그대로 재생해 보여주는 서버 저장소가 없고, 링크를 열면 항상 'A와의 궁합을 입력해 보기' 초대 화면부터 다시
+   시작된다. 그래서 문구도 "우리 결과를 그대로 보여준다"가 아니라, 실제로 벌어지는 일(자신의 정보를 넣어야
+   본인과 A의 궁합이 나온다)에 맞춰 B의 점수를 티저로만 보여주는 초대 카피로 구성한다. */
 async function mjShareMatchKakao(btn){
   var mr=window.__MATCHRESULT;
   if(!mr){ mjToast('먼저 궁합 결과가 준비되어야 해요.'); return; }
   try{
     if(btn) btn.disabled=true;
     await mjKakaoShare({
-      title:mr.aNm+' & '+mr.bNm+'님의 '+mr.relName+' 궁합 ✦ 마중',
-      desc:'인연 상생률 '+mr.score+'%! 우리 궁합, 너도 30초 만에 확인해봐',
+      title:mr.aNm+'님과의 '+mr.relName+' 궁합, 당신과는 몇 %일까요? ✦ 마중',
+      desc:mr.bNm+'님은 '+mr.score+'%가 나왔어요! 당신도 30초 만에 '+mr.aNm+'님과의 궁합을 확인해보세요',
       url:mr.url,
-      btn:'궁합 확인하기'
+      btn:'내 궁합 확인하기'
     });
   } finally { if(btn){ btn.disabled=false; } }
 }
