@@ -3392,8 +3392,9 @@ async function mjReportShortLink(){
     var _req={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)};
     var r; try{ r=await _mFetchTO('/api/match/create',_req,6000); }
     catch(e1){ r=await _mFetchTO('/api/match/create',_req,8000); } /* 1회 재시도 */
-    /* '#r' 플래그: 토큰 만료 시에도 리포트 링크임을 알 수 있게 2글자만 덧붙인다 */
-    if(r.ok){ var d=await r.json(); if(d&&d.token) return MJ_CANON+'/match/'+d.token+'#r'; }
+    /* '#r=' 폴백: 서버 조회가 실패/지연/유실돼도(친구마다 성공률이 갈리는 문제) 링크 자체에 담긴
+       압축 데이터로 리포트를 복원할 수 있도록, 짧은 파이프 문자열을 해시에 함께 싣는다 */
+    if(r.ok){ var d=await r.json(); if(d&&d.token) return MJ_CANON+'/match/'+d.token+'#r='+_mEncS(body.voc); }
   }catch(_){}
   return mjReportHashLink();
 }
@@ -3520,7 +3521,7 @@ async function mjQrDataUrl(text, px){
     var m=(location.pathname||'').match(/^\/match\/([^\/?#]+)/);
     var h=(location.hash||'').match(/^#m=([A-Za-z0-9_\-]+)/);
     var rr=(location.hash||'').match(/^#r=([A-Za-z0-9_\-]+)/);
-    if(m&&m[1]){ startMatchFlow(decodeURIComponent(m[1]), h&&h[1]?h[1]:null); }
+    if(m&&m[1]){ startMatchFlow(decodeURIComponent(m[1]), (h&&h[1])?h[1]:((rr&&rr[1])?rr[1]:null)); }
     else if(h&&h[1]){ startMatchFlowLocal(h[1]); }
     else if(rr&&rr[1]){ try{ var _d=_mUnpack(_mDec(rr[1])); if(mjIsReportPayload(_d)){ showReportInviteScreen(_d); } }catch(_){} }
   }catch(_){}
